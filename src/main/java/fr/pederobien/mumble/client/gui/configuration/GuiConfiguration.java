@@ -4,15 +4,23 @@ import java.util.Locale;
 import java.util.function.Consumer;
 
 import fr.pederobien.mumble.client.gui.interfaces.IObsGuiConfiguration;
+import fr.pederobien.persistence.interfaces.IUnmodifiableNominable;
 import fr.pederobien.utils.IObservable;
 import fr.pederobien.utils.Observable;
 
-public class GuiConfiguration implements IObservable<IObsGuiConfiguration> {
+public class GuiConfiguration implements IUnmodifiableNominable, IObservable<IObsGuiConfiguration> {
+	private static final Locale DEFAULT_LOCALE = Locale.ENGLISH;
+
 	private Observable<IObsGuiConfiguration> observers;
 	private Locale locale;
 
-	private GuiConfiguration() {
+	public GuiConfiguration() {
 		observers = new Observable<IObsGuiConfiguration>();
+	}
+
+	@Override
+	public String getName() {
+		return "GuiConfiguration";
 	}
 
 	@Override
@@ -29,7 +37,7 @@ public class GuiConfiguration implements IObservable<IObsGuiConfiguration> {
 	 * @return The gui locale, this correspond to the language in which user messages are displayed.
 	 */
 	public Locale getLocale() {
-		return locale;
+		return locale == null ? DEFAULT_LOCALE : locale;
 	}
 
 	/**
@@ -39,7 +47,7 @@ public class GuiConfiguration implements IObservable<IObsGuiConfiguration> {
 	 * @param locale The new gui locale.
 	 */
 	public void setLocale(Locale locale) {
-		if (this.locale.equals(locale))
+		if (this.locale != null && this.locale.equals(locale))
 			return;
 
 		Locale oldLocale = this.locale;
