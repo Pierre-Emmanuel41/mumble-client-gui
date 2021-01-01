@@ -17,9 +17,4 @@ public class ServerListLoaderV10 extends AbstractServerListLoader {
 		setServers(root);
 		return this;
 	}
-
-	@Override
-	protected ServerList create() {
-		return new ServerList();
-	}
 }

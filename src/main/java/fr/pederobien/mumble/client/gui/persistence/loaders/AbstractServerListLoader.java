@@ -14,6 +14,11 @@ public abstract class AbstractServerListLoader extends AbstractXmlPersistenceLoa
 		super(version);
 	}
 
+	@Override
+	protected ServerList create() {
+		return new ServerList();
+	}
+
 	/**
 	 * Retrieve registered servers in the given xml root and add them to the server list.
 	 * 
