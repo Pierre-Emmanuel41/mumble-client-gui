@@ -10,7 +10,6 @@ import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.gui.model.ServerList;
 import fr.pederobien.mumble.client.gui.persistence.loaders.ServerListLoaderV10;
 import fr.pederobien.persistence.impl.xml.AbstractXmlPersistence;
-import fr.pederobien.persistence.interfaces.IPersistence;
 
 public class ServerListPersistence extends AbstractXmlPersistence<ServerList> {
 	private static final String ROOT_XML_DOCUMENT = "ServerList";
@@ -20,12 +19,12 @@ public class ServerListPersistence extends AbstractXmlPersistence<ServerList> {
 		register(new ServerListLoaderV10());
 	}
 
-	public static IPersistence<ServerList> getInstance() {
+	public static ServerListPersistence getInstance() {
 		return SingletonHolder.PERSISTENCE;
 	}
 
 	private static class SingletonHolder {
-		private static final IPersistence<ServerList> PERSISTENCE = new ServerListPersistence();
+		private static final ServerListPersistence PERSISTENCE = new ServerListPersistence();
 	}
 
 	@Override
