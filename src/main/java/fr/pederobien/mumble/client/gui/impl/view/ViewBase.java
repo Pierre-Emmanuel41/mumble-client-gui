@@ -1,9 +1,10 @@
 package fr.pederobien.mumble.client.gui.impl.view;
 
 import fr.pederobien.mumble.client.gui.impl.presenter.PresenterBase;
+import fr.pederobien.mumble.client.gui.interfaces.IObsGuiConfiguration;
 import javafx.scene.Parent;
 
-public class ViewBase<T extends PresenterBase, U extends Parent> {
+public abstract class ViewBase<T extends PresenterBase, U extends Parent> implements IObsGuiConfiguration {
 	private T presenter;
 	private U root;
 
