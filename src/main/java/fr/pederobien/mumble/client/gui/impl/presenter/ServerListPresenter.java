@@ -1,5 +1,7 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
+import fr.pederobien.dictionary.interfaces.IMessageCode;
+import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.interfaces.IObsServerList;
 import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.gui.model.ServerList;
@@ -31,5 +33,12 @@ public class ServerListPresenter extends PresenterBase implements IObsServerList
 	 */
 	public ObservableList<Server> getServers() {
 		return servers;
+	}
+
+	/**
+	 * @return The code associated to the message to be displayed when there is no registered servers.
+	 */
+	public IMessageCode getEmptyServerListCode() {
+		return EMessageCode.EMPTY_SERVER_LIST;
 	}
 }
