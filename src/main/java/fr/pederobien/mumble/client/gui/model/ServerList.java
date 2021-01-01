@@ -4,18 +4,33 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import fr.pederobien.mumble.client.gui.interfaces.IObsServerList;
 import fr.pederobien.persistence.interfaces.IUnmodifiableNominable;
+import fr.pederobien.utils.IObservable;
+import fr.pederobien.utils.Observable;
 
-public class ServerList implements IUnmodifiableNominable {
+public class ServerList implements IUnmodifiableNominable, IObservable<IObsServerList> {
 	private List<Server> servers;
+	private Observable<IObsServerList> observers;
 
 	public ServerList() {
 		servers = new ArrayList<Server>();
+		observers = new Observable<IObsServerList>();
 	}
 
 	@Override
 	public String getName() {
 		return "ServerList";
+	}
+
+	@Override
+	public void addObserver(IObsServerList obs) {
+		observers.addObserver(obs);
+	}
+
+	@Override
+	public void removeObserver(IObsServerList obs) {
+		observers.removeObserver(obs);
 	}
 
 	/**
@@ -25,6 +40,7 @@ public class ServerList implements IUnmodifiableNominable {
 	 */
 	public void add(Server server) {
 		servers.add(server);
+		observers.notifyObservers(obs -> obs.onServerAdded(server));
 	}
 
 	/**
@@ -34,6 +50,7 @@ public class ServerList implements IUnmodifiableNominable {
 	 */
 	public void remove(Server server) {
 		servers.remove(server);
+		observers.notifyObservers(obs -> obs.onServerRemoved(server));
 	}
 
 	/**
