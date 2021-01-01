@@ -39,7 +39,7 @@ public class Main extends Application {
 		}
 
 		ViewBase.setGuiConfiguration(GuiConfigurationPersistence.getInstance().get());
-		registerDictionaries("French.xml");
+		registerDictionaries("French.xml", "English.xml");
 	}
 
 	@Override

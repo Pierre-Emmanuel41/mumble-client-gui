@@ -1,0 +1,18 @@
+<dictionary>
+	<name>Game</name>
+	<version>1.0</version>
+	<locales>
+		<locale>en</locale>
+		<locale>en-EN</locale>
+		<locale>en-GB</locale>
+		<locale>en-UK</locale>
+		<locale>en-US</locale>
+		<locale>en-CA</locale>
+	</locales>
+	<messages>
+		<message>
+			<code>EMPTY_SERVER_LIST</code>
+			<value>There is no servers</value>
+		</message>
+	</messages>
+</dictionary>
