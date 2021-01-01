@@ -1,6 +1,9 @@
 package fr.pederobien.mumble.client.gui.impl;
 
 public enum Environment {
+	// Folder that contains resources files
+	RESOURCES_FOLDER("src/main/resources/"),
+
 	// File that contains gui configuration parameters.
 	GUI_CONFIGURATION("GuiConfiguration"),
 

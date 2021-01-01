@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dictionary>
+	<name>French</name>
+	<version>1.0</version>
+	<locales>
+		<locale>fr</locale>
+		<locale>fr-FR</locale>
+		<locale>fr-CA</locale>
+	</locales>
+	<messages>
+		<message>
+			<code>EMPTY_SERVER_LIST</code>
+			<value>Il n'y a pas de serveurs</value>
+		</message>
+	</messages>
+</dictionary>
