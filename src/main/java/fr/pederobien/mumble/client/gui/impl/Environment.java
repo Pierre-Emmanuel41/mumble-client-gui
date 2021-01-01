@@ -1,6 +1,10 @@
 package fr.pederobien.mumble.client.gui.impl;
 
 public enum Environment {
+	// File that contains gui configuration parameters.
+	GUI_CONFIGURATION("GuiConfiguration"),
+
+	// File that contains all registered servers.
 	SERVER_LIST("ServerList");
 
 	private String fileName;
