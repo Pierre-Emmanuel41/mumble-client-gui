@@ -12,7 +12,7 @@ public abstract class PresenterBase {
 	/**
 	 * @return The primary stage of the application.
 	 */
-	protected Stage getPrimaryStage() {
+	public Stage getPrimaryStage() {
 		return primaryStage;
 	}
 }
