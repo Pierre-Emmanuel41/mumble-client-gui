@@ -14,9 +14,10 @@ public class ServerPresenter extends PresenterBase implements IObsServer {
 	private StringProperty serverNameProperty;
 	private BooleanProperty isReachableProperty;
 
-	protected ServerPresenter(Stage primaryStage, Server server) {
+	public ServerPresenter(Stage primaryStage, Server server) {
 		super(primaryStage);
 
+		server.addObserver(this);
 		serverNameProperty = new SimpleStringProperty(this, "serverName", server.getName());
 		isReachableProperty = new SimpleBooleanProperty(this, "isReachable", server.isReachable());
 	}
