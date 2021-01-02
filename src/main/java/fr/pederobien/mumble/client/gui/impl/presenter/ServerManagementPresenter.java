@@ -1,57 +1,72 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
+import fr.pederobien.mumble.client.gui.properties.SimpleFontProperty;
 import fr.pederobien.mumble.client.gui.properties.SimpleLanguageProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class ServerManagementPresenter extends PresenterBase {
-	private SimpleLanguageProperty joinServerProperty, addServerProperty, editServerProperty, deleteServerProperty, refreshServerProperty;
+	private SimpleLanguageProperty joinServerLanguageProperty, addServerLanguageProperty, editServerLanguageProperty, deleteServerLanguageProperty,
+			refreshServerLanguageProperty;
+
+	private SimpleFontProperty fontProperty;
 
 	public ServerManagementPresenter(Stage primaryStage) {
 		super(primaryStage);
 
-		joinServerProperty = createLanguageProperty(EMessageCode.JOIN_SERVER);
-		addServerProperty = createLanguageProperty(EMessageCode.ADD_SERVER);
-		editServerProperty = createLanguageProperty(EMessageCode.EDIT_SERVER);
-		deleteServerProperty = createLanguageProperty(EMessageCode.DELETE_SERVER);
-		refreshServerProperty = createLanguageProperty(EMessageCode.REFRESH_SERVERS);
+		joinServerLanguageProperty = createLanguageProperty(EMessageCode.JOIN_SERVER);
+		addServerLanguageProperty = createLanguageProperty(EMessageCode.ADD_SERVER);
+		editServerLanguageProperty = createLanguageProperty(EMessageCode.EDIT_SERVER);
+		deleteServerLanguageProperty = createLanguageProperty(EMessageCode.DELETE_SERVER);
+		refreshServerLanguageProperty = createLanguageProperty(EMessageCode.REFRESH_SERVERS);
+
+		fontProperty = createFontProperty();
 	}
 
 	/**
 	 * @return The message to display in order to join the server.
 	 */
 	public StringProperty joinServerProperty() {
-		return joinServerProperty;
+		return joinServerLanguageProperty;
 	}
 
 	/**
 	 * @return The message to display in order to add a server.
 	 */
 	public StringProperty addServerProperty() {
-		return addServerProperty;
+		return addServerLanguageProperty;
 	}
 
 	/**
 	 * @return The message to display in order to edit the server.
 	 */
 	public StringProperty editServerProperty() {
-		return editServerProperty;
+		return editServerLanguageProperty;
 	}
 
 	/**
 	 * @return The message to display in order to delete the server.
 	 */
 	public StringProperty deleteServerProperty() {
-		return deleteServerProperty;
+		return deleteServerLanguageProperty;
 	}
 
 	/**
 	 * @return The message to display in order to refresh server status.
 	 */
 	public StringProperty refreshServersProperty() {
-		return refreshServerProperty;
+		return refreshServerLanguageProperty;
+	}
+
+	/**
+	 * @return The font to display messages.
+	 */
+	public ObjectProperty<Font> fontProperty() {
+		return fontProperty;
 	}
 
 	public void onJoinServerClicked(ActionEvent event) {

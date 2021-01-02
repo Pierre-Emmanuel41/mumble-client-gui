@@ -3,6 +3,7 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 import fr.pederobien.dictionary.impl.NotificationCenter;
 import fr.pederobien.dictionary.interfaces.IMessageCode;
 import fr.pederobien.mumble.client.gui.configuration.GuiConfiguration;
+import fr.pederobien.mumble.client.gui.properties.SimpleFontProperty;
 import fr.pederobien.mumble.client.gui.properties.SimpleLanguageProperty;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -67,9 +68,18 @@ public abstract class PresenterBase {
 	 * @param code the code associated to the message to display.
 	 * @param args The message arguments if the message needs arguments.
 	 * 
-	 * @return The registered property.
+	 * @return The property.
 	 */
 	protected SimpleLanguageProperty createLanguageProperty(IMessageCode code, Object... args) {
 		return new SimpleLanguageProperty(guiConfiguration, NotificationCenter.getInstance(), code, args);
+	}
+
+	/**
+	 * Creates a font property automatically updated when the gui font changes.
+	 * 
+	 * @return The property.
+	 */
+	protected SimpleFontProperty createFontProperty() {
+		return new SimpleFontProperty(guiConfiguration, guiConfiguration.getFont());
 	}
 }

@@ -1,18 +1,20 @@
 package fr.pederobien.mumble.client.gui.configuration;
 
 import java.util.Locale;
-import java.util.function.Consumer;
 
 import fr.pederobien.mumble.client.gui.interfaces.IObsGuiConfiguration;
 import fr.pederobien.persistence.interfaces.IUnmodifiableNominable;
 import fr.pederobien.utils.IObservable;
 import fr.pederobien.utils.Observable;
+import javafx.scene.text.Font;
 
 public class GuiConfiguration implements IUnmodifiableNominable, IObservable<IObsGuiConfiguration> {
 	private static final Locale DEFAULT_LOCALE = Locale.ENGLISH;
+	private static final Font DEFAULT_FONT = Font.getDefault();
 
 	private Observable<IObsGuiConfiguration> observers;
 	private Locale locale;
+	private Font font;
 
 	public GuiConfiguration() {
 		observers = new Observable<IObsGuiConfiguration>();
@@ -50,12 +52,23 @@ public class GuiConfiguration implements IUnmodifiableNominable, IObservable<IOb
 		if (this.locale != null && this.locale.equals(locale))
 			return;
 
-		Locale oldLocale = this.locale;
+		Locale oldLocale = getLocale();
 		this.locale = locale;
-		notifyObservers(obs -> obs.onLanguageChanged(oldLocale, locale));
+		observers.notifyObservers(obs -> obs.onLanguageChanged(oldLocale, locale));
 	}
 
-	private void notifyObservers(Consumer<IObsGuiConfiguration> consumer) {
-		observers.notifyObservers(consumer);
+	/**
+	 * @return The gui font, this correspond to the font used by each graphical component to display messages.
+	 */
+	public Font getFont() {
+		return font == null ? DEFAULT_FONT : font;
+	}
+
+	public void setFont(Font font) {
+		if (this.font != null && this.font.equals(font))
+			return;
+		Font oldFont = getFont();
+		this.font = font;
+		observers.notifyObservers(obs -> obs.onFontChanged(oldFont, font));
 	}
 }

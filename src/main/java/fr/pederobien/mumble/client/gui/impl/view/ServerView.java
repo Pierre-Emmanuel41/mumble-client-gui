@@ -13,10 +13,12 @@ public class ServerView extends ViewBase<ServerPresenter, FlowPane> {
 
 		serverNameLabel = new Label();
 		serverNameLabel.textProperty().bind(getPresenter().serverNameProperty());
+		serverNameLabel.fontProperty().bind(getPresenter().fontProperty());
 
 		serverReachableLabel = new Label();
 		serverReachableLabel.textProperty().bind(getPresenter().serverStatusProperty());
 		serverReachableLabel.textFillProperty().bind(getPresenter().textFillProperty());
+		serverReachableLabel.fontProperty().bind(getPresenter().fontProperty());
 
 		getRoot().getChildren().add(serverNameLabel);
 	}

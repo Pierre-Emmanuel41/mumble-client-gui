@@ -1,27 +1,25 @@
 package fr.pederobien.mumble.client.gui.properties;
 
-import java.util.Locale;
-
 import fr.pederobien.dictionary.impl.MessageEvent;
 import fr.pederobien.dictionary.interfaces.IMessageCode;
 import fr.pederobien.dictionary.interfaces.INotificationCenter;
 import fr.pederobien.mumble.client.gui.configuration.GuiConfiguration;
-import fr.pederobien.mumble.client.gui.interfaces.IObsGuiConfiguration;
+import fr.pederobien.mumble.client.gui.properties.InternalProperty.Action;
 import javafx.beans.property.SimpleStringProperty;
 
 public class SimpleLanguageProperty extends SimpleStringProperty {
-	private GuiConfiguration guiConfiguration;
+	private InternalProperty internalProperty;
 	private INotificationCenter notificationCenter;
 	private IMessageCode code;
 	private Object[] args;
 
 	public SimpleLanguageProperty(GuiConfiguration guiConfiguration, INotificationCenter notificationCenter, IMessageCode code, Object... args) {
-		this.guiConfiguration = guiConfiguration;
+		internalProperty = new InternalProperty(guiConfiguration);
 		this.notificationCenter = notificationCenter;
 		this.code = code;
 		this.args = args;
 
-		guiConfiguration.addObserver(new Observer());
+		internalProperty.registerAction(Action.LOCALE_CHANGED, o -> update());
 		update();
 	}
 
@@ -52,14 +50,6 @@ public class SimpleLanguageProperty extends SimpleStringProperty {
 	}
 
 	private void update() {
-		setValue(notificationCenter.getDictionaryContext().getMessage(new MessageEvent(guiConfiguration.getLocale(), getCode(), getArgs())));
-	}
-
-	private class Observer implements IObsGuiConfiguration {
-
-		@Override
-		public void onLanguageChanged(Locale oldLocale, Locale newLocale) {
-			update();
-		}
+		setValue(notificationCenter.getDictionaryContext().getMessage(new MessageEvent(internalProperty.getGuiConfiguration().getLocale(), getCode(), getArgs())));
 	}
 }

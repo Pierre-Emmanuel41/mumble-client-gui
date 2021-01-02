@@ -2,6 +2,8 @@ package fr.pederobien.mumble.client.gui.interfaces;
 
 import java.util.Locale;
 
+import javafx.scene.text.Font;
+
 public interface IObsGuiConfiguration {
 
 	/**
@@ -11,4 +13,12 @@ public interface IObsGuiConfiguration {
 	 * @param newLocale The new configuration locale.
 	 */
 	void onLanguageChanged(Locale oldLocale, Locale newLocale);
+
+	/**
+	 * Notify this observer the configuration font has changed.
+	 * 
+	 * @param oldFont The old configuration font.
+	 * @param newFont The new configuration font.
+	 */
+	void onFontChanged(Font oldFont, Font newFont);
 }

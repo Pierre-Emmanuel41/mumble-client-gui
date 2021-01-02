@@ -16,9 +16,11 @@ import fr.pederobien.mumble.client.gui.impl.view.ServerListView;
 import fr.pederobien.mumble.client.gui.impl.view.ServerManagementView;
 import fr.pederobien.mumble.client.gui.persistence.ServerListPersistence;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -63,6 +65,16 @@ public class Main extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
+		new Thread(() -> {
+			try {
+				Thread.sleep(2500);
+				Platform.runLater(() -> GuiConfigurationPersistence.getInstance().get().setFont(Font.font(10)));
+				Thread.sleep(2500);
+				Platform.runLater(() -> GuiConfigurationPersistence.getInstance().get().setFont(Font.font(20)));
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}).start();
 	}
 
 	@Override

@@ -14,7 +14,8 @@ public class ServerListView extends ViewBase<ServerListPresenter, StackPane> {
 		getRoot().setPrefWidth(1500);
 
 		emptyServerListLabel = new Label();
-		emptyServerListLabel.textProperty().bind(getPresenter().emptyServersListProperty());
+		emptyServerListLabel.textProperty().bind(getPresenter().emptyServersListLanguageProperty());
+		emptyServerListLabel.fontProperty().bind(getPresenter().emptyServersListFontProperty());
 
 		if (getPresenter().getServers().isEmpty())
 			getRoot().getChildren().add(emptyServerListLabel);

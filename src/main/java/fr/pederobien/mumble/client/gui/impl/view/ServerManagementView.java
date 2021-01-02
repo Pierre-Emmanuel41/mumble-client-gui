@@ -26,6 +26,7 @@ public class ServerManagementView extends ViewBase<ServerManagementPresenter, Fl
 
 	private void addButton(Button button, StringProperty bindingProperty, EventHandler<ActionEvent> handler) {
 		button.textProperty().bind(bindingProperty);
+		button.fontProperty().bind(getPresenter().fontProperty());
 		button.setOnAction(handler);
 		add(button);
 	}
