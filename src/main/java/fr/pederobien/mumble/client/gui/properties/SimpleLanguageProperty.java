@@ -22,6 +22,7 @@ public class SimpleLanguageProperty extends SimpleStringProperty {
 		this.args = args;
 
 		guiConfiguration.addObserver(new Observer());
+		update();
 	}
 
 	/**
