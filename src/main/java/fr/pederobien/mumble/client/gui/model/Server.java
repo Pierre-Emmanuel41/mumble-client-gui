@@ -1,20 +1,37 @@
 package fr.pederobien.mumble.client.gui.model;
 
-public class Server {
+import fr.pederobien.mumble.client.gui.interfaces.IObsServer;
+import fr.pederobien.utils.IObservable;
+import fr.pederobien.utils.Observable;
+
+public class Server implements IObservable<IObsServer> {
 	private static final String DEFAULT_NAME = "";
 	private static final String DEFAULT_ADDRESS = "0.0.0.0";
 	private static final int DEFAULT_PORT = 0;
 	private String name, address;
 	private int port;
+	private boolean isReachable;
+	private Observable<IObsServer> observers;
 
 	public Server(String name, String address, int port) {
 		this.name = name;
 		this.address = address;
 		this.port = port;
+		observers = new Observable<IObsServer>();
 	}
 
 	public Server() {
 		this(DEFAULT_NAME, DEFAULT_ADDRESS, DEFAULT_PORT);
+	}
+
+	@Override
+	public void addObserver(IObsServer obs) {
+		observers.addObserver(obs);
+	}
+
+	@Override
+	public void removeObserver(IObsServer obs) {
+		observers.removeObserver(obs);
 	}
 
 	/**
@@ -30,7 +47,11 @@ public class Server {
 	 * @param name The new server name.
 	 */
 	public void setName(String name) {
+		if (this.name != null && this.name == name)
+			return;
+		String oldName = this.name;
 		this.name = name;
+		observers.notifyObservers(obs -> obs.onNameChanged(this, oldName, name));
 	}
 
 	/**
@@ -46,7 +67,11 @@ public class Server {
 	 * @param address The new server address.
 	 */
 	public void setAddress(String address) {
+		if (this.address != null && this.address == address)
+			return;
+		String oldAddress = this.address;
 		this.address = address;
+		observers.notifyObservers(obs -> obs.onIpAddressChanged(this, oldAddress, address));
 	}
 
 	/**
@@ -62,7 +87,18 @@ public class Server {
 	 * @param port The new server port number.
 	 */
 	public void setPort(int port) {
+		if (this.port == port)
+			return;
+		int oldPort = this.port;
 		this.port = port;
+		observers.notifyObservers(obs -> obs.onPortChanged(this, oldPort, port));
+	}
+
+	/**
+	 * @return True if the server is opened, false otherwise.
+	 */
+	public boolean isReachable() {
+		return isReachable;
 	}
 
 	@Override
@@ -80,5 +116,12 @@ public class Server {
 
 		Server other = (Server) obj;
 		return address.equals(other.getAddress()) && port == other.getPort();
+	}
+
+	private void setIsReachable(boolean isReachable) {
+		if (this.isReachable == isReachable)
+			return;
+		this.isReachable = isReachable;
+		observers.notifyObservers(obs -> obs.onReachableStatusChanged(this, isReachable));
 	}
 }

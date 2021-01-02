@@ -32,5 +32,13 @@
 			<code>REFRESH_SERVERS</code>
 			<value>Rafraîchir</value>
 		</message>
+		<message>
+			<code>REACHABLE_SERVER</code>
+			<value>Ouvert</value>
+		</message>
+		<message>
+			<code>UNREACHABLE_SERVER</code>
+			<value>Fermé</value>
+		</message>
 	</messages>
 </dictionary>

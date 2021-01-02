@@ -19,7 +19,13 @@ public enum EMessageCode implements IMessageCode {
 	DELETE_SERVER,
 
 	// Code to refresh servers state
-	REFRESH_SERVERS;
+	REFRESH_SERVERS,
+
+	// Code when the server is reachable
+	REACHABLE_SERVER,
+
+	// Code when the server is unreachable
+	UNREACHABLE_SERVER;
 
 	@Override
 	public String value() {
