@@ -7,15 +7,18 @@ import java.nio.file.Paths;
 import fr.pederobien.dictionary.impl.DefaultDictionaryParser;
 import fr.pederobien.dictionary.impl.JarDictionaryParser;
 import fr.pederobien.dictionary.impl.NotificationCenter;
-import fr.pederobien.dictionary.interfaces.IDictionaryParser;
 import fr.pederobien.mumble.client.gui.configuration.persistence.GuiConfigurationPersistence;
 import fr.pederobien.mumble.client.gui.impl.Environment;
+import fr.pederobien.mumble.client.gui.impl.presenter.PresenterBase;
 import fr.pederobien.mumble.client.gui.impl.presenter.ServerListPresenter;
+import fr.pederobien.mumble.client.gui.impl.presenter.ServerManagementPresenter;
 import fr.pederobien.mumble.client.gui.impl.view.ServerListView;
-import fr.pederobien.mumble.client.gui.impl.view.ViewBase;
+import fr.pederobien.mumble.client.gui.impl.view.ServerManagementView;
 import fr.pederobien.mumble.client.gui.persistence.ServerListPersistence;
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -38,14 +41,24 @@ public class Main extends Application {
 			GuiConfigurationPersistence.getInstance().saveDefault();
 		}
 
-		ViewBase.setGuiConfiguration(GuiConfigurationPersistence.getInstance().get());
+		PresenterBase.setGuiConfiguration(GuiConfigurationPersistence.getInstance().get());
 		registerDictionaries("French.xml", "English.xml");
 	}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		ServerListView ServerListView = new ServerListView(new ServerListPresenter(primaryStage, ServerListPersistence.getInstance().get()));
-		Scene scene = new Scene(ServerListView.getRoot());
+		BorderPane root = new BorderPane();
+
+		ServerListView serverListView = new ServerListView(new ServerListPresenter(primaryStage, ServerListPersistence.getInstance().get()));
+		ServerManagementView serverManagementView = new ServerManagementView(new ServerManagementPresenter(primaryStage));
+
+		root.setCenter(serverListView.getRoot());
+		root.setBottom(serverManagementView.getRoot());
+
+		BorderPane.setAlignment(serverListView.getRoot(), Pos.CENTER);
+		BorderPane.setAlignment(serverManagementView.getRoot(), Pos.CENTER);
+
+		Scene scene = new Scene(root);
 
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -60,27 +73,23 @@ public class Main extends Application {
 	private void registerDictionaries(String... dictionaryNames) {
 		String url = getClass().getResource(getClass().getSimpleName() + ".class").toExternalForm();
 
-		if (url.startsWith("file")) {
-			DefaultDictionaryParser parser = new DefaultDictionaryParser();
-			for (String name : dictionaryNames)
-				registerDictionary(parser, Paths.get(Environment.RESOURCES_FOLDER.getFileName(), name));
-
-		} else if (url.startsWith("jar")) {
-			Path jarPath = Paths.get(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath().substring(1));
-			String internalPath = Environment.RESOURCES_FOLDER.getFileName();
-			JarDictionaryParser parser = new JarDictionaryParser(internalPath);
-			for (String name : dictionaryNames)
-				registerDictionary(parser.setName(internalPath.concat(name)), jarPath);
-
-		} else
-			throw new UnsupportedOperationException("Technical error");
-	}
-
-	private void registerDictionary(IDictionaryParser parser, Path path) {
 		try {
-			NotificationCenter.getInstance().getDictionaryContext().register(parser, path);
+			if (url.startsWith("file")) {
+				DefaultDictionaryParser parser = new DefaultDictionaryParser();
+				for (String name : dictionaryNames)
+					NotificationCenter.getInstance().getDictionaryContext().register(parser, Paths.get(Environment.RESOURCES_FOLDER.getFileName(), name));
+
+			} else if (url.startsWith("jar")) {
+				Path jarPath = Paths.get(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath().substring(1));
+				String internalPath = Environment.RESOURCES_FOLDER.getFileName();
+				JarDictionaryParser parser = new JarDictionaryParser(internalPath);
+				for (String name : dictionaryNames)
+					NotificationCenter.getInstance().getDictionaryContext().register(parser.setName(internalPath.concat(name)), jarPath);
+
+			} else
+				throw new UnsupportedOperationException("Technical error");
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+
 		}
 	}
 }

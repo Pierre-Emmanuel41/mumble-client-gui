@@ -1,13 +1,27 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
+import fr.pederobien.dictionary.impl.NotificationCenter;
+import fr.pederobien.dictionary.interfaces.IMessageCode;
+import fr.pederobien.mumble.client.gui.configuration.GuiConfiguration;
+import fr.pederobien.mumble.client.gui.properties.SimpleLanguageProperty;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
 public abstract class PresenterBase {
+	private static GuiConfiguration guiConfiguration;
 	private Stage primaryStage;
 
 	protected PresenterBase(Stage primaryStage) {
 		this.primaryStage = primaryStage;
+	}
+
+	/**
+	 * Set the guiConfiguration. When changes are made in the specified configuration, then each view are updated.
+	 * 
+	 * @param guiConfiguration The gui configuration.
+	 */
+	public static void setGuiConfiguration(GuiConfiguration guiConfiguration) {
+		PresenterBase.guiConfiguration = guiConfiguration;
 	}
 
 	/**
@@ -45,5 +59,17 @@ public abstract class PresenterBase {
 	 */
 	protected void dispatch(Runnable runnable) {
 		Platform.runLater(runnable);
+	}
+
+	/**
+	 * Creates a property automatically updated when the gui language changes.
+	 * 
+	 * @param code the code associated to the message to display.
+	 * @param args The message arguments if the message needs arguments.
+	 * 
+	 * @return The registered property.
+	 */
+	protected SimpleLanguageProperty createLanguageProperty(IMessageCode code, Object... args) {
+		return new SimpleLanguageProperty(guiConfiguration, NotificationCenter.getInstance(), code, args);
 	}
 }

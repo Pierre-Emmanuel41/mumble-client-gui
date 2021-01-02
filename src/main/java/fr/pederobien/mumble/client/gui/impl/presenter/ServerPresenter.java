@@ -4,43 +4,30 @@ import fr.pederobien.dictionary.interfaces.IMessageCode;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.interfaces.IObsServer;
 import fr.pederobien.mumble.client.gui.model.Server;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import fr.pederobien.mumble.client.gui.properties.SimpleLanguageProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
 public class ServerPresenter extends PresenterBase implements IObsServer {
 	private StringProperty serverNameProperty;
-	private BooleanProperty isReachableProperty;
+	private SimpleLanguageProperty serverReachableStatusProperty;
+	private ObjectProperty<Paint> textFillProperty;
+	private boolean isReachable;
 
 	public ServerPresenter(Stage primaryStage, Server server) {
 		super(primaryStage);
 
+		isReachable = server.isReachable();
+
 		server.addObserver(this);
-		serverNameProperty = new SimpleStringProperty(this, "serverName", server.getName());
-		isReachableProperty = new SimpleBooleanProperty(this, "isReachable", server.isReachable());
-	}
-
-	/**
-	 * @return The property to display the server name.
-	 */
-	public StringProperty serverNameProperty() {
-		return serverNameProperty;
-	}
-
-	/**
-	 * @return The property to display the reachable state of the server.
-	 */
-	public BooleanProperty isReachable() {
-		return isReachableProperty;
-	}
-
-	/**
-	 * @return The code associated to the message to be displayed when the server is reachable or not.
-	 */
-	public IMessageCode serverStateCode() {
-		return isReachable().get() ? EMessageCode.REACHABLE_SERVER : EMessageCode.UNREACHABLE_SERVER;
+		serverNameProperty = new SimpleStringProperty(server.getName());
+		serverReachableStatusProperty = createLanguageProperty(getServerStateCode());
+		textFillProperty = new SimpleObjectProperty<Paint>(Color.RED);
 	}
 
 	@Override
@@ -60,6 +47,35 @@ public class ServerPresenter extends PresenterBase implements IObsServer {
 
 	@Override
 	public void onReachableStatusChanged(Server server, boolean isReachable) {
-		isReachableProperty.setValue(isReachable);
+		this.isReachable = isReachable;
+		dispatch(() -> {
+			serverReachableStatusProperty.setCode(getServerStateCode());
+			textFillProperty.setValue(isReachable ? Color.GREEN : Color.RED);
+		});
+	}
+
+	/**
+	 * @return The property to display the server name.
+	 */
+	public StringProperty serverNameProperty() {
+		return serverNameProperty;
+	}
+
+	/**
+	 * @return The message to display the server status.
+	 */
+	public StringProperty serverStatusProperty() {
+		return serverReachableStatusProperty;
+	}
+
+	/**
+	 * @return The code associated to the message to be displayed when the server is reachable or not.
+	 */
+	private IMessageCode getServerStateCode() {
+		return isReachable ? EMessageCode.REACHABLE_SERVER : EMessageCode.UNREACHABLE_SERVER;
+	}
+
+	public ObjectProperty<Paint> textFillProperty() {
+		return textFillProperty;
 	}
 }

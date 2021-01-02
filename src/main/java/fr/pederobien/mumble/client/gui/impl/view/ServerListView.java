@@ -1,7 +1,5 @@
 package fr.pederobien.mumble.client.gui.impl.view;
 
-import java.util.Locale;
-
 import fr.pederobien.mumble.client.gui.impl.presenter.ServerListPresenter;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
@@ -15,14 +13,10 @@ public class ServerListView extends ViewBase<ServerListPresenter, StackPane> {
 		getRoot().setPrefHeight(500);
 		getRoot().setPrefWidth(1500);
 
-		emptyServerListLabel = new Label(getMessage(getPresenter().getEmptyServerListCode()));
+		emptyServerListLabel = new Label();
+		emptyServerListLabel.textProperty().bind(getPresenter().emptyServersListProperty());
 
 		if (getPresenter().getServers().isEmpty())
 			getRoot().getChildren().add(emptyServerListLabel);
-	}
-
-	@Override
-	public void onLanguageChanged(Locale oldLocale, Locale newLocale) {
-		emptyServerListLabel.setText(getMessage(getPresenter().getEmptyServerListCode()));
 	}
 }
