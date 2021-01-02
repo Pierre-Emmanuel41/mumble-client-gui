@@ -24,27 +24,41 @@ public class SimpleLanguageProperty extends SimpleStringProperty {
 		guiConfiguration.addObserver(new Observer());
 	}
 
+	/**
+	 * @return The code associated to this property.
+	 */
 	public IMessageCode getCode() {
 		return code;
 	}
 
-	public void setCode(IMessageCode code) {
+	/**
+	 * Set the code associated to this property. This will automatically change the displayed text.
+	 * 
+	 * @param code
+	 * @param args The new arguments array associated to the code.
+	 */
+	public void setCode(IMessageCode code, Object... args) {
 		this.code = code;
+		this.args = args;
+		update();
 	}
 
+	/**
+	 * @return An array that contains arguments for message that need parameters.
+	 */
 	public Object[] getArgs() {
 		return args;
 	}
 
-	public void setArgs(String[] args) {
-		this.args = args;
+	private void update() {
+		setValue(notificationCenter.getDictionaryContext().getMessage(new MessageEvent(guiConfiguration.getLocale(), getCode(), getArgs())));
 	}
 
 	private class Observer implements IObsGuiConfiguration {
 
 		@Override
 		public void onLanguageChanged(Locale oldLocale, Locale newLocale) {
-			setValue(notificationCenter.getDictionaryContext().getMessage(new MessageEvent(guiConfiguration.getLocale(), getCode(), getArgs())));
+			update();
 		}
 	}
 }
