@@ -12,5 +12,25 @@
 			<code>EMPTY_SERVER_LIST</code>
 			<value>Il n'y a pas de serveurs</value>
 		</message>
+		<message>
+			<code>JOIN_SERVER</code>
+			<value>Rejoindre le serveur</value>
+		</message>
+		<message>
+			<code>ADD_SERVER</code>
+			<value>Ajouter un serveur</value>
+		</message>
+		<message>
+			<code>EDIT_SERVER</code>
+			<value>Editer</value>
+		</message>
+		<message>
+			<code>DELETE_SERVER</code>
+			<value>Supprimer</value>
+		</message>
+		<message>
+			<code>REFRESH_SERVERS</code>
+			<value>Rafraîchir</value>
+		</message>
 	</messages>
 </dictionary>
