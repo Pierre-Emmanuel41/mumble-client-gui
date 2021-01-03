@@ -1,6 +1,9 @@
 package fr.pederobien.mumble.client.gui.model;
 
 import fr.pederobien.mumble.client.gui.interfaces.IObsServer;
+import fr.pederobien.mumble.client.impl.MumbleConnection;
+import fr.pederobien.mumble.client.interfaces.IMumbleConnection;
+import fr.pederobien.mumble.client.interfaces.observers.IObsMumbleConnection;
 import fr.pederobien.utils.IObservable;
 import fr.pederobien.utils.Observable;
 
@@ -12,12 +15,17 @@ public class Server implements IObservable<IObsServer> {
 	private int port;
 	private boolean isReachable;
 	private Observable<IObsServer> observers;
+	private IMumbleConnection connection;
+	private InternalObserver internalObserver;
 
 	public Server(String name, String address, int port) {
 		this.name = name;
 		this.address = address;
 		this.port = port;
 		observers = new Observable<IObsServer>();
+
+		internalObserver = new InternalObserver();
+		initiateConnection();
 	}
 
 	public Server() {
@@ -72,6 +80,7 @@ public class Server implements IObservable<IObsServer> {
 		String oldAddress = this.address;
 		this.address = address;
 		observers.notifyObservers(obs -> obs.onIpAddressChanged(this, oldAddress, address));
+		initiateConnection();
 	}
 
 	/**
@@ -92,6 +101,7 @@ public class Server implements IObservable<IObsServer> {
 		int oldPort = this.port;
 		this.port = port;
 		observers.notifyObservers(obs -> obs.onPortChanged(this, oldPort, port));
+		initiateConnection();
 	}
 
 	/**
@@ -99,6 +109,13 @@ public class Server implements IObservable<IObsServer> {
 	 */
 	public boolean isReachable() {
 		return isReachable;
+	}
+
+	/**
+	 * Abort the connection to the remote.
+	 */
+	public void disconnect() {
+		connection.disconnect();
 	}
 
 	@Override
@@ -118,10 +135,39 @@ public class Server implements IObservable<IObsServer> {
 		return address.equals(other.getAddress()) && port == other.getPort();
 	}
 
+	private void initiateConnection() {
+		if (this.connection != null && !this.connection.isDisposed()) {
+			this.connection.dispose();
+			this.connection.removeObserver(internalObserver);
+		}
+
+		connection = MumbleConnection.of(getAddress(), getPort());
+		connection.addObserver(internalObserver);
+		connection.connect();
+	}
+
 	private void setIsReachable(boolean isReachable) {
 		if (this.isReachable == isReachable)
 			return;
 		this.isReachable = isReachable;
 		observers.notifyObservers(obs -> obs.onReachableStatusChanged(this, isReachable));
+	}
+
+	private class InternalObserver implements IObsMumbleConnection {
+
+		@Override
+		public void onConnectionComplete() {
+			setIsReachable(true);
+		}
+
+		@Override
+		public void onConnectionDisposed() {
+
+		}
+
+		@Override
+		public void onConnectionLost() {
+			setIsReachable(false);
+		}
 	}
 }

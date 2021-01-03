@@ -16,7 +16,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class ServerPresenter extends PresenterBase implements IObsServer {
-	private StringProperty serverNameProperty;
+	private StringProperty serverNameProperty, serverIpAddressProperty;
 	private SimpleLanguageProperty serverReachableStatusProperty;
 	private SimpleFontProperty fontProperty;
 	private ObjectProperty<Paint> textFillProperty;
@@ -29,6 +29,7 @@ public class ServerPresenter extends PresenterBase implements IObsServer {
 
 		server.addObserver(this);
 		serverNameProperty = new SimpleStringProperty(server.getName());
+		serverIpAddressProperty = new SimpleStringProperty(server.getAddress() + ":" + server.getPort());
 		serverReachableStatusProperty = createLanguageProperty(getServerStateCode());
 		textFillProperty = new SimpleObjectProperty<Paint>(Color.RED);
 
@@ -42,12 +43,12 @@ public class ServerPresenter extends PresenterBase implements IObsServer {
 
 	@Override
 	public void onIpAddressChanged(Server server, String oldAddress, String newAddress) {
-
+		serverIpAddressProperty.setValue(newAddress + ":" + server.getPort());
 	}
 
 	@Override
 	public void onPortChanged(Server server, int oldPort, int newPort) {
-
+		serverIpAddressProperty.setValue(server.getAddress() + ":" + newPort);
 	}
 
 	@Override
@@ -64,6 +65,13 @@ public class ServerPresenter extends PresenterBase implements IObsServer {
 	 */
 	public StringProperty serverNameProperty() {
 		return serverNameProperty;
+	}
+
+	/**
+	 * @return The property to display the server Ip address.
+	 */
+	public StringProperty serverIpAddressProperty() {
+		return serverIpAddressProperty;
 	}
 
 	/**
