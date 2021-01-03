@@ -31,7 +31,7 @@ public class ServerPresenter extends PresenterBase implements IObsServer {
 		serverNameProperty = new SimpleStringProperty(server.getName());
 		serverIpAddressProperty = new SimpleStringProperty(server.getAddress() + ":" + server.getPort());
 		serverReachableStatusProperty = createLanguageProperty(getServerStateCode());
-		textFillProperty = new SimpleObjectProperty<Paint>(Color.RED);
+		textFillProperty = new SimpleObjectProperty<Paint>(getServerReachableStatusColor());
 
 		fontProperty = createFontProperty();
 	}
@@ -56,7 +56,7 @@ public class ServerPresenter extends PresenterBase implements IObsServer {
 		this.isReachable = isReachable;
 		dispatch(() -> {
 			serverReachableStatusProperty.setCode(getServerStateCode());
-			textFillProperty.setValue(isReachable ? Color.GREEN : Color.RED);
+			textFillProperty.setValue(getServerReachableStatusColor());
 		});
 	}
 
@@ -100,5 +100,12 @@ public class ServerPresenter extends PresenterBase implements IObsServer {
 	 */
 	private IMessageCode getServerStateCode() {
 		return isReachable ? EMessageCode.REACHABLE_SERVER : EMessageCode.UNREACHABLE_SERVER;
+	}
+
+	/**
+	 * @return The color in which the server status is displayed.
+	 */
+	private Paint getServerReachableStatusColor() {
+		return isReachable ? Color.GREEN : Color.RED;
 	}
 }

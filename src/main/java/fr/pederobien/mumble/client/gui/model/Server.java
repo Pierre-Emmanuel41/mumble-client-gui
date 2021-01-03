@@ -139,6 +139,7 @@ public class Server implements IObservable<IObsServer> {
 		if (this.connection != null && !this.connection.isDisposed()) {
 			this.connection.dispose();
 			this.connection.removeObserver(internalObserver);
+			setIsReachable(false);
 		}
 
 		connection = MumbleConnection.of(getAddress(), getPort());
