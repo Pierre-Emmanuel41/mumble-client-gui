@@ -1,4 +1,4 @@
-package fr.pederobien.mumble.client.gui.interfaces;
+package fr.pederobien.mumble.client.gui.interfaces.observers.model;
 
 import java.util.Locale;
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import fr.pederobien.mumble.client.gui.interfaces.IObsServerList;
+import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsServerList;
 import fr.pederobien.persistence.interfaces.IUnmodifiableNominable;
 import fr.pederobien.utils.IObservable;
 import fr.pederobien.utils.Observable;

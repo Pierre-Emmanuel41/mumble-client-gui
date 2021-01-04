@@ -2,7 +2,7 @@ package fr.pederobien.mumble.client.gui.configuration;
 
 import java.util.Locale;
 
-import fr.pederobien.mumble.client.gui.interfaces.IObsGuiConfiguration;
+import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsGuiConfiguration;
 import fr.pederobien.persistence.interfaces.IUnmodifiableNominable;
 import fr.pederobien.utils.IObservable;
 import fr.pederobien.utils.Observable;

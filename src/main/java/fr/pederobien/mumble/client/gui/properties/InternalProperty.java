@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import fr.pederobien.mumble.client.gui.configuration.GuiConfiguration;
-import fr.pederobien.mumble.client.gui.interfaces.IObsGuiConfiguration;
+import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsGuiConfiguration;
 import javafx.scene.text.Font;
 
 public class InternalProperty {

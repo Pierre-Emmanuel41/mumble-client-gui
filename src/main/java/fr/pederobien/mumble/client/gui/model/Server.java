@@ -1,6 +1,6 @@
 package fr.pederobien.mumble.client.gui.model;
 
-import fr.pederobien.mumble.client.gui.interfaces.IObsServer;
+import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsServer;
 import fr.pederobien.mumble.client.impl.MumbleConnection;
 import fr.pederobien.mumble.client.interfaces.IMumbleConnection;
 import fr.pederobien.mumble.client.interfaces.observers.IObsMumbleConnection;

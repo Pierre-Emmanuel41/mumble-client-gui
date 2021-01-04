@@ -2,7 +2,7 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import fr.pederobien.dictionary.interfaces.IMessageCode;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
-import fr.pederobien.mumble.client.gui.interfaces.IObsServer;
+import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsServer;
 import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.gui.properties.SimpleFontProperty;
 import fr.pederobien.mumble.client.gui.properties.SimpleLanguageProperty;
