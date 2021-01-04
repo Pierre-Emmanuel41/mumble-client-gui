@@ -82,6 +82,7 @@ public class Main extends Application {
 	public void stop() throws Exception {
 		GuiConfigurationPersistence.getInstance().save();
 		ServerListPersistence.getInstance().get().getServers().forEach(server -> server.dispose());
+		ServerListPersistence.getInstance().save();
 	}
 
 	private void registerDictionaries(String... dictionaryNames) {
