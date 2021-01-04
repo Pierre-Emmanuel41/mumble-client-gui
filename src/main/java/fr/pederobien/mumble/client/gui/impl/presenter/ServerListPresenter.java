@@ -3,10 +3,13 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.view.ServerView;
 import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsServerList;
+import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsServerListPresenter;
 import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.gui.model.ServerList;
 import fr.pederobien.mumble.client.gui.properties.SimpleFontProperty;
 import fr.pederobien.mumble.client.gui.properties.SimpleLanguageProperty;
+import fr.pederobien.utils.IObservable;
+import fr.pederobien.utils.Observable;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -19,12 +22,13 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-public class ServerListPresenter extends PresenterBase implements IObsServerList {
+public class ServerListPresenter extends PresenterBase implements IObsServerList, IObservable<IObsServerListPresenter> {
 	private ObservableList<Object> servers;
 	private SimpleLanguageProperty emptyServersListLanguageProperty;
 	private SimpleFontProperty emptyServersListFontProperty;
 	private BooleanProperty emptyServersListVisibilityProperty;
 	private Server selectedServer;
+	private Observable<IObsServerListPresenter> observers;
 
 	public ServerListPresenter(Stage primaryStage, ServerList serverList) {
 		super(primaryStage);
@@ -34,6 +38,7 @@ public class ServerListPresenter extends PresenterBase implements IObsServerList
 		emptyServersListLanguageProperty = createLanguageProperty(EMessageCode.EMPTY_SERVER_LIST);
 		emptyServersListFontProperty = createFontProperty();
 		emptyServersListVisibilityProperty = new SimpleBooleanProperty(serverList.getServers().isEmpty());
+		observers = new Observable<IObsServerListPresenter>();
 	}
 
 	@Override
@@ -46,6 +51,16 @@ public class ServerListPresenter extends PresenterBase implements IObsServerList
 	public void onServerRemoved(Server server) {
 		servers.remove(server);
 		emptyServersListVisibilityProperty.setValue(servers.isEmpty());
+	}
+
+	@Override
+	public void addObserver(IObsServerListPresenter obs) {
+		observers.addObserver(obs);
+	}
+
+	@Override
+	public void removeObserver(IObsServerListPresenter obs) {
+		observers.removeObserver(obs);
 	}
 
 	/**
@@ -105,7 +120,7 @@ public class ServerListPresenter extends PresenterBase implements IObsServerList
 	 */
 	public void onServerSelectedChanged(Object oldServer, Object newServer) {
 		this.selectedServer = (Server) newServer;
-		System.out.println("Selected server : " + selectedServer);
+		observers.notifyObservers(obs -> obs.onSelectedServerChanged((Server) oldServer, (Server) newServer));
 	}
 
 	/**
