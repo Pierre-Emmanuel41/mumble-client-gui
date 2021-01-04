@@ -14,10 +14,13 @@ import fr.pederobien.mumble.client.gui.impl.presenter.ServerListPresenter;
 import fr.pederobien.mumble.client.gui.impl.presenter.ServerManagementPresenter;
 import fr.pederobien.mumble.client.gui.impl.view.ServerListView;
 import fr.pederobien.mumble.client.gui.impl.view.ServerManagementView;
+import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.gui.persistence.ServerListPersistence;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -47,13 +50,23 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		BorderPane root = new BorderPane();
+		ScrollPane root = new ScrollPane();
+		root.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
+		root.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
+		root.setContent(root);
+		root.setFitToHeight(true);
+		root.setFitToWidth(true);
 
+		BorderPane secondaryRoot = new BorderPane();
+		root.setContent(secondaryRoot);
+
+		ServerListPersistence.getInstance().get().add(new Server("Test", "62.210.41.48", 28000));
+		ServerListPersistence.getInstance().get().add(new Server("Test", "62.210.41.49", 32000));
 		ServerListView serverListView = new ServerListView(new ServerListPresenter(primaryStage, ServerListPersistence.getInstance().get()));
 		ServerManagementView serverManagementView = new ServerManagementView(new ServerManagementPresenter(primaryStage));
 
-		root.setCenter(serverListView.getRoot());
-		root.setBottom(serverManagementView.getRoot());
+		secondaryRoot.setCenter(serverListView.getRoot());
+		secondaryRoot.setBottom(serverManagementView.getRoot());
 
 		BorderPane.setAlignment(serverListView.getRoot(), Pos.CENTER);
 		BorderPane.setAlignment(serverManagementView.getRoot(), Pos.CENTER);
@@ -62,11 +75,13 @@ public class Main extends Application {
 
 		primaryStage.setScene(scene);
 		primaryStage.show();
+		primaryStage.setMaximized(true);
 	}
 
 	@Override
 	public void stop() throws Exception {
-
+		GuiConfigurationPersistence.getInstance().save();
+		ServerListPersistence.getInstance().get().getServers().forEach(server -> server.dispose());
 	}
 
 	private void registerDictionaries(String... dictionaryNames) {
