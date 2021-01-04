@@ -112,10 +112,24 @@ public class Server implements IObservable<IObsServer> {
 	}
 
 	/**
+	 * Attempt a connection to the remove.
+	 */
+	public void connect() {
+		connection.connect();
+	}
+
+	/**
 	 * Abort the connection to the remote.
 	 */
 	public void disconnect() {
 		connection.disconnect();
+	}
+
+	/**
+	 * Close definitively this connection.
+	 */
+	public void dispose() {
+		connection.dispose();
 	}
 
 	@Override
@@ -163,7 +177,7 @@ public class Server implements IObservable<IObsServer> {
 
 		@Override
 		public void onConnectionDisposed() {
-
+			setIsReachable(false);
 		}
 
 		@Override
