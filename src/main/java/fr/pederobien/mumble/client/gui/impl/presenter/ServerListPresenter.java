@@ -106,7 +106,7 @@ public class ServerListPresenter extends PresenterBase implements IObsServerList
 						setText(null);
 						setGraphic(null);
 					} else
-						setGraphic(new ServerView(new ServerPresenter(getPrimaryStage(), (Server) item)).getRoot());
+						setGraphic(new ServerView(ServerPresenter.getOrCreateServerPresenter(getPrimaryStage(), (Server) item)).getRoot());
 				}
 			};
 		};

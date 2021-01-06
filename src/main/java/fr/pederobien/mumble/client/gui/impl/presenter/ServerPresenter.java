@@ -1,5 +1,8 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import fr.pederobien.dictionary.interfaces.IMessageCode;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsServer;
@@ -16,13 +19,24 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class ServerPresenter extends PresenterBase implements IObsServer {
+	private static final Map<Server, ServerPresenter> PRESENTERS = new HashMap<Server, ServerPresenter>();
 	private StringProperty serverNameProperty, serverIpAddressProperty;
 	private SimpleLanguageProperty serverReachableStatusProperty;
 	private SimpleFontProperty fontProperty;
 	private ObjectProperty<Paint> textFillProperty;
 	private boolean isReachable;
 
-	public ServerPresenter(Stage primaryStage, Server server) {
+	public static ServerPresenter getOrCreateServerPresenter(Stage primaryStage, Server server) {
+		ServerPresenter presenter = PRESENTERS.get(server);
+		if (presenter != null)
+			return presenter;
+
+		presenter = new ServerPresenter(primaryStage, server);
+		PRESENTERS.put(server, presenter);
+		return presenter;
+	}
+
+	private ServerPresenter(Stage primaryStage, Server server) {
 		super(primaryStage);
 
 		isReachable = server.isReachable();
