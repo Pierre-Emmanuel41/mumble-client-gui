@@ -14,7 +14,6 @@ import fr.pederobien.mumble.client.gui.impl.presenter.ServerListPresenter;
 import fr.pederobien.mumble.client.gui.impl.presenter.ServerManagementPresenter;
 import fr.pederobien.mumble.client.gui.impl.view.ServerListView;
 import fr.pederobien.mumble.client.gui.impl.view.ServerManagementView;
-import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.gui.persistence.ServerListPersistence;
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -60,10 +59,12 @@ public class Main extends Application {
 		BorderPane secondaryRoot = new BorderPane();
 		root.setContent(secondaryRoot);
 
-		ServerListPersistence.getInstance().get().add(new Server("Test", "62.210.41.48", 28000));
-		ServerListPersistence.getInstance().get().add(new Server("Test", "62.210.41.49", 32000));
-		ServerListView serverListView = new ServerListView(new ServerListPresenter(primaryStage, ServerListPersistence.getInstance().get()));
-		ServerManagementView serverManagementView = new ServerManagementView(new ServerManagementPresenter(primaryStage));
+		ServerListPresenter serverListPresenter = new ServerListPresenter(primaryStage, ServerListPersistence.getInstance().get());
+		ServerListView serverListView = new ServerListView(serverListPresenter);
+
+		ServerManagementPresenter serverManagementPresenter = new ServerManagementPresenter(primaryStage, ServerListPersistence.getInstance().get());
+		serverListPresenter.addObserver(serverManagementPresenter);
+		ServerManagementView serverManagementView = new ServerManagementView(serverManagementPresenter);
 
 		secondaryRoot.setCenter(serverListView.getRoot());
 		secondaryRoot.setBottom(serverManagementView.getRoot());
@@ -74,8 +75,8 @@ public class Main extends Application {
 		Scene scene = new Scene(root);
 
 		primaryStage.setScene(scene);
-		primaryStage.show();
 		primaryStage.setMaximized(true);
+		primaryStage.show();
 	}
 
 	@Override
