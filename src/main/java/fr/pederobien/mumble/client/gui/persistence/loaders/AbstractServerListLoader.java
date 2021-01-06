@@ -29,11 +29,11 @@ public abstract class AbstractServerListLoader extends AbstractXmlPersistenceLoa
 		NodeList servers = getElementsByTagName(root, ServersXmlTag.SERVER);
 		for (int i = 0; i < servers.getLength(); i++) {
 			Element s = (Element) servers.item(i);
-			Server server = new Server();
-			server.setName(getStringAttribute(s, ServersXmlTag.NAME));
-			server.setAddress(getStringAttribute(s, ServersXmlTag.SERVER_ADDRESS));
-			server.setPort(getIntAttribute(s, ServersXmlTag.SERVER_PORT));
-			get().add(server);
+			register(getStringAttribute(s, ServersXmlTag.NAME), getStringAttribute(s, ServersXmlTag.SERVER_ADDRESS), getIntAttribute(s, ServersXmlTag.SERVER_PORT));
 		}
+	}
+
+	private void register(String name, String address, int port) {
+		get().add(new Server(name, address, port));
 	}
 }
