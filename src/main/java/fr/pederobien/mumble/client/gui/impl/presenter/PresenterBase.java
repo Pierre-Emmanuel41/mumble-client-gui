@@ -10,11 +10,7 @@ import javafx.stage.Stage;
 
 public abstract class PresenterBase {
 	private static GuiConfiguration guiConfiguration;
-	private Stage primaryStage;
-
-	protected PresenterBase(Stage primaryStage) {
-		this.primaryStage = primaryStage;
-	}
+	private static Stage primaryStage;
 
 	/**
 	 * Set the guiConfiguration. When changes are made in the specified configuration, then each view are updated.
@@ -23,6 +19,15 @@ public abstract class PresenterBase {
 	 */
 	public static void setGuiConfiguration(GuiConfiguration guiConfiguration) {
 		PresenterBase.guiConfiguration = guiConfiguration;
+	}
+
+	/**
+	 * Set the primary stage for all future presenter in order to modify it later.
+	 * 
+	 * @param primaryStage The primary stage.
+	 */
+	public static void setPrimaryStage(Stage primaryStage) {
+		PresenterBase.primaryStage = primaryStage;
 	}
 
 	/**

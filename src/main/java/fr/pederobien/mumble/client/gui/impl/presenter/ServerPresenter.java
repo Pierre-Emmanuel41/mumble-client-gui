@@ -16,7 +16,6 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
 
 public class ServerPresenter extends PresenterBase implements IObsServer {
 	private static final Map<Server, ServerPresenter> PRESENTERS = new HashMap<Server, ServerPresenter>();
@@ -26,19 +25,17 @@ public class ServerPresenter extends PresenterBase implements IObsServer {
 	private ObjectProperty<Paint> textFillProperty;
 	private boolean isReachable;
 
-	public static ServerPresenter getOrCreateServerPresenter(Stage primaryStage, Server server) {
+	public static ServerPresenter getOrCreateServerPresenter(Server server) {
 		ServerPresenter presenter = PRESENTERS.get(server);
 		if (presenter != null)
 			return presenter;
 
-		presenter = new ServerPresenter(primaryStage, server);
+		presenter = new ServerPresenter(server);
 		PRESENTERS.put(server, presenter);
 		return presenter;
 	}
 
-	private ServerPresenter(Stage primaryStage, Server server) {
-		super(primaryStage);
-
+	private ServerPresenter(Server server) {
 		isReachable = server.isReachable();
 
 		server.addObserver(this);

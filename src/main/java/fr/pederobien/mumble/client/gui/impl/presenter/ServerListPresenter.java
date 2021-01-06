@@ -19,7 +19,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
 import javafx.util.Callback;
 
 public class ServerListPresenter extends PresenterBase implements IObsServerList, IObservable<IObsServerListPresenter> {
@@ -30,9 +29,7 @@ public class ServerListPresenter extends PresenterBase implements IObsServerList
 	private Server selectedServer;
 	private Observable<IObsServerListPresenter> observers;
 
-	public ServerListPresenter(Stage primaryStage, ServerList serverList) {
-		super(primaryStage);
-
+	public ServerListPresenter(ServerList serverList) {
 		serverList.addObserver(this);
 		servers = FXCollections.observableArrayList(serverList.getServers());
 		emptyServersListLanguageProperty = createLanguageProperty(EMessageCode.EMPTY_SERVER_LIST);
@@ -106,7 +103,7 @@ public class ServerListPresenter extends PresenterBase implements IObsServerList
 						setText(null);
 						setGraphic(null);
 					} else
-						setGraphic(new ServerView(ServerPresenter.getOrCreateServerPresenter(getPrimaryStage(), (Server) item)).getRoot());
+						setGraphic(new ServerView(ServerPresenter.getOrCreateServerPresenter((Server) item)).getRoot());
 				}
 			};
 		};

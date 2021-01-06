@@ -49,6 +49,7 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		PresenterBase.setPrimaryStage(primaryStage);
 		ScrollPane root = new ScrollPane();
 		root.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
 		root.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
@@ -59,10 +60,10 @@ public class Main extends Application {
 		BorderPane secondaryRoot = new BorderPane();
 		root.setContent(secondaryRoot);
 
-		ServerListPresenter serverListPresenter = new ServerListPresenter(primaryStage, ServerListPersistence.getInstance().get());
+		ServerListPresenter serverListPresenter = new ServerListPresenter(ServerListPersistence.getInstance().get());
 		ServerListView serverListView = new ServerListView(serverListPresenter);
 
-		ServerManagementPresenter serverManagementPresenter = new ServerManagementPresenter(primaryStage, ServerListPersistence.getInstance().get());
+		ServerManagementPresenter serverManagementPresenter = new ServerManagementPresenter(ServerListPersistence.getInstance().get());
 		serverListPresenter.addObserver(serverManagementPresenter);
 		ServerManagementView serverManagementView = new ServerManagementView(serverManagementPresenter);
 

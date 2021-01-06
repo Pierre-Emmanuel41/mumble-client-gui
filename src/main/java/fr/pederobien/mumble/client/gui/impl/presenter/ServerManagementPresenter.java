@@ -12,7 +12,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
 
 public class ServerManagementPresenter extends PresenterBase implements IObsServerListPresenter {
 	private SimpleLanguageProperty joinServerLanguageProperty, addServerLanguageProperty, editServerLanguageProperty, deleteServerLanguageProperty,
@@ -24,8 +23,7 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 	private ServerList serverList;
 	private Server selectedServer;
 
-	public ServerManagementPresenter(Stage primaryStage, ServerList serverList) {
-		super(primaryStage);
+	public ServerManagementPresenter(ServerList serverList) {
 		this.serverList = serverList;
 
 		joinServerLanguageProperty = createLanguageProperty(EMessageCode.JOIN_SERVER);
