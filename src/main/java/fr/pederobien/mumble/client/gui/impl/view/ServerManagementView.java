@@ -1,6 +1,7 @@
 package fr.pederobien.mumble.client.gui.impl.view;
 
 import fr.pederobien.mumble.client.gui.impl.presenter.ServerManagementPresenter;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -17,15 +18,17 @@ public class ServerManagementView extends ViewBase<ServerManagementPresenter, Fl
 
 		getRoot().setAlignment(Pos.CENTER);
 
-		addButton(new Button(), getPresenter().joinServerProperty(), e -> getPresenter().onJoinServerClicked(e));
-		addButton(new Button(), getPresenter().addServerProperty(), e -> getPresenter().onAddServerClicked(e));
-		addButton(new Button(), getPresenter().editServerProperty(), e -> getPresenter().onEditServerClicked(e));
-		addButton(new Button(), getPresenter().deleteServerProperty(), e -> getPresenter().onDeleteServerClicked(e));
-		addButton(new Button(), getPresenter().refreshServersProperty(), e -> getPresenter().onRefreshServersClicked(e));
+		addButton(getPresenter().joinServerLanguageProperty(), getPresenter().joinServerDisableProperty(), e -> getPresenter().onJoinServerClicked(e));
+		addButton(getPresenter().addServerLanguageProperty(), getPresenter().addServerDisabledProperty(), e -> getPresenter().onAddServerClicked(e));
+		addButton(getPresenter().editServerLanguageProperty(), getPresenter().editServerDisableProperty(), e -> getPresenter().onEditServerClicked(e));
+		addButton(getPresenter().deleteServerLanguageProperty(), getPresenter().deleteServerDisableProperty(), e -> getPresenter().onDeleteServerClicked(e));
+		addButton(getPresenter().refreshServersLanguageProperty(), getPresenter().refreshServersDisableProperty(), e -> getPresenter().onRefreshServersClicked(e));
 	}
 
-	private void addButton(Button button, StringProperty bindingProperty, EventHandler<ActionEvent> handler) {
-		button.textProperty().bind(bindingProperty);
+	private void addButton(StringProperty languageProperty, BooleanProperty disabledProperty, EventHandler<ActionEvent> handler) {
+		Button button = new Button();
+		button.textProperty().bind(languageProperty);
+		button.disableProperty().bind(disabledProperty);
 		button.fontProperty().bind(getPresenter().fontProperty());
 		button.setOnAction(handler);
 		add(button);
