@@ -7,7 +7,6 @@ import fr.pederobien.dictionary.interfaces.IMessageCode;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsServer;
 import fr.pederobien.mumble.client.gui.model.Server;
-import fr.pederobien.mumble.client.gui.properties.SimpleFontProperty;
 import fr.pederobien.mumble.client.gui.properties.SimpleLanguageProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -21,9 +20,9 @@ import javafx.stage.WindowEvent;
 public class ServerPresenter extends PresenterBase implements IObsServer {
 	private static final Map<Server, ServerPresenter> PRESENTERS = new HashMap<Server, ServerPresenter>();
 	private Server server;
+	private ObjectProperty<Font> fontProperty;
 	private StringProperty serverNameProperty, serverIpAddressProperty;
 	private SimpleLanguageProperty serverReachableStatusProperty;
-	private SimpleFontProperty fontProperty;
 	private ObjectProperty<Paint> textFillProperty;
 	private boolean isReachable;
 
@@ -42,12 +41,13 @@ public class ServerPresenter extends PresenterBase implements IObsServer {
 
 		isReachable = server.isReachable();
 		server.addObserver(this);
+
+		fontProperty = createFontProperty();
+
 		serverNameProperty = new SimpleStringProperty(server.getName());
 		serverIpAddressProperty = new SimpleStringProperty(server.getAddress() + ":" + server.getPort());
 		serverReachableStatusProperty = createLanguageProperty(getServerStateCode());
 		textFillProperty = new SimpleObjectProperty<Paint>(getServerReachableStatusColor());
-
-		fontProperty = createFontProperty();
 	}
 
 	@Override
@@ -80,6 +80,13 @@ public class ServerPresenter extends PresenterBase implements IObsServer {
 	}
 
 	/**
+	 * @return The font property to display messages.
+	 */
+	public ObjectProperty<Font> fontProperty() {
+		return fontProperty;
+	}
+
+	/**
 	 * @return The property to display the server name.
 	 */
 	public StringProperty serverNameProperty() {
@@ -105,13 +112,6 @@ public class ServerPresenter extends PresenterBase implements IObsServer {
 	 */
 	public ObjectProperty<Paint> textFillProperty() {
 		return textFillProperty;
-	}
-
-	/**
-	 * @return The font property to display message.
-	 */
-	public ObjectProperty<Font> fontProperty() {
-		return fontProperty;
 	}
 
 	/**

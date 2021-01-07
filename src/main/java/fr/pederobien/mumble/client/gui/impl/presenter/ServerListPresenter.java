@@ -6,7 +6,6 @@ import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsServerList
 import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsServerListPresenter;
 import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.gui.model.ServerList;
-import fr.pederobien.mumble.client.gui.properties.SimpleFontProperty;
 import fr.pederobien.mumble.client.gui.properties.SimpleLanguageProperty;
 import fr.pederobien.utils.IObservable;
 import fr.pederobien.utils.Observable;
@@ -23,8 +22,8 @@ import javafx.util.Callback;
 
 public class ServerListPresenter extends PresenterBase implements IObsServerList, IObservable<IObsServerListPresenter> {
 	private ObservableList<Object> servers;
+	private ObjectProperty<Font> fontProperty;
 	private SimpleLanguageProperty emptyServersListLanguageProperty;
-	private SimpleFontProperty emptyServersListFontProperty;
 	private BooleanProperty emptyServersListVisibilityProperty;
 	private Server selectedServer;
 	private Observable<IObsServerListPresenter> observers;
@@ -32,8 +31,10 @@ public class ServerListPresenter extends PresenterBase implements IObsServerList
 	public ServerListPresenter(ServerList serverList) {
 		serverList.addObserver(this);
 		servers = FXCollections.observableArrayList(serverList.getServers());
+
+		fontProperty = createFontProperty();
+
 		emptyServersListLanguageProperty = createLanguageProperty(EMessageCode.EMPTY_SERVER_LIST);
-		emptyServersListFontProperty = createFontProperty();
 		emptyServersListVisibilityProperty = new SimpleBooleanProperty(serverList.getServers().isEmpty());
 		observers = new Observable<IObsServerListPresenter>();
 	}
@@ -68,17 +69,17 @@ public class ServerListPresenter extends PresenterBase implements IObsServerList
 	}
 
 	/**
+	 * @return The font property to display messages.
+	 */
+	public ObjectProperty<Font> fontProperty() {
+		return fontProperty;
+	}
+
+	/**
 	 * @return The message to display when there is no registered server.
 	 */
 	public StringProperty emptyServersListLanguageProperty() {
 		return emptyServersListLanguageProperty;
-	}
-
-	/**
-	 * @return The font to display the message when there is no registered server.
-	 */
-	public ObjectProperty<Font> emptyServersListFontProperty() {
-		return emptyServersListFontProperty;
 	}
 
 	/**

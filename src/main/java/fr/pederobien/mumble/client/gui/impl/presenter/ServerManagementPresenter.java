@@ -1,6 +1,7 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.view.AddServerView;
 import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsServerListPresenter;
 import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.gui.model.ServerList;
@@ -14,8 +15,8 @@ import javafx.event.ActionEvent;
 import javafx.scene.text.Font;
 
 public class ServerManagementPresenter extends PresenterBase implements IObsServerListPresenter {
-	private SimpleLanguageProperty joinServerLanguageProperty, addServerLanguageProperty, editServerLanguageProperty, deleteServerLanguageProperty;
 	private SimpleFontProperty fontProperty;
+	private SimpleLanguageProperty joinServerLanguageProperty, addServerLanguageProperty, editServerLanguageProperty, deleteServerLanguageProperty;
 	private BooleanProperty joinServerDisableProperty, addServerDisableProperty, editServerDisableProperty, deleteServerDisableProperty;
 
 	private ServerList serverList;
@@ -24,12 +25,12 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 	public ServerManagementPresenter(ServerList serverList) {
 		this.serverList = serverList;
 
+		fontProperty = createFontProperty();
+
 		joinServerLanguageProperty = createLanguageProperty(EMessageCode.JOIN_SERVER);
 		addServerLanguageProperty = createLanguageProperty(EMessageCode.ADD_SERVER);
 		editServerLanguageProperty = createLanguageProperty(EMessageCode.EDIT_SERVER);
 		deleteServerLanguageProperty = createLanguageProperty(EMessageCode.DELETE_SERVER);
-
-		fontProperty = createFontProperty();
 
 		joinServerDisableProperty = new SimpleBooleanProperty(true);
 		addServerDisableProperty = new SimpleBooleanProperty(false);
@@ -43,6 +44,13 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 		joinServerDisableProperty.setValue(selectedServer == null || !selectedServer.isReachable());
 		editServerDisableProperty.setValue(selectedServer == null);
 		deleteServerDisableProperty.setValue(selectedServer == null);
+	}
+
+	/**
+	 * @return The font property to display messages.
+	 */
+	public ObjectProperty<Font> fontProperty() {
+		return fontProperty;
 	}
 
 	/**
@@ -101,19 +109,13 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 		return deleteServerDisableProperty;
 	}
 
-	/**
-	 * @return The font to display messages.
-	 */
-	public ObjectProperty<Font> fontProperty() {
-		return fontProperty;
-	}
-
 	public void onJoinServerClicked(ActionEvent event) {
 		System.out.println("Joining server");
 	}
 
 	public void onAddServerClicked(ActionEvent event) {
 		System.out.println("Adding new server");
+		new AddServerView(getPrimaryStage(), new AddServerPresenter());
 	}
 
 	public void onEditServerClicked(ActionEvent event) {
