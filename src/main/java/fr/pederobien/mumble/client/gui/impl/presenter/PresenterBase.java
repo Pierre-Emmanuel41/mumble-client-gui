@@ -2,15 +2,21 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import fr.pederobien.dictionary.impl.NotificationCenter;
 import fr.pederobien.dictionary.interfaces.IMessageCode;
+import fr.pederobien.mumble.client.gui.MainPresenter;
 import fr.pederobien.mumble.client.gui.configuration.GuiConfiguration;
 import fr.pederobien.mumble.client.gui.properties.SimpleFontProperty;
 import fr.pederobien.mumble.client.gui.properties.SimpleLanguageProperty;
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public abstract class PresenterBase {
 	private static GuiConfiguration guiConfiguration;
 	private static Stage primaryStage;
+
+	protected PresenterBase() {
+		MainPresenter.registerPresenter(this);
+	}
 
 	/**
 	 * Set the guiConfiguration. When changes are made in the specified configuration, then each view are updated.
@@ -31,9 +37,18 @@ public abstract class PresenterBase {
 	}
 
 	/**
+	 * Called when there is an external request to close this {@code Window}. The installed event handler can prevent window closing
+	 * by consuming the received event.
+	 *
+	 * @param event the event thrown by the window.
+	 */
+	public void onCloseRequest(WindowEvent event) {
+	}
+
+	/**
 	 * @return The primary stage of the application.
 	 */
-	public Stage getPrimaryStage() {
+	protected Stage getPrimaryStage() {
 		return primaryStage;
 	}
 

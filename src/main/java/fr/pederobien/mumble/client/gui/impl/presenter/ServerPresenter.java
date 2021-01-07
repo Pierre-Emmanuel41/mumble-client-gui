@@ -16,9 +16,11 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import javafx.stage.WindowEvent;
 
 public class ServerPresenter extends PresenterBase implements IObsServer {
 	private static final Map<Server, ServerPresenter> PRESENTERS = new HashMap<Server, ServerPresenter>();
+	private Server server;
 	private StringProperty serverNameProperty, serverIpAddressProperty;
 	private SimpleLanguageProperty serverReachableStatusProperty;
 	private SimpleFontProperty fontProperty;
@@ -36,8 +38,9 @@ public class ServerPresenter extends PresenterBase implements IObsServer {
 	}
 
 	private ServerPresenter(Server server) {
-		isReachable = server.isReachable();
+		this.server = server;
 
+		isReachable = server.isReachable();
 		server.addObserver(this);
 		serverNameProperty = new SimpleStringProperty(server.getName());
 		serverIpAddressProperty = new SimpleStringProperty(server.getAddress() + ":" + server.getPort());
@@ -69,6 +72,11 @@ public class ServerPresenter extends PresenterBase implements IObsServer {
 			serverReachableStatusProperty.setCode(getServerStateCode());
 			textFillProperty.setValue(getServerReachableStatusColor());
 		});
+	}
+
+	@Override
+	public void onCloseRequest(WindowEvent event) {
+		server.dispose();
 	}
 
 	/**
