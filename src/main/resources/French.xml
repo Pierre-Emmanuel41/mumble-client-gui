@@ -29,10 +29,6 @@
 			<value>Supprimer</value>
 		</message>
 		<message>
-			<code>REFRESH_SERVERS</code>
-			<value>Rafraîchir</value>
-		</message>
-		<message>
 			<code>REACHABLE_SERVER</code>
 			<value>Ouvert</value>
 		</message>

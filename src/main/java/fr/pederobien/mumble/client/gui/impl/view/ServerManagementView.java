@@ -22,7 +22,6 @@ public class ServerManagementView extends ViewBase<ServerManagementPresenter, Fl
 		addButton(getPresenter().addServerLanguageProperty(), getPresenter().addServerDisabledProperty(), e -> getPresenter().onAddServerClicked(e));
 		addButton(getPresenter().editServerLanguageProperty(), getPresenter().editServerDisableProperty(), e -> getPresenter().onEditServerClicked(e));
 		addButton(getPresenter().deleteServerLanguageProperty(), getPresenter().deleteServerDisableProperty(), e -> getPresenter().onDeleteServerClicked(e));
-		addButton(getPresenter().refreshServersLanguageProperty(), getPresenter().refreshServersDisableProperty(), e -> getPresenter().onRefreshServersClicked(e));
 	}
 
 	private void addButton(StringProperty languageProperty, BooleanProperty disabledProperty, EventHandler<ActionEvent> handler) {

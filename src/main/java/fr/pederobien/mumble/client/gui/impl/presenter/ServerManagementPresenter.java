@@ -14,11 +14,9 @@ import javafx.event.ActionEvent;
 import javafx.scene.text.Font;
 
 public class ServerManagementPresenter extends PresenterBase implements IObsServerListPresenter {
-	private SimpleLanguageProperty joinServerLanguageProperty, addServerLanguageProperty, editServerLanguageProperty, deleteServerLanguageProperty,
-			refreshServersLanguageProperty;
-
+	private SimpleLanguageProperty joinServerLanguageProperty, addServerLanguageProperty, editServerLanguageProperty, deleteServerLanguageProperty;
 	private SimpleFontProperty fontProperty;
-	private BooleanProperty joinServerDisableProperty, addServerDisableProperty, editServerDisableProperty, deleteServerDisableProperty, refreshServersDisableProperty;
+	private BooleanProperty joinServerDisableProperty, addServerDisableProperty, editServerDisableProperty, deleteServerDisableProperty;
 
 	private ServerList serverList;
 	private Server selectedServer;
@@ -30,7 +28,6 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 		addServerLanguageProperty = createLanguageProperty(EMessageCode.ADD_SERVER);
 		editServerLanguageProperty = createLanguageProperty(EMessageCode.EDIT_SERVER);
 		deleteServerLanguageProperty = createLanguageProperty(EMessageCode.DELETE_SERVER);
-		refreshServersLanguageProperty = createLanguageProperty(EMessageCode.REFRESH_SERVERS);
 
 		fontProperty = createFontProperty();
 
@@ -38,7 +35,6 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 		addServerDisableProperty = new SimpleBooleanProperty(false);
 		editServerDisableProperty = new SimpleBooleanProperty(true);
 		deleteServerDisableProperty = new SimpleBooleanProperty(true);
-		refreshServersDisableProperty = new SimpleBooleanProperty(serverList.getServers().isEmpty());
 	}
 
 	@Override
@@ -106,20 +102,6 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 	}
 
 	/**
-	 * @return The message to display in order to refresh server status.
-	 */
-	public StringProperty refreshServersLanguageProperty() {
-		return refreshServersLanguageProperty;
-	}
-
-	/**
-	 * @return The property to enable/disable the "refresh server" functionality.
-	 */
-	public BooleanProperty refreshServersDisableProperty() {
-		return refreshServersDisableProperty;
-	}
-
-	/**
 	 * @return The font to display messages.
 	 */
 	public ObjectProperty<Font> fontProperty() {
@@ -140,12 +122,5 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 
 	public void onDeleteServerClicked(ActionEvent event) {
 		System.out.println("Deleting server");
-	}
-
-	public void onRefreshServersClicked(ActionEvent event) {
-		for (Server server : serverList.getServers()) {
-			server.disconnect();
-			server.connect();
-		}
 	}
 }

@@ -31,10 +31,6 @@
 			<value>Delete</value>
 		</message>
 		<message>
-			<code>REFRESH_SERVERS</code>
-			<value>Refresh</value>
-		</message>
-		<message>
 			<code>REACHABLE_SERVER</code>
 			<value>Opened</value>
 		</message>

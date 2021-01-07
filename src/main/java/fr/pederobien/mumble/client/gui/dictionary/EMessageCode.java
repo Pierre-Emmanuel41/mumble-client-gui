@@ -18,9 +18,6 @@ public enum EMessageCode implements IMessageCode {
 	// Code to delete a server
 	DELETE_SERVER,
 
-	// Code to refresh servers state
-	REFRESH_SERVERS,
-
 	// Code when the server is reachable
 	REACHABLE_SERVER,
 
