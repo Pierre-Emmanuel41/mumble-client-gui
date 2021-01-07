@@ -49,6 +49,7 @@ public class ServerList implements IUnmodifiableNominable, IObservable<IObsServe
 	 * @param server The server to remove.
 	 */
 	public void remove(Server server) {
+		server.dispose();
 		servers.remove(server);
 		observers.notifyObservers(obs -> obs.onServerRemoved(server));
 	}
@@ -64,6 +65,8 @@ public class ServerList implements IUnmodifiableNominable, IObservable<IObsServe
 	 * Removes all of the elements from this list. The list will be empty after this call returns.
 	 */
 	public void clear() {
-		servers.clear();
+		int size = servers.size();
+		for (int i = 0; i < size; i++)
+			remove(servers.get(0));
 	}
 }
