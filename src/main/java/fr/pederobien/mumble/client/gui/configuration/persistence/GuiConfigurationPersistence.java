@@ -49,6 +49,11 @@ public class GuiConfigurationPersistence extends AbstractXmlPersistence<GuiConfi
 		locale.appendChild(doc.createTextNode(get().getLocale().toString()));
 		root.appendChild(locale);
 
+		Element font = createElement(doc, GuiConfigurationXmlTag.FONT);
+		setAttribute(font, GuiConfigurationXmlTag.FONT_FAMILY, get().getFont().getFamily());
+		setAttribute(font, GuiConfigurationXmlTag.FONT_SIZE, get().getFont().getSize());
+		root.appendChild(font);
+
 		saveDocument(doc, get().getName());
 		return true;
 	}

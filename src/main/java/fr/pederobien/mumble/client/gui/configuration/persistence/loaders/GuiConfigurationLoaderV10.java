@@ -14,8 +14,8 @@ public class GuiConfigurationLoaderV10 extends AbstractGuiConfigurationLoader {
 	@Override
 	public IXmlPersistenceLoader<GuiConfiguration> load(Element root) {
 		createNewElement();
-
 		setLocale(root);
+		setFont(root);
 		return this;
 	}
 }

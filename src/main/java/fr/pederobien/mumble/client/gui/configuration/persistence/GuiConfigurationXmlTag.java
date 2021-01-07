@@ -1,7 +1,7 @@
 package fr.pederobien.mumble.client.gui.configuration.persistence;
 
 public enum GuiConfigurationXmlTag {
-	NAME("name"), LOCALE("locale");
+	NAME("name"), LOCALE("locale"), FONT("font"), FONT_FAMILY("fontFamily"), FONT_SIZE("fontSize");
 
 	private String name;
 
