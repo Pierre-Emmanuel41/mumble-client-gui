@@ -7,6 +7,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
@@ -22,6 +24,10 @@ public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> {
 
 		getRoot().setPadding(new Insets(marginBetweenRootAndChildren));
 		getRoot().setAlignment(Pos.CENTER);
+		getRoot().addEventHandler(KeyEvent.KEY_RELEASED, e -> {
+			if (e.getCode() == KeyCode.ENTER)
+				getPresenter().onOkClicked(null);
+		});
 
 		// Server Name
 		// -------------------------------------------------------------------------------------------------
@@ -124,6 +130,7 @@ public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> {
 		getPresenter().getStage().titleProperty().bind(getPresenter().titleProperty());
 		getPresenter().getStage().setScene(new Scene(getRoot()));
 		getPresenter().getStage().sizeToScene();
+		getPresenter().getStage().setResizable(false);
 		getPresenter().getStage().initOwner(initOwner);
 		getPresenter().getStage().initModality(Modality.APPLICATION_MODAL);
 		getPresenter().getStage().show();

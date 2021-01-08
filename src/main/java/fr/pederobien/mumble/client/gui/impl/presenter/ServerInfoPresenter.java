@@ -16,6 +16,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
@@ -82,6 +84,10 @@ public abstract class ServerInfoPresenter extends PresenterBase {
 
 		observer.updateOkDisableProperty();
 		stage = new Stage();
+		stage.addEventHandler(KeyEvent.KEY_RELEASED, e -> {
+			if (e.getCode() == KeyCode.ESCAPE)
+				stage.close();
+		});
 	}
 
 	/**
@@ -243,6 +249,8 @@ public abstract class ServerInfoPresenter extends PresenterBase {
 	}
 
 	public void onOkClicked(ActionEvent event) {
+		if (okDisableProperty.get())
+			return;
 		onOkButtonClicked(server, serverNameProperty().get(), serverIpAddressProperty().get(), Integer.parseInt(serverPortProperty().get()));
 		stage.close();
 	}
