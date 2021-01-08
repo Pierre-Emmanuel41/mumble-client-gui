@@ -17,6 +17,7 @@ import fr.pederobien.mumble.client.gui.impl.presenter.ServerManagementPresenter;
 import fr.pederobien.mumble.client.gui.impl.view.ServerListView;
 import fr.pederobien.mumble.client.gui.impl.view.ServerManagementView;
 import fr.pederobien.mumble.client.gui.persistence.ServerListPersistence;
+import fr.pederobien.mumble.client.gui.properties.PropertyHelper;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
@@ -26,10 +27,14 @@ import javafx.stage.Stage;
 
 public class MainPresenter {
 	private static final List<PresenterBase> PRESENTERS = new ArrayList<PresenterBase>();
+	private static Stage primaryStage;
+	private static PropertyHelper propertyHelper;
 	private ScrollPane root;
 
 	public static void registerPresenter(PresenterBase presenter) {
 		PRESENTERS.add(presenter);
+		presenter.setPrimaryStage(primaryStage);
+		presenter.setPropertyHelper(propertyHelper);
 	}
 
 	public void init() {
@@ -45,12 +50,12 @@ public class MainPresenter {
 			GuiConfigurationPersistence.getInstance().saveDefault();
 		}
 
-		PresenterBase.setGuiConfiguration(GuiConfigurationPersistence.getInstance().get());
+		propertyHelper = new PropertyHelper(GuiConfigurationPersistence.getInstance().get());
 		registerDictionaries("French.xml", "English.xml");
 	}
 
 	public Parent start(Stage primaryStage) {
-		PresenterBase.setPrimaryStage(primaryStage);
+		MainPresenter.primaryStage = primaryStage;
 		primaryStage.setOnCloseRequest(e -> PRESENTERS.forEach(presenter -> presenter.onCloseRequest(e)));
 
 		root = new ScrollPane();

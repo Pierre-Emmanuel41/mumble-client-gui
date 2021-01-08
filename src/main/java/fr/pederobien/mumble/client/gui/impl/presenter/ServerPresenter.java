@@ -42,11 +42,11 @@ public class ServerPresenter extends PresenterBase implements IObsServer {
 		isReachable = server.isReachable();
 		server.addObserver(this);
 
-		fontProperty = createFontProperty();
+		fontProperty = getPropertyHelper().fontProperty();
 
 		serverNameProperty = new SimpleStringProperty(server.getName());
 		serverIpAddressProperty = new SimpleStringProperty(server.getAddress() + ":" + server.getPort());
-		serverReachableStatusProperty = createLanguageProperty(getServerStateCode());
+		serverReachableStatusProperty = getPropertyHelper().languageProperty(getServerStateCode());
 		textFillProperty = new SimpleObjectProperty<Paint>(getServerReachableStatusColor());
 	}
 

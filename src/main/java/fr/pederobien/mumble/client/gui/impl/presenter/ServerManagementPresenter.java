@@ -25,12 +25,12 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 	public ServerManagementPresenter(ServerList serverList) {
 		this.serverList = serverList;
 
-		fontProperty = createFontProperty();
+		fontProperty = getPropertyHelper().fontProperty();
 
-		joinServerLanguageProperty = createLanguageProperty(EMessageCode.JOIN_SERVER);
-		addServerLanguageProperty = createLanguageProperty(EMessageCode.ADD_SERVER);
-		editServerLanguageProperty = createLanguageProperty(EMessageCode.EDIT_SERVER);
-		deleteServerLanguageProperty = createLanguageProperty(EMessageCode.DELETE_SERVER);
+		joinServerLanguageProperty = getPropertyHelper().languageProperty(EMessageCode.JOIN_SERVER);
+		addServerLanguageProperty = getPropertyHelper().languageProperty(EMessageCode.ADD_SERVER);
+		editServerLanguageProperty = getPropertyHelper().languageProperty(EMessageCode.EDIT_SERVER);
+		deleteServerLanguageProperty = getPropertyHelper().languageProperty(EMessageCode.DELETE_SERVER);
 
 		joinServerDisableProperty = new SimpleBooleanProperty(true);
 		addServerDisableProperty = new SimpleBooleanProperty(false);
@@ -114,8 +114,7 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 	}
 
 	public void onAddServerClicked(ActionEvent event) {
-		System.out.println("Adding new server");
-		new AddServerView(getPrimaryStage(), new AddServerPresenter());
+		new AddServerView(getPrimaryStage(), new AddServerPresenter(serverList));
 	}
 
 	public void onEditServerClicked(ActionEvent event) {
@@ -123,6 +122,6 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 	}
 
 	public void onDeleteServerClicked(ActionEvent event) {
-		System.out.println("Deleting server");
+		serverList.remove(selectedServer);
 	}
 }

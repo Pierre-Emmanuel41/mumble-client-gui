@@ -32,9 +32,9 @@ public class ServerListPresenter extends PresenterBase implements IObsServerList
 		serverList.addObserver(this);
 		servers = FXCollections.observableArrayList(serverList.getServers());
 
-		fontProperty = createFontProperty();
+		fontProperty = getPropertyHelper().fontProperty();
 
-		emptyServersListLanguageProperty = createLanguageProperty(EMessageCode.EMPTY_SERVER_LIST);
+		emptyServersListLanguageProperty = getPropertyHelper().languageProperty(EMessageCode.EMPTY_SERVER_LIST);
 		emptyServersListVisibilityProperty = new SimpleBooleanProperty(serverList.getServers().isEmpty());
 		observers = new Observable<IObsServerListPresenter>();
 	}

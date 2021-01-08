@@ -13,6 +13,14 @@ public class SimpleLanguageProperty extends SimpleStringProperty {
 	private IMessageCode code;
 	private Object[] args;
 
+	/**
+	 * Create a string property based on the given gui configuration. If the local parameter in the gui configuration changes then
+	 * this property is automatically updated.
+	 * 
+	 * @param guiConfiguration The gui configuration that updates this property.
+	 * @param code             The code associated to the message to display.
+	 * @param args             The message arguments if the message needs arguments.
+	 */
 	public SimpleLanguageProperty(GuiConfiguration guiConfiguration, IMessageCode code, Object... args) {
 		internalProperty = new InternalProperty(guiConfiguration);
 		this.code = code;

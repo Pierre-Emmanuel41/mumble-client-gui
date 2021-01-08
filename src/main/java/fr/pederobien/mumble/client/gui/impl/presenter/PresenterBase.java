@@ -1,30 +1,26 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
-import fr.pederobien.dictionary.interfaces.IMessageCode;
 import fr.pederobien.mumble.client.gui.MainPresenter;
-import fr.pederobien.mumble.client.gui.configuration.GuiConfiguration;
-import fr.pederobien.mumble.client.gui.properties.SimpleFontProperty;
-import fr.pederobien.mumble.client.gui.properties.SimpleLanguageProperty;
-import fr.pederobien.mumble.client.gui.properties.SimpleTooltipProperty;
+import fr.pederobien.mumble.client.gui.properties.PropertyHelper;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 public abstract class PresenterBase {
-	private static GuiConfiguration guiConfiguration;
-	private static Stage primaryStage;
+	private Stage primaryStage;
+	private PropertyHelper propertyHelper;
 
 	protected PresenterBase() {
 		MainPresenter.registerPresenter(this);
 	}
 
 	/**
-	 * Set the guiConfiguration. When changes are made in the specified configuration, then each view are updated.
+	 * Set the property helper. When changes are made in the specified configuration, then each view are updated.
 	 * 
 	 * @param guiConfiguration The gui configuration.
 	 */
-	public static void setGuiConfiguration(GuiConfiguration guiConfiguration) {
-		PresenterBase.guiConfiguration = guiConfiguration;
+	public void setPropertyHelper(PropertyHelper propertyHelper) {
+		this.propertyHelper = propertyHelper;
 	}
 
 	/**
@@ -32,8 +28,8 @@ public abstract class PresenterBase {
 	 * 
 	 * @param primaryStage The primary stage.
 	 */
-	public static void setPrimaryStage(Stage primaryStage) {
-		PresenterBase.primaryStage = primaryStage;
+	public void setPrimaryStage(Stage primaryStage) {
+		this.primaryStage = primaryStage;
 	}
 
 	/**
@@ -43,6 +39,13 @@ public abstract class PresenterBase {
 	 * @param event the event thrown by the window.
 	 */
 	public void onCloseRequest(WindowEvent event) {
+	}
+
+	/**
+	 * @return The property helper that created property updated by the gui configuration.
+	 */
+	protected PropertyHelper getPropertyHelper() {
+		return propertyHelper;
 	}
 
 	/**
@@ -80,38 +83,5 @@ public abstract class PresenterBase {
 	 */
 	protected void dispatch(Runnable runnable) {
 		Platform.runLater(runnable);
-	}
-
-	/**
-	 * Creates a property automatically updated when the gui language changes.
-	 * 
-	 * @param code the code associated to the message to display.
-	 * @param args The message arguments if the message needs arguments.
-	 * 
-	 * @return The property.
-	 */
-	protected SimpleLanguageProperty createLanguageProperty(IMessageCode code, Object... args) {
-		return new SimpleLanguageProperty(guiConfiguration, code, args);
-	}
-
-	/**
-	 * Creates a font property automatically updated when the gui font changes.
-	 * 
-	 * @return The property.
-	 */
-	protected SimpleFontProperty createFontProperty() {
-		return new SimpleFontProperty(guiConfiguration);
-	}
-
-	/**
-	 * Creates a property automatically updated when the gui language changes.
-	 * 
-	 * @param code the code associated to the message to display.
-	 * @param args The message arguments if the message needs arguments.
-	 * 
-	 * @return The property.
-	 */
-	protected SimpleTooltipProperty createTooltipProperty(IMessageCode code, Object... args) {
-		return new SimpleTooltipProperty(guiConfiguration, code, args);
 	}
 }
