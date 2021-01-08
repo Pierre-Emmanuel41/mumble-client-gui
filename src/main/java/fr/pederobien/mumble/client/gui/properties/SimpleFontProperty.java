@@ -7,8 +7,8 @@ import javafx.scene.text.Font;
 
 public class SimpleFontProperty extends SimpleObjectProperty<Font> {
 
-	public SimpleFontProperty(GuiConfiguration guiConfiguration, Font initialFont) {
-		super(initialFont);
+	public SimpleFontProperty(GuiConfiguration guiConfiguration) {
+		super(guiConfiguration.getFont());
 		new InternalProperty(guiConfiguration).registerAction(Action.FONT_CHANGED, e -> setValue((Font) e.getNewValue()));
 	}
 }

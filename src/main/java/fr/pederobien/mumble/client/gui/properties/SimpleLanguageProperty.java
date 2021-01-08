@@ -1,21 +1,20 @@
 package fr.pederobien.mumble.client.gui.properties;
 
 import fr.pederobien.dictionary.impl.MessageEvent;
+import fr.pederobien.dictionary.impl.NotificationCenter;
+import fr.pederobien.dictionary.interfaces.IDictionaryContext;
 import fr.pederobien.dictionary.interfaces.IMessageCode;
-import fr.pederobien.dictionary.interfaces.INotificationCenter;
 import fr.pederobien.mumble.client.gui.configuration.GuiConfiguration;
 import fr.pederobien.mumble.client.gui.properties.InternalProperty.Action;
 import javafx.beans.property.SimpleStringProperty;
 
 public class SimpleLanguageProperty extends SimpleStringProperty {
 	private InternalProperty internalProperty;
-	private INotificationCenter notificationCenter;
 	private IMessageCode code;
 	private Object[] args;
 
-	public SimpleLanguageProperty(GuiConfiguration guiConfiguration, INotificationCenter notificationCenter, IMessageCode code, Object... args) {
+	public SimpleLanguageProperty(GuiConfiguration guiConfiguration, IMessageCode code, Object... args) {
 		internalProperty = new InternalProperty(guiConfiguration);
-		this.notificationCenter = notificationCenter;
 		this.code = code;
 		this.args = args;
 
@@ -50,6 +49,7 @@ public class SimpleLanguageProperty extends SimpleStringProperty {
 	}
 
 	private void update() {
-		setValue(notificationCenter.getDictionaryContext().getMessage(new MessageEvent(internalProperty.getGuiConfiguration().getLocale(), getCode(), getArgs())));
+		IDictionaryContext context = NotificationCenter.getInstance().getDictionaryContext();
+		setValue(context.getMessage(new MessageEvent(internalProperty.getGuiConfiguration().getLocale(), getCode(), getArgs())));
 	}
 }

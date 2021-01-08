@@ -1,11 +1,11 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
-import fr.pederobien.dictionary.impl.NotificationCenter;
 import fr.pederobien.dictionary.interfaces.IMessageCode;
 import fr.pederobien.mumble.client.gui.MainPresenter;
 import fr.pederobien.mumble.client.gui.configuration.GuiConfiguration;
 import fr.pederobien.mumble.client.gui.properties.SimpleFontProperty;
 import fr.pederobien.mumble.client.gui.properties.SimpleLanguageProperty;
+import fr.pederobien.mumble.client.gui.properties.SimpleTooltipProperty;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -91,7 +91,7 @@ public abstract class PresenterBase {
 	 * @return The property.
 	 */
 	protected SimpleLanguageProperty createLanguageProperty(IMessageCode code, Object... args) {
-		return new SimpleLanguageProperty(guiConfiguration, NotificationCenter.getInstance(), code, args);
+		return new SimpleLanguageProperty(guiConfiguration, code, args);
 	}
 
 	/**
@@ -100,6 +100,18 @@ public abstract class PresenterBase {
 	 * @return The property.
 	 */
 	protected SimpleFontProperty createFontProperty() {
-		return new SimpleFontProperty(guiConfiguration, guiConfiguration.getFont());
+		return new SimpleFontProperty(guiConfiguration);
+	}
+
+	/**
+	 * Creates a property automatically updated when the gui language changes.
+	 * 
+	 * @param code the code associated to the message to display.
+	 * @param args The message arguments if the message needs arguments.
+	 * 
+	 * @return The property.
+	 */
+	protected SimpleTooltipProperty createTooltipProperty(IMessageCode code, Object... args) {
+		return new SimpleTooltipProperty(guiConfiguration, code, args);
 	}
 }
