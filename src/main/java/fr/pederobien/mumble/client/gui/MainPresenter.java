@@ -8,6 +8,7 @@ import fr.pederobien.dictionary.impl.DefaultDictionaryParser;
 import fr.pederobien.dictionary.impl.JarDictionaryParser;
 import fr.pederobien.dictionary.impl.NotificationCenter;
 import fr.pederobien.mumble.client.gui.configuration.persistence.GuiConfigurationPersistence;
+import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.Environment;
 import fr.pederobien.mumble.client.gui.impl.presenter.PresenterBase;
 import fr.pederobien.mumble.client.gui.impl.presenter.ServerListPresenter;
@@ -16,18 +17,14 @@ import fr.pederobien.mumble.client.gui.impl.view.ServerListView;
 import fr.pederobien.mumble.client.gui.impl.view.ServerManagementView;
 import fr.pederobien.mumble.client.gui.persistence.ServerListPersistence;
 import fr.pederobien.mumble.client.gui.properties.PropertyHelper;
-import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ScrollPane.ScrollBarPolicy;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
+import javafx.beans.property.StringProperty;
 
 public class MainPresenter extends PresenterBase {
-	private PropertyHelper propertyHelper;
-	private ScrollPane root;
+	private ServerListView serverListView;
+	private ServerManagementView serverManagementView;
+	private StringProperty titleLanguageProperty;
 
-	public void init() {
+	public MainPresenter() {
 		try {
 			ServerListPersistence.getInstance().load(Environment.SERVER_LIST.getFileName());
 		} catch (FileNotFoundException e) {
@@ -40,45 +37,44 @@ public class MainPresenter extends PresenterBase {
 			GuiConfigurationPersistence.getInstance().saveDefault();
 		}
 
-		propertyHelper = new PropertyHelper(GuiConfigurationPersistence.getInstance().get());
+		setPropertyHelper(new PropertyHelper(GuiConfigurationPersistence.getInstance().get()));
 		registerDictionaries("French.xml", "English.xml");
-	}
-
-	public Parent start(Stage primaryStage) {
-		setPrimaryStage(primaryStage);
-		setPropertyHelper(propertyHelper);
-
-		root = new ScrollPane();
-		root.setFitToHeight(true);
-		root.setFitToWidth(true);
-		root.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
-		root.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
-
-		BorderPane secondaryRoot = new BorderPane();
-		root.setContent(secondaryRoot);
 
 		ServerListPresenter serverListPresenter = new ServerListPresenter(ServerListPersistence.getInstance().get());
-		ServerListView serverListView = new ServerListView(serverListPresenter);
+		serverListView = new ServerListView(serverListPresenter);
 
 		ServerManagementPresenter serverManagementPresenter = new ServerManagementPresenter(ServerListPersistence.getInstance().get());
 		serverListPresenter.addObserver(serverManagementPresenter);
-		ServerManagementView serverManagementView = new ServerManagementView(serverManagementPresenter);
+		serverManagementView = new ServerManagementView(serverManagementPresenter);
 
-		secondaryRoot.setCenter(serverListView.getRoot());
-		secondaryRoot.setBottom(serverManagementView.getRoot());
-
-		BorderPane.setAlignment(serverListView.getRoot(), Pos.CENTER);
-		BorderPane.setAlignment(serverManagementView.getRoot(), Pos.CENTER);
-		return root;
+		titleLanguageProperty = getPropertyHelper().languageProperty(EMessageCode.MUMBLE_WINDOW_TITLE);
 	}
 
-	public void stop() {
+	@Override
+	public void onCloseRequest() {
 		GuiConfigurationPersistence.getInstance().save();
 		ServerListPersistence.getInstance().save();
 	}
 
-	public Parent getRoot() {
-		return root;
+	/**
+	 * @return The string property corresponding to the title of the stage.
+	 */
+	public StringProperty titleLanguageProperty() {
+		return titleLanguageProperty;
+	}
+
+	/**
+	 * @return The server list view. This view contains a view for each registered server.
+	 */
+	public ServerListView getServerListView() {
+		return serverListView;
+	}
+
+	/**
+	 * @return The server management view. this view contains buttons to join, add, edit and delete a server.
+	 */
+	public ServerManagementView getServerManagementView() {
+		return serverManagementView;
 	}
 
 	private void registerDictionaries(String... dictionaryNames) {
