@@ -45,6 +45,11 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 		deleteServerDisableProperty.setValue(selectedServer == null);
 	}
 
+	@Override
+	public void onDoubleClickOnServer(Server server) {
+		onEditServerClicked();
+	}
+
 	/**
 	 * @return The font property to display messages.
 	 */
@@ -116,19 +121,28 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 		new ServerInfoView(getPrimaryStage(), new ServerInfoPresenter(serverList, new Server()) {
 			@Override
 			protected void onOkButtonClicked(Server server, String name, String address, int port) {
-				server.setName(name);
-				server.setAddress(address);
-				server.setPort(port);
+				performChangesOnServer(server, name, address, port);
 				serverList.add(server);
 			}
 		});
 	}
 
 	public void onEditServerClicked() {
-		System.out.println("Editing server");
+		new ServerInfoView(getPrimaryStage(), new ServerInfoPresenter(serverList, selectedServer) {
+			@Override
+			protected void onOkButtonClicked(Server server, String name, String address, int port) {
+				performChangesOnServer(server, name, address, port);
+			}
+		});
 	}
 
 	public void onDeleteServerClicked() {
 		serverList.remove(selectedServer);
+	}
+
+	private void performChangesOnServer(Server server, String name, String address, int port) {
+		server.setName(name);
+		server.setAddress(address);
+		server.setPort(port);
 	}
 }

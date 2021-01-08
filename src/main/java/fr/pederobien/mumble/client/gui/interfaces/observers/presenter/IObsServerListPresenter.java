@@ -11,4 +11,11 @@ public interface IObsServerListPresenter {
 	 * @param newServer The new selected server.
 	 */
 	void onSelectedServerChanged(Server oldServer, Server newServer);
+
+	/**
+	 * Notify this observer the user did a double click on the given server.
+	 * 
+	 * @param server The double clicked server.
+	 */
+	void onDoubleClickOnServer(Server server);
 }

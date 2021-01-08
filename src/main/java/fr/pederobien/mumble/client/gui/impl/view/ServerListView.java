@@ -23,6 +23,7 @@ public class ServerListView extends ViewBase<ServerListPresenter, StackPane> {
 		listView.setCellFactory(getPresenter().serverCellFactory());
 		listView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		listView.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> getPresenter().onServerSelectedChanged(oldValue, newValue));
+		listView.setOnMouseClicked(e -> getPresenter().onDoubleClickOnSelectedServer(e));
 		getRoot().getChildren().add(listView);
 	}
 }

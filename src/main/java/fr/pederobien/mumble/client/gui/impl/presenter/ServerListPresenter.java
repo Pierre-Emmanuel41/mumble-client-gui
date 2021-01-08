@@ -17,6 +17,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
 
@@ -126,5 +128,15 @@ public class ServerListPresenter extends PresenterBase implements IObsServerList
 	 */
 	public Server getSelectedServer() {
 		return selectedServer;
+	}
+
+	/**
+	 * Action to perform when the user double clicked on a server.
+	 * 
+	 * @param event The event which occurred.
+	 */
+	public void onDoubleClickOnSelectedServer(MouseEvent event) {
+		if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2)
+			observers.notifyObservers(obs -> obs.onDoubleClickOnServer(selectedServer));
 	}
 }
