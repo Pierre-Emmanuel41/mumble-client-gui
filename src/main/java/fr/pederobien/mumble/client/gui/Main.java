@@ -3,8 +3,6 @@ package fr.pederobien.mumble.client.gui;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -26,16 +24,9 @@ public class Main extends Application {
 
 		primaryStage.titleProperty().bind(mainPresenter.titleLanguageProperty());
 
-		ScrollPane root = new ScrollPane();
-		root.setFitToHeight(true);
-		root.setFitToWidth(true);
-		root.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
-		root.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
-
-		BorderPane secondaryRoot = new BorderPane();
-		root.setContent(secondaryRoot);
-		secondaryRoot.setCenter(mainPresenter.getServerListView().getRoot());
-		secondaryRoot.setBottom(mainPresenter.getServerManagementView().getRoot());
+		BorderPane root = new BorderPane();
+		root.setCenter(mainPresenter.getServerListView().getRoot());
+		root.setBottom(mainPresenter.getServerManagementView().getRoot());
 
 		BorderPane.setAlignment(mainPresenter.getServerListView().getRoot(), Pos.CENTER);
 		BorderPane.setAlignment(mainPresenter.getServerManagementView().getRoot(), Pos.CENTER);
