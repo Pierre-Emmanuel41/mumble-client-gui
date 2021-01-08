@@ -49,7 +49,6 @@ public abstract class ServerInfoPresenter extends PresenterBase {
 	public ServerInfoPresenter(ServerList serverList, Server server) {
 		this.serverList = serverList;
 		this.server = server;
-		observer = new InternalObserver();
 
 		fontProperty = getPropertyHelper().fontProperty();
 		titleProperty = getPropertyHelper().languageProperty(EMessageCode.ADD_NEW_SERVER_TITLE);
@@ -58,27 +57,30 @@ public abstract class ServerInfoPresenter extends PresenterBase {
 		serverNameBorderProperty = new SimpleObjectProperty<Border>(null);
 		serverNamePromptLanguageProperty = getPropertyHelper().languageProperty(EMessageCode.SERVER_NAME_PROMPT);
 		serverNameTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.SERVER_NAME_TOOLTIP);
-		serverNameProperty = new SimpleStringProperty(server.getName().equals("") ? null : server.getName());
-		serverNameProperty.addListener(observer);
+		serverNameProperty = new SimpleStringProperty(server.getName().equals(Server.DEFAULT_NAME) ? null : server.getName());
 
 		serverIpAddressLanguageProperty = getPropertyHelper().languageProperty(EMessageCode.SERVER_IP_ADDRESS);
 		serverIpAddressBorderProperty = new SimpleObjectProperty<Border>(null);
 		serverIpAddressPromptLanguageProperty = getPropertyHelper().languageProperty(EMessageCode.SERVER_IP_ADDRESS_PROMPT);
 		serverIpAddressTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.SERVER_IP_ADDRESS_TOOLTIP);
-		serverIpAddressProperty = new SimpleStringProperty(server.getAddress().equals("0.0.0.0") ? null : server.getAddress());
-		serverIpAddressProperty.addListener(observer);
+		serverIpAddressProperty = new SimpleStringProperty(server.getAddress().equals(Server.DEFAULT_ADDRESS) ? null : server.getAddress());
 
 		serverPortLanguageProperty = getPropertyHelper().languageProperty(EMessageCode.SERVER_PORT_NUMBER);
 		serverPortBorderProperty = new SimpleObjectProperty<Border>(null);
 		serverPortPromptLanguageProperty = getPropertyHelper().languageProperty(EMessageCode.SERVER_PORT_NUMBER_PROMPT);
 		serverPortTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.SERVER_PORT_NUMBER_TOOLTIP);
-		serverPortProperty = new SimpleStringProperty(server.getPort() == 0 ? null : "" + server.getPort());
-		serverPortProperty.addListener(observer);
+		serverPortProperty = new SimpleStringProperty(server.getPort() == Server.DEFAULT_PORT ? null : "" + server.getPort());
 
 		okLanguageProperty = getPropertyHelper().languageProperty(EMessageCode.OK);
 		okDisableProperty = new SimpleBooleanProperty(true);
 		cancelLanguageProperty = getPropertyHelper().languageProperty(EMessageCode.CANCEL);
 
+		observer = new InternalObserver();
+		serverNameProperty.addListener(observer);
+		serverIpAddressProperty.addListener(observer);
+		serverPortProperty.addListener(observer);
+
+		observer.updateOkDisableProperty();
 		stage = new Stage();
 	}
 
@@ -299,40 +301,41 @@ public abstract class ServerInfoPresenter extends PresenterBase {
 		private Pattern pattern = Pattern.compile(single + "\\." + single + "\\." + single + "\\." + single);
 
 		public InternalObserver() {
-			isNameOk = false;
-			isIpOk = false;
-			isPortOk = false;
+			isNameOk = onServerNameChanged(serverNameProperty.get());
+			isIpOk = onServerIpChanged(serverIpAddressProperty.get());
+			isPortOk = onServerPortChanged(serverPortProperty.get());
+			updateOkDisableProperty();
 		}
 
 		@Override
 		public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 			if (observable.equals(serverNameProperty))
-				onServerNameChanged(newValue);
+				isNameOk = onServerNameChanged(newValue);
 			else if (observable.equals(serverIpAddressProperty))
-				onServerIpChanged(newValue);
+				isIpOk = onServerIpChanged(newValue);
 			else
-				onServerPortChanged(newValue);
+				isPortOk = onServerPortChanged(newValue);
 
 			updateOkDisableProperty();
 		}
 
-		private void onServerNameChanged(String newName) {
-			isNameOk = newName != null && newName.length() > 5;
-			if (!isNameOk)
-				return;
-			isNameOk &= !serverList.getServers().stream().filter(s -> s.getName().equals(newName.trim())).findFirst().isPresent();
+		private boolean onServerNameChanged(String newName) {
+			boolean isValid = newName != null && newName.length() > 5;
+			if (!isValid)
+				return false;
+			return isValid &= !serverList.getServers().stream().filter(s -> !s.equals(server) && s.getName().equals(newName.trim())).findFirst().isPresent();
 		}
 
-		private void onServerIpChanged(String newIp) {
-			isIpOk = pattern.matcher(newIp).matches();
+		private boolean onServerIpChanged(String newIp) {
+			return newIp != null && pattern.matcher(newIp).matches();
 		}
 
-		private void onServerPortChanged(String newPort) {
+		private boolean onServerPortChanged(String newPort) {
 			try {
 				int number = Integer.parseInt(newPort);
-				isPortOk = 0 <= number && number <= 65535;
+				return 0 <= number && number <= 65535;
 			} catch (NumberFormatException e) {
-				isPortOk = false;
+				return false;
 			}
 		}
 
