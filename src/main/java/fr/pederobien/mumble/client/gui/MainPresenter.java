@@ -3,8 +3,6 @@ package fr.pederobien.mumble.client.gui;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 import fr.pederobien.dictionary.impl.DefaultDictionaryParser;
 import fr.pederobien.dictionary.impl.JarDictionaryParser;
@@ -25,17 +23,9 @@ import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-public class MainPresenter {
-	private static final List<PresenterBase> PRESENTERS = new ArrayList<PresenterBase>();
-	private static Stage primaryStage;
-	private static PropertyHelper propertyHelper;
+public class MainPresenter extends PresenterBase {
+	private PropertyHelper propertyHelper;
 	private ScrollPane root;
-
-	public static void registerPresenter(PresenterBase presenter) {
-		PRESENTERS.add(presenter);
-		presenter.setPrimaryStage(primaryStage);
-		presenter.setPropertyHelper(propertyHelper);
-	}
 
 	public void init() {
 		try {
@@ -55,8 +45,8 @@ public class MainPresenter {
 	}
 
 	public Parent start(Stage primaryStage) {
-		MainPresenter.primaryStage = primaryStage;
-		primaryStage.setOnCloseRequest(e -> PRESENTERS.forEach(presenter -> presenter.onCloseRequest(e)));
+		setPrimaryStage(primaryStage);
+		setPropertyHelper(propertyHelper);
 
 		root = new ScrollPane();
 		root.setFitToHeight(true);

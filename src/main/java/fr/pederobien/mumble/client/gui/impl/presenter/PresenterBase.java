@@ -1,17 +1,22 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
-import fr.pederobien.mumble.client.gui.MainPresenter;
+import java.util.ArrayList;
+import java.util.List;
+
 import fr.pederobien.mumble.client.gui.properties.PropertyHelper;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 public abstract class PresenterBase {
-	private Stage primaryStage;
-	private PropertyHelper propertyHelper;
+	private static final List<PresenterBase> PRESENTERS = new ArrayList<PresenterBase>();
+	private static Stage primaryStage;
+	private static PropertyHelper propertyHelper;
 
 	protected PresenterBase() {
-		MainPresenter.registerPresenter(this);
+		PRESENTERS.add(this);
+		if (primaryStage != null)
+			primaryStage.setOnCloseRequest(e -> PRESENTERS.forEach(presenter -> presenter.onCloseRequest(e)));
 	}
 
 	/**
@@ -20,7 +25,7 @@ public abstract class PresenterBase {
 	 * @param guiConfiguration The gui configuration.
 	 */
 	public void setPropertyHelper(PropertyHelper propertyHelper) {
-		this.propertyHelper = propertyHelper;
+		PresenterBase.propertyHelper = propertyHelper;
 	}
 
 	/**
@@ -29,7 +34,7 @@ public abstract class PresenterBase {
 	 * @param primaryStage The primary stage.
 	 */
 	public void setPrimaryStage(Stage primaryStage) {
-		this.primaryStage = primaryStage;
+		PresenterBase.primaryStage = primaryStage;
 	}
 
 	/**
