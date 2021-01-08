@@ -18,18 +18,24 @@ public class Server implements IObservable<IObsServer> {
 	private IMumbleConnection connection;
 	private InternalObserver internalObserver;
 
-	public Server(String name, String address, int port) {
+	private Server(String name, String address, int port, boolean connect) {
 		this.name = name;
 		this.address = address;
 		this.port = port;
 		observers = new Observable<IObsServer>();
 
 		internalObserver = new InternalObserver();
-		initiateConnection();
+
+		if (connect)
+			initiateConnection();
+	}
+
+	public Server(String name, String address, int port) {
+		this(name, address, port, true);
 	}
 
 	public Server() {
-		this(DEFAULT_NAME, DEFAULT_ADDRESS, DEFAULT_PORT);
+		this(DEFAULT_NAME, DEFAULT_ADDRESS, DEFAULT_PORT, false);
 	}
 
 	@Override

@@ -8,9 +8,21 @@
 		<locale>fr-CA</locale>
 	</locales>
 	<messages>
+	<message>
+			<code>MUMBLE_WINDOW_TITLE</code>
+			<value>Mumble client gui</value>
+		</message>
+		<message>
+			<code>OK</code>
+			<value>Ok</value>
+		</message>
+		<message>
+			<code>CANCEL</code>
+			<value>Annuler</value>
+		</message>
 		<message>
 			<code>EMPTY_SERVER_LIST</code>
-			<value>Il n'y a pas de serveurs</value>
+			<value>Il n'y a pas de serveur</value>
 		</message>
 		<message>
 			<code>JOIN_SERVER</code>
@@ -35,6 +47,46 @@
 		<message>
 			<code>UNREACHABLE_SERVER</code>
 			<value>Fermé</value>
+		</message>
+		<message>
+			<code>ADD_NEW_SERVER_TITLE</code>
+			<value>Nouveau server</value>
+		</message>
+		<message>
+			<code>SERVER_NAME</code>
+			<value>Nom : </value>
+		</message>
+		<message>
+			<code>SERVER_NAME_PROMPT</code>
+			<value>Nom</value>
+		</message>
+		<message>
+			<code>SERVER_NAME_TOOLTIP</code>
+			<value>Le nom du serveur doit être unique et doit contenir au moins cinq caractères.</value>
+		</message>
+		<message>
+			<code>SERVER_IP_ADDRESS</code>
+			<value>Adresse IP : </value>
+		</message>
+		<message>
+			<code>SERVER_IP_ADDRESS_PROMPT</code>
+			<value>Adresse IP</value>
+		</message>
+		<message>
+			<code>SERVER_IP_ADDRESS_TOOLTIP</code>
+			<value>L'adresse ip doit être un adresse IPv4 (ex: 255.255.255.255)</value>
+		</message>
+		<message>
+			<code>SERVER_PORT_NUMBER</code>
+			<value>Numéro de port : </value>
+		</message>
+		<message>
+			<code>SERVER_PORT_NUMBER_PROMPT</code>
+			<value>Numéro de port</value>
+		</message>
+		<message>
+			<code>SERVER_PORT_NUMBER_TOOLTIP</code>
+			<value>Le numéro de port du serveur doit être un entier dans l'intervalle [0, 65535]</value>
 		</message>
 	</messages>
 </dictionary>

@@ -11,8 +11,20 @@
 	</locales>
 	<messages>
 		<message>
+			<code>MUMBLE_WINDOW_TITLE</code>
+			<value>Mumble client gui</value>
+		</message>
+		<message>
+			<code>OK</code>
+			<value>Ok</value>
+		</message>
+		<message>
+			<code>CANCEL</code>
+			<value>Cancel</value>
+		</message>
+		<message>
 			<code>EMPTY_SERVER_LIST</code>
-			<value>There is no servers</value>
+			<value>There is no server</value>
 		</message>
 		<message>
 			<code>JOIN_SERVER</code>
@@ -37,6 +49,46 @@
 		<message>
 			<code>UNREACHABLE_SERVER</code>
 			<value>Closed</value>
+		</message>
+		<message>
+			<code>ADD_NEW_SERVER_TITLE</code>
+			<value>New server</value>
+		</message>
+		<message>
+			<code>SERVER_NAME</code>
+			<value>Name : </value>
+		</message>
+		<message>
+			<code>SERVER_NAME_PROMPT</code>
+			<value>Name</value>
+		</message>
+		<message>
+			<code>SERVER_NAME_TOOLTIP</code>
+			<value>The server name should be unique and should contains minimum five characters.</value>
+		</message>
+		<message>
+			<code>SERVER_IP_ADDRESS</code>
+			<value>IP address : </value>
+		</message>
+		<message>
+			<code>SERVER_IP_ADDRESS_PROMPT</code>
+			<value>IP address</value>
+		</message>
+		<message>
+			<code>SERVER_IP_ADDRESS_TOOLTIP</code>
+			<value>The ip address should be an IPv4 address (ex: 255.255.255.255)</value>
+		</message>
+		<message>
+			<code>SERVER_PORT_NUMBER</code>
+			<value>Port number : </value>
+		</message>
+		<message>
+			<code>SERVER_PORT_NUMBER_PROMPT</code>
+			<value>Port number</value>
+		</message>
+		<message>
+			<code>SERVER_PORT_NUMBER_TOOLTIP</code>
+			<value>The server port number should be an integer in range [0, 65535]</value>
 		</message>
 	</messages>
 </dictionary>

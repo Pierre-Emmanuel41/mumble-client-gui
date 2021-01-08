@@ -1,7 +1,7 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
-import fr.pederobien.mumble.client.gui.impl.view.AddServerView;
+import fr.pederobien.mumble.client.gui.impl.view.ServerInfoView;
 import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsServerListPresenter;
 import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.gui.model.ServerList;
@@ -11,7 +11,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
-import javafx.event.ActionEvent;
 import javafx.scene.text.Font;
 
 public class ServerManagementPresenter extends PresenterBase implements IObsServerListPresenter {
@@ -109,19 +108,27 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 		return deleteServerDisableProperty;
 	}
 
-	public void onJoinServerClicked(ActionEvent event) {
+	public void onJoinServerClicked() {
 		System.out.println("Joining server");
 	}
 
-	public void onAddServerClicked(ActionEvent event) {
-		new AddServerView(getPrimaryStage(), new AddServerPresenter(serverList));
+	public void onAddServerClicked() {
+		new ServerInfoView(getPrimaryStage(), new ServerInfoPresenter(serverList, new Server()) {
+			@Override
+			protected void onOkButtonClicked(Server server, String name, String address, int port) {
+				server.setName(name);
+				server.setAddress(address);
+				server.setPort(port);
+				serverList.add(server);
+			}
+		});
 	}
 
-	public void onEditServerClicked(ActionEvent event) {
+	public void onEditServerClicked() {
 		System.out.println("Editing server");
 	}
 
-	public void onDeleteServerClicked(ActionEvent event) {
+	public void onDeleteServerClicked() {
 		serverList.remove(selectedServer);
 	}
 }

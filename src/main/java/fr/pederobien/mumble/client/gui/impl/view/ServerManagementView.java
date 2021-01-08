@@ -18,10 +18,10 @@ public class ServerManagementView extends ViewBase<ServerManagementPresenter, Fl
 
 		getRoot().setAlignment(Pos.CENTER);
 
-		addButton(getPresenter().joinServerLanguageProperty(), getPresenter().joinServerDisableProperty(), e -> getPresenter().onJoinServerClicked(e));
-		addButton(getPresenter().addServerLanguageProperty(), getPresenter().addServerDisabledProperty(), e -> getPresenter().onAddServerClicked(e));
-		addButton(getPresenter().editServerLanguageProperty(), getPresenter().editServerDisableProperty(), e -> getPresenter().onEditServerClicked(e));
-		addButton(getPresenter().deleteServerLanguageProperty(), getPresenter().deleteServerDisableProperty(), e -> getPresenter().onDeleteServerClicked(e));
+		addButton(getPresenter().joinServerLanguageProperty(), getPresenter().joinServerDisableProperty(), e -> getPresenter().onJoinServerClicked());
+		addButton(getPresenter().addServerLanguageProperty(), getPresenter().addServerDisabledProperty(), e -> getPresenter().onAddServerClicked());
+		addButton(getPresenter().editServerLanguageProperty(), getPresenter().editServerDisableProperty(), e -> getPresenter().onEditServerClicked());
+		addButton(getPresenter().deleteServerLanguageProperty(), getPresenter().deleteServerDisableProperty(), e -> getPresenter().onDeleteServerClicked());
 	}
 
 	private void addButton(StringProperty languageProperty, BooleanProperty disabledProperty, EventHandler<ActionEvent> handler) {
