@@ -15,7 +15,6 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
-import javafx.stage.WindowEvent;
 
 public class ServerPresenter extends PresenterBase implements IObsServer {
 	private static final Map<Server, ServerPresenter> PRESENTERS = new HashMap<Server, ServerPresenter>();
@@ -75,7 +74,7 @@ public class ServerPresenter extends PresenterBase implements IObsServer {
 	}
 
 	@Override
-	public void onCloseRequest(WindowEvent event) {
+	public void onCloseRequest() {
 		server.dispose();
 	}
 

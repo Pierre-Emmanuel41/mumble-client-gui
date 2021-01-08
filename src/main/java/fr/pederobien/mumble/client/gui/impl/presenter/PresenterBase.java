@@ -6,7 +6,6 @@ import java.util.List;
 import fr.pederobien.mumble.client.gui.properties.PropertyHelper;
 import javafx.application.Platform;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 public abstract class PresenterBase {
 	private static final List<PresenterBase> PRESENTERS = new ArrayList<PresenterBase>();
@@ -16,7 +15,7 @@ public abstract class PresenterBase {
 	protected PresenterBase() {
 		PRESENTERS.add(this);
 		if (primaryStage != null)
-			primaryStage.setOnCloseRequest(e -> PRESENTERS.forEach(presenter -> presenter.onCloseRequest(e)));
+			primaryStage.setOnCloseRequest(e -> PRESENTERS.forEach(presenter -> presenter.onCloseRequest()));
 	}
 
 	/**
@@ -35,6 +34,7 @@ public abstract class PresenterBase {
 	 */
 	public void setPrimaryStage(Stage primaryStage) {
 		PresenterBase.primaryStage = primaryStage;
+		PRESENTERS.add(this);
 	}
 
 	/**
@@ -43,7 +43,7 @@ public abstract class PresenterBase {
 	 *
 	 * @param event the event thrown by the window.
 	 */
-	public void onCloseRequest(WindowEvent event) {
+	public void onCloseRequest() {
 	}
 
 	/**
