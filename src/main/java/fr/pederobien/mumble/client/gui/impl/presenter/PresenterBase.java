@@ -38,10 +38,8 @@ public abstract class PresenterBase {
 	}
 
 	/**
-	 * Called when there is an external request to close this {@code Window}. The installed event handler can prevent window closing
-	 * by consuming the received event.
-	 *
-	 * @param event the event thrown by the window.
+	 * Called when the application is about to be closed. This method should be overridden if additional treatment should be
+	 * performed.
 	 */
 	public void onCloseRequest() {
 	}
