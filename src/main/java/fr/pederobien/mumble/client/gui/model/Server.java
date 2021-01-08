@@ -8,9 +8,9 @@ import fr.pederobien.utils.IObservable;
 import fr.pederobien.utils.Observable;
 
 public class Server implements IObservable<IObsServer> {
-	private static final String DEFAULT_NAME = "";
-	private static final String DEFAULT_ADDRESS = "0.0.0.0";
-	private static final int DEFAULT_PORT = 0;
+	public static final String DEFAULT_NAME = "";
+	public static final String DEFAULT_ADDRESS = "0.0.0.0";
+	public static final int DEFAULT_PORT = 0;
 	private String name, address;
 	private int port;
 	private boolean isReachable;
@@ -152,7 +152,7 @@ public class Server implements IObservable<IObsServer> {
 			return false;
 
 		Server other = (Server) obj;
-		return address.equals(other.getAddress()) && port == other.getPort();
+		return name.equals(other.getName()) && address.equals(other.getAddress()) && port == other.getPort();
 	}
 
 	private void initiateConnection() {
