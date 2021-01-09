@@ -110,7 +110,7 @@ public class ServerListPresenter extends PresenterBase implements IObsServerList
 	 * @param event The event which occurred.
 	 */
 	public void onDoubleClickOnSelectedServer(MouseEvent event) {
-		if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2)
+		if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2 && !(event.getTarget() instanceof ListCellView))
 			observers.notifyObservers(obs -> obs.onDoubleClickOnServer(selectedServer));
 	}
 }
