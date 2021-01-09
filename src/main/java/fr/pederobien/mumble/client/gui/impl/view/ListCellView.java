@@ -4,16 +4,35 @@ import java.util.function.Function;
 
 import javafx.scene.Parent;
 import javafx.scene.control.ListCell;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 
 public class ListCellView<T> extends ListCell<T> {
 	private Function<T, Parent> constructor;
 
 	public ListCellView(Function<T, Parent> constructor) {
 		this.constructor = constructor;
-		/*
-		 * setOnMouseEntered(e -> updateBackground(new Background(new BackgroundFill(Color.web("0x002a91"), null, null))));
-		 * setOnMouseExited(e -> updateBackground(Background.EMPTY));
-		 */
+		setBackground(Background.EMPTY);
+
+		setOnMouseEntered(e -> {
+			if (isEmpty())
+				return;
+			setBackground(new Background(new BackgroundFill(Color.web("0x0096c9ff"), new CornerRadii(2), null)));
+		});
+
+		setOnMouseExited(e -> {
+			if (isEmpty() || isSelected())
+				return;
+			setBackground(Background.EMPTY);
+		});
+
+		selectedProperty().addListener((obs, oldValue, newValue) -> {
+			if (newValue)
+				return;
+			setBackground(Background.EMPTY);
+		});
 	}
 
 	@Override
@@ -22,13 +41,7 @@ public class ListCellView<T> extends ListCell<T> {
 		if (empty || item == null) {
 			setText(null);
 			setGraphic(null);
-			// setBackground(Background.EMPTY);
-		} else {
+		} else
 			setGraphic(constructor.apply(item));
-		}
 	}
-
-	/*
-	 * private void updateBackground(Background background) { if (isEmpty()) return; setBackground(background); }
-	 */
 }
