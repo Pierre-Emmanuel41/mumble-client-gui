@@ -1,5 +1,6 @@
 package fr.pederobien.mumble.client.gui.impl.view;
 
+import fr.pederobien.fxstyle.impl.wrapper.TextFieldWrapper;
 import fr.pederobien.mumble.client.gui.impl.presenter.ServerInfoPresenter;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -38,13 +39,12 @@ public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> {
 		Label serverNameLabel = getStyle().createLabel(getPresenter().serverNameCode());
 		serverName.getChildren().add(serverNameLabel);
 
-		TextField serverNameTextField = getStyle().createTextfield(getPresenter().serverNamePromptCode());
-		serverNameTextField.textProperty().bindBidirectional(getPresenter().serverNameProperty());
-		serverNameTextField.borderProperty().bind(getPresenter().serverNameBorderProperty());
-		serverNameTextField.focusedProperty().addListener((obs, oldValue, newValue) -> getPresenter().validateServerName(newValue));
-		serverNameTextField.tooltipProperty().bind(getStyle().getPropertyHelper().tooltipProperty(getPresenter().serverNameTooltipCode()));
-		serverName.getChildren().add(serverNameTextField);
-		FlowPane.setMargin(serverNameTextField, new Insets(0, 0, 0, marginBetweenLabelAndTextField));
+		TextFieldWrapper nameWrapper = getStyle().createTextfield(getPresenter().serverNamePromptCode()).text(getPresenter().serverNameProperty());
+		nameWrapper.border(getPresenter().serverNameBorderProperty()).onFocusChanged((obs, oldValue, newValue) -> getPresenter().validateServerName(newValue));
+		nameWrapper.tooltip(getPresenter().serverNameTooltipCode()).get();
+
+		serverName.getChildren().add(nameWrapper.get());
+		FlowPane.setMargin(nameWrapper.get(), new Insets(0, 0, 0, marginBetweenLabelAndTextField));
 
 		getRoot().add(serverName, 0, 0);
 		GridPane.setMargin(serverName, new Insets(0, 0, 10, 0));
@@ -57,14 +57,12 @@ public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> {
 		Label serverIpAddressLabel = getStyle().createLabel(getPresenter().serverIpAddressCode());
 		serverIpAddress.getChildren().add(serverIpAddressLabel);
 
-		TextField serverIpAddressTextField = getStyle().createTextfield(getPresenter().serverIpAddressPromptCode());
-		serverIpAddressTextField.textProperty().bindBidirectional(getPresenter().serverIpAddressProperty());
-		serverIpAddressTextField.borderProperty().bind(getPresenter().serverIpAddressBorderProperty());
-		serverIpAddressTextField.focusedProperty().addListener((obs, oldValue, newValue) -> getPresenter().validateServerIpAdress(newValue));
-		serverIpAddressTextField.tooltipProperty().bind(getStyle().getPropertyHelper().tooltipProperty(getPresenter().serverIpAddressTooltipCode()));
+		TextFieldWrapper ipWrapper = getStyle().createTextfield(getPresenter().serverIpAddressPromptCode()).text(getPresenter().serverIpAddressProperty());
+		ipWrapper.border(getPresenter().serverIpAddressBorderProperty()).onFocusChanged((obs, oldValue, newValue) -> getPresenter().validateServerIpAdress(newValue));
+		ipWrapper.tooltip(getPresenter().serverIpAddressTooltipCode()).get();
 
-		serverIpAddress.getChildren().add(serverIpAddressTextField);
-		FlowPane.setMargin(serverIpAddressTextField, new Insets(0, 0, 0, marginBetweenLabelAndTextField));
+		serverIpAddress.getChildren().add(ipWrapper.get());
+		FlowPane.setMargin(ipWrapper.get(), new Insets(0, 0, 0, marginBetweenLabelAndTextField));
 
 		getRoot().add(serverIpAddress, 0, 1);
 		GridPane.setMargin(serverIpAddress, new Insets(10, 0, 10, 0));
@@ -77,14 +75,12 @@ public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> {
 		Label serverPortLabel = getStyle().createLabel(getPresenter().serverPortCode());
 		serverPort.getChildren().add(serverPortLabel);
 
-		TextField serverPortTextField = getStyle().createTextfield(getPresenter().serverPortPromptCode());
-		serverPortTextField.textProperty().bindBidirectional(getPresenter().serverPortProperty());
-		serverPortTextField.borderProperty().bind(getPresenter().serverPortBorderProperty());
-		serverPortTextField.focusedProperty().addListener((obs, oldValue, newValue) -> getPresenter().validateServerPortNumber(newValue));
-		serverPortTextField.tooltipProperty().bind(getStyle().getPropertyHelper().tooltipProperty(getPresenter().serverPortTooltipCode()));
+		TextFieldWrapper portWrapper = getStyle().createTextfield(getPresenter().serverPortPromptCode()).text(getPresenter().serverPortProperty());
+		portWrapper.border(getPresenter().serverPortBorderProperty()).onFocusChanged((obs, oldValue, newValue) -> getPresenter().validateServerPortNumber(newValue));
+		portWrapper.tooltip(getPresenter().serverPortTooltipCode()).get();
 
-		serverPort.getChildren().add(serverPortTextField);
-		FlowPane.setMargin(serverPortTextField, new Insets(0, 0, 0, marginBetweenLabelAndTextField));
+		serverPort.getChildren().add(portWrapper.get());
+		FlowPane.setMargin(portWrapper.get(), new Insets(0, 0, 0, marginBetweenLabelAndTextField));
 
 		getRoot().add(serverPort, 0, 2);
 		GridPane.setMargin(serverPort, new Insets(10, 0, 0, 0));
@@ -95,11 +91,11 @@ public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> {
 		FlowPane buttons = new FlowPane();
 		buttons.setAlignment(Pos.CENTER_RIGHT);
 
-		Button ok = getStyle().createButton(getPresenter().okCode()).onAction(e -> getPresenter().ok(e)).disable(getPresenter().okDisableProperty()).build();
+		Button ok = getStyle().createButton(getPresenter().okCode()).onAction(e -> getPresenter().ok(e)).disable(getPresenter().okDisableProperty()).get();
 		buttons.getChildren().add(ok);
 		FlowPane.setMargin(ok, new Insets(0, 10, 0, 0));
 
-		Button cancel = getStyle().createButton(getPresenter().cancelCode()).onAction(e -> getPresenter().cancel(e)).build();
+		Button cancel = getStyle().createButton(getPresenter().cancelCode()).onAction(e -> getPresenter().cancel(e)).get();
 		buttons.getChildren().add(cancel);
 		FlowPane.setMargin(cancel, new Insets(0, 0, 0, 10));
 
@@ -117,7 +113,7 @@ public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> {
 		getPresenter().getStage().show();
 
 		maxWidthLabel(serverNameLabel, serverIpAddressLabel, serverPortLabel);
-		maxWidthTextField(serverNameTextField, serverIpAddressTextField, serverPortTextField);
+		maxWidthTextField(nameWrapper.get(), ipWrapper.get(), portWrapper.get());
 	}
 
 	private void maxWidthLabel(Label... labels) {
