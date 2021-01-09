@@ -5,19 +5,20 @@ import java.util.Locale;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import fr.pederobien.mumble.client.gui.configuration.GuiConfiguration;
+import fr.pederobien.fxstyle.impl.GuiConfiguration;
+import fr.pederobien.fxstyle.interfaces.IGuiConfiguration;
 import fr.pederobien.mumble.client.gui.configuration.persistence.GuiConfigurationXmlTag;
 import fr.pederobien.persistence.impl.xml.AbstractXmlPersistenceLoader;
 import javafx.scene.text.Font;
 
-public abstract class AbstractGuiConfigurationLoader extends AbstractXmlPersistenceLoader<GuiConfiguration> {
+public abstract class AbstractGuiConfigurationLoader extends AbstractXmlPersistenceLoader<IGuiConfiguration> {
 
 	protected AbstractGuiConfigurationLoader(Double version) {
 		super(version);
 	}
 
 	@Override
-	protected GuiConfiguration create() {
+	protected IGuiConfiguration create() {
 		return new GuiConfiguration();
 	}
 

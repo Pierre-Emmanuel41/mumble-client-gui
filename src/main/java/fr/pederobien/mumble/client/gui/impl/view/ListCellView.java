@@ -10,6 +10,10 @@ public class ListCellView<T> extends ListCell<T> {
 
 	public ListCellView(Function<T, Parent> constructor) {
 		this.constructor = constructor;
+		/*
+		 * setOnMouseEntered(e -> updateBackground(new Background(new BackgroundFill(Color.web("0x002a91"), null, null))));
+		 * setOnMouseExited(e -> updateBackground(Background.EMPTY));
+		 */
 	}
 
 	@Override
@@ -18,9 +22,13 @@ public class ListCellView<T> extends ListCell<T> {
 		if (empty || item == null) {
 			setText(null);
 			setGraphic(null);
+			// setBackground(Background.EMPTY);
 		} else {
 			setGraphic(constructor.apply(item));
 		}
 	}
 
+	/*
+	 * private void updateBackground(Background background) { if (isEmpty()) return; setBackground(background); }
+	 */
 }

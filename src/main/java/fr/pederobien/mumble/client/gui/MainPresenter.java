@@ -6,7 +6,8 @@ import java.nio.file.Paths;
 
 import fr.pederobien.dictionary.impl.DefaultDictionaryParser;
 import fr.pederobien.dictionary.impl.JarDictionaryParser;
-import fr.pederobien.dictionary.impl.NotificationCenter;
+import fr.pederobien.fxstyle.impl.Styles;
+import fr.pederobien.fxstyle.interfaces.IStyle;
 import fr.pederobien.mumble.client.gui.configuration.persistence.GuiConfigurationPersistence;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.Environment;
@@ -15,8 +16,8 @@ import fr.pederobien.mumble.client.gui.impl.presenter.ServerListPresenter;
 import fr.pederobien.mumble.client.gui.impl.presenter.ServerManagementPresenter;
 import fr.pederobien.mumble.client.gui.impl.view.ServerListView;
 import fr.pederobien.mumble.client.gui.impl.view.ServerManagementView;
+import fr.pederobien.mumble.client.gui.impl.view.ViewBase;
 import fr.pederobien.mumble.client.gui.persistence.ServerListPersistence;
-import fr.pederobien.mumble.client.gui.properties.PropertyHelper;
 import javafx.beans.property.StringProperty;
 
 public class MainPresenter extends PresenterBase {
@@ -37,7 +38,10 @@ public class MainPresenter extends PresenterBase {
 			GuiConfigurationPersistence.getInstance().saveDefault();
 		}
 
-		setPropertyHelper(new PropertyHelper(GuiConfigurationPersistence.getInstance().get()));
+		IStyle style = Styles.simple(GuiConfigurationPersistence.getInstance().get());
+
+		ViewBase.setStyle(style);
+		setPropertyHelper(style.getPropertyHelper());
 		registerDictionaries("French.xml", "English.xml");
 
 		ServerListPresenter serverListPresenter = new ServerListPresenter(ServerListPersistence.getInstance().get());
@@ -84,14 +88,14 @@ public class MainPresenter extends PresenterBase {
 			if (url.startsWith("file")) {
 				DefaultDictionaryParser parser = new DefaultDictionaryParser();
 				for (String name : dictionaryNames)
-					NotificationCenter.getInstance().getDictionaryContext().register(parser, Paths.get(Environment.RESOURCES_FOLDER.getFileName(), name));
+					GuiConfigurationPersistence.getInstance().get().registerDictionary(parser.parse(Paths.get(Environment.RESOURCES_FOLDER.getFileName(), name)));
 
 			} else if (url.startsWith("jar")) {
 				Path jarPath = Paths.get(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath().substring(1));
 				String internalPath = Environment.RESOURCES_FOLDER.getFileName();
 				JarDictionaryParser parser = new JarDictionaryParser(internalPath);
 				for (String name : dictionaryNames)
-					NotificationCenter.getInstance().getDictionaryContext().register(parser.setName(internalPath.concat(name)), jarPath);
+					GuiConfigurationPersistence.getInstance().get().registerDictionary(parser.setName(internalPath.concat(name)).parse(jarPath));
 
 			} else
 				throw new UnsupportedOperationException("Technical error");

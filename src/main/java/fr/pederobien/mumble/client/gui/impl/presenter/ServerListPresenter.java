@@ -1,5 +1,6 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
+import fr.pederobien.dictionary.interfaces.IMessageCode;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.view.ListCellView;
 import fr.pederobien.mumble.client.gui.impl.view.ServerView;
@@ -7,26 +8,20 @@ import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsServerList
 import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsServerListPresenter;
 import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.gui.model.ServerList;
-import fr.pederobien.mumble.client.gui.properties.SimpleLanguageProperty;
 import fr.pederobien.utils.IObservable;
 import fr.pederobien.utils.Observable;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.text.Font;
 import javafx.util.Callback;
 
 public class ServerListPresenter extends PresenterBase implements IObsServerList, IObservable<IObsServerListPresenter> {
 	private ObservableList<Object> servers;
-	private ObjectProperty<Font> fontProperty;
-	private SimpleLanguageProperty emptyServersListLanguageProperty;
 	private BooleanProperty emptyServersListVisibilityProperty;
 	private Server selectedServer;
 	private Observable<IObsServerListPresenter> observers;
@@ -35,9 +30,6 @@ public class ServerListPresenter extends PresenterBase implements IObsServerList
 		serverList.addObserver(this);
 		servers = FXCollections.observableArrayList(serverList.getServers());
 
-		fontProperty = getPropertyHelper().fontProperty();
-
-		emptyServersListLanguageProperty = getPropertyHelper().languageProperty(EMessageCode.EMPTY_SERVER_LIST);
 		emptyServersListVisibilityProperty = new SimpleBooleanProperty(serverList.getServers().isEmpty());
 		observers = new Observable<IObsServerListPresenter>();
 	}
@@ -72,17 +64,10 @@ public class ServerListPresenter extends PresenterBase implements IObsServerList
 	}
 
 	/**
-	 * @return The font property to display messages.
+	 * @return The code associated to the message to display when there is no registered server.
 	 */
-	public ObjectProperty<Font> fontProperty() {
-		return fontProperty;
-	}
-
-	/**
-	 * @return The message to display when there is no registered server.
-	 */
-	public StringProperty emptyServersListLanguageProperty() {
-		return emptyServersListLanguageProperty;
+	public IMessageCode emptyServerCode() {
+		return EMessageCode.EMPTY_SERVER_LIST;
 	}
 
 	/**

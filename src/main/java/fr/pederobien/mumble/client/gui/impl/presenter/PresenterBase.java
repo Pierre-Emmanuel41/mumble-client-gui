@@ -3,7 +3,7 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.pederobien.mumble.client.gui.properties.PropertyHelper;
+import fr.pederobien.fxstyle.impl.properties.PropertyHelper;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
@@ -19,12 +19,17 @@ public abstract class PresenterBase {
 	}
 
 	/**
-	 * Set the property helper. When changes are made in the specified configuration, then each view are updated.
-	 * 
-	 * @param guiConfiguration The gui configuration.
+	 * Called when the application is about to be closed. This method should be overridden if additional treatment should be
+	 * performed.
 	 */
-	public void setPropertyHelper(PropertyHelper propertyHelper) {
-		PresenterBase.propertyHelper = propertyHelper;
+	public void onCloseRequest() {
+	}
+
+	/**
+	 * @return The primary stage of the application.
+	 */
+	protected Stage getPrimaryStage() {
+		return primaryStage;
 	}
 
 	/**
@@ -38,24 +43,19 @@ public abstract class PresenterBase {
 	}
 
 	/**
-	 * Called when the application is about to be closed. This method should be overridden if additional treatment should be
-	 * performed.
+	 * Set the property helper used to create properties.
+	 * 
+	 * @param propertyHelper The helper that creates properties.
 	 */
-	public void onCloseRequest() {
+	protected void setPropertyHelper(PropertyHelper propertyHelper) {
+		PresenterBase.propertyHelper = propertyHelper;
 	}
 
 	/**
-	 * @return The property helper that created property updated by the gui configuration.
+	 * @return The helper that creates properties.
 	 */
 	protected PropertyHelper getPropertyHelper() {
 		return propertyHelper;
-	}
-
-	/**
-	 * @return The primary stage of the application.
-	 */
-	protected Stage getPrimaryStage() {
-		return primaryStage;
 	}
 
 	/**

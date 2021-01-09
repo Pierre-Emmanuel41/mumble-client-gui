@@ -1,8 +1,8 @@
 package fr.pederobien.mumble.client.gui.impl.view;
 
+import fr.pederobien.dictionary.interfaces.IMessageCode;
 import fr.pederobien.mumble.client.gui.impl.presenter.ServerManagementPresenter;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -18,17 +18,15 @@ public class ServerManagementView extends ViewBase<ServerManagementPresenter, Fl
 
 		getRoot().setAlignment(Pos.CENTER);
 
-		addButton(getPresenter().joinServerLanguageProperty(), getPresenter().joinServerDisableProperty(), e -> getPresenter().onJoinServerClicked());
-		addButton(getPresenter().addServerLanguageProperty(), getPresenter().addServerDisabledProperty(), e -> getPresenter().onAddServerClicked());
-		addButton(getPresenter().editServerLanguageProperty(), getPresenter().editServerDisableProperty(), e -> getPresenter().onEditServerClicked());
-		addButton(getPresenter().deleteServerLanguageProperty(), getPresenter().deleteServerDisableProperty(), e -> getPresenter().onDeleteServerClicked());
+		addButton(getPresenter().joinServerCode(), getPresenter().joinServerDisableProperty(), e -> getPresenter().onJoinServerClicked());
+		addButton(getPresenter().addServerCode(), getPresenter().addServerDisabledProperty(), e -> getPresenter().onAddServerClicked());
+		addButton(getPresenter().editServerCode(), getPresenter().editServerDisableProperty(), e -> getPresenter().onEditServerClicked());
+		addButton(getPresenter().deleteServerCode(), getPresenter().deleteServerDisableProperty(), e -> getPresenter().onDeleteServerClicked());
 	}
 
-	private void addButton(StringProperty languageProperty, BooleanProperty disabledProperty, EventHandler<ActionEvent> handler) {
-		Button button = new Button();
-		button.textProperty().bind(languageProperty);
+	private void addButton(IMessageCode code, BooleanProperty disabledProperty, EventHandler<ActionEvent> handler) {
+		Button button = getStyle().createButton(code);
 		button.disableProperty().bind(disabledProperty);
-		button.fontProperty().bind(getPresenter().fontProperty());
 		button.setOnAction(handler);
 		add(button);
 	}

@@ -6,11 +6,12 @@ import java.nio.file.Paths;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import fr.pederobien.mumble.client.gui.configuration.GuiConfiguration;
+import fr.pederobien.fxstyle.impl.GuiConfiguration;
+import fr.pederobien.fxstyle.interfaces.IGuiConfiguration;
 import fr.pederobien.mumble.client.gui.configuration.persistence.loaders.GuiConfigurationLoaderV10;
 import fr.pederobien.persistence.impl.xml.AbstractXmlPersistence;
 
-public class GuiConfigurationPersistence extends AbstractXmlPersistence<GuiConfiguration> {
+public class GuiConfigurationPersistence extends AbstractXmlPersistence<IGuiConfiguration> {
 	private static final String XML_ROOT_ELEMENT = "GuiConfiguration";
 
 	protected GuiConfigurationPersistence() {
@@ -41,10 +42,6 @@ public class GuiConfigurationPersistence extends AbstractXmlPersistence<GuiConfi
 		version.appendChild(doc.createTextNode(getVersion().toString()));
 		root.appendChild(version);
 
-		Element name = createElement(doc, GuiConfigurationXmlTag.NAME);
-		name.appendChild(doc.createTextNode(get().getName()));
-		root.appendChild(name);
-
 		Element locale = createElement(doc, GuiConfigurationXmlTag.LOCALE);
 		locale.appendChild(doc.createTextNode(get().getLocale().toString()));
 		root.appendChild(locale);
@@ -54,7 +51,7 @@ public class GuiConfigurationPersistence extends AbstractXmlPersistence<GuiConfi
 		setAttribute(font, GuiConfigurationXmlTag.FONT_SIZE, get().getFont().getSize());
 		root.appendChild(font);
 
-		saveDocument(doc, get().getName());
+		saveDocument(doc, XML_ROOT_ELEMENT);
 		return true;
 	}
 

@@ -1,21 +1,15 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
+import fr.pederobien.dictionary.interfaces.IMessageCode;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.view.ServerInfoView;
 import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsServerListPresenter;
 import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.gui.model.ServerList;
-import fr.pederobien.mumble.client.gui.properties.SimpleFontProperty;
-import fr.pederobien.mumble.client.gui.properties.SimpleLanguageProperty;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.StringProperty;
-import javafx.scene.text.Font;
 
 public class ServerManagementPresenter extends PresenterBase implements IObsServerListPresenter {
-	private SimpleFontProperty fontProperty;
-	private SimpleLanguageProperty joinServerLanguageProperty, addServerLanguageProperty, editServerLanguageProperty, deleteServerLanguageProperty;
 	private BooleanProperty joinServerDisableProperty, addServerDisableProperty, editServerDisableProperty, deleteServerDisableProperty;
 
 	private ServerList serverList;
@@ -23,13 +17,6 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 
 	public ServerManagementPresenter(ServerList serverList) {
 		this.serverList = serverList;
-
-		fontProperty = getPropertyHelper().fontProperty();
-
-		joinServerLanguageProperty = getPropertyHelper().languageProperty(EMessageCode.JOIN_SERVER);
-		addServerLanguageProperty = getPropertyHelper().languageProperty(EMessageCode.ADD_SERVER);
-		editServerLanguageProperty = getPropertyHelper().languageProperty(EMessageCode.EDIT_SERVER);
-		deleteServerLanguageProperty = getPropertyHelper().languageProperty(EMessageCode.DELETE_SERVER);
 
 		joinServerDisableProperty = new SimpleBooleanProperty(true);
 		addServerDisableProperty = new SimpleBooleanProperty(false);
@@ -51,17 +38,10 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 	}
 
 	/**
-	 * @return The font property to display messages.
+	 * @return The code associated to the message to display in order to join the server.
 	 */
-	public ObjectProperty<Font> fontProperty() {
-		return fontProperty;
-	}
-
-	/**
-	 * @return The message to display in order to join the server.
-	 */
-	public StringProperty joinServerLanguageProperty() {
-		return joinServerLanguageProperty;
+	public IMessageCode joinServerCode() {
+		return EMessageCode.JOIN_SERVER;
 	}
 
 	/**
@@ -72,10 +52,10 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 	}
 
 	/**
-	 * @return The message to display in order to add a server.
+	 * @return The code associated to the message to display in order to add a server.
 	 */
-	public StringProperty addServerLanguageProperty() {
-		return addServerLanguageProperty;
+	public IMessageCode addServerCode() {
+		return EMessageCode.ADD_SERVER;
 	}
 
 	/**
@@ -86,10 +66,10 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 	}
 
 	/**
-	 * @return The message to display in order to edit the server.
+	 * @return The code associated to the message to display in order to edit the server.
 	 */
-	public StringProperty editServerLanguageProperty() {
-		return editServerLanguageProperty;
+	public IMessageCode editServerCode() {
+		return EMessageCode.EDIT_SERVER;
 	}
 
 	/**
@@ -100,10 +80,10 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 	}
 
 	/**
-	 * @return The message to display in order to delete the server.
+	 * @return The code associated to the message to display in order to delete the server.
 	 */
-	public StringProperty deleteServerLanguageProperty() {
-		return deleteServerLanguageProperty;
+	public IMessageCode deleteServerCode() {
+		return EMessageCode.DELETE_SERVER;
 	}
 
 	/**

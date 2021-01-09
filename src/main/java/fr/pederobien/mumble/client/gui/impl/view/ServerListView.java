@@ -11,9 +11,7 @@ public class ServerListView extends ViewBase<ServerListPresenter, StackPane> {
 	public ServerListView(ServerListPresenter presenter) {
 		super(presenter, new StackPane());
 
-		Label emptyServerListLabel = new Label();
-		emptyServerListLabel.textProperty().bind(getPresenter().emptyServersListLanguageProperty());
-		emptyServerListLabel.fontProperty().bind(getPresenter().fontProperty());
+		Label emptyServerListLabel = getStyle().createLabel(getPresenter().emptyServerCode());
 		emptyServerListLabel.visibleProperty().bind(getPresenter().emptyServersListVisibilityProperty());
 		getRoot().getChildren().add(emptyServerListLabel);
 

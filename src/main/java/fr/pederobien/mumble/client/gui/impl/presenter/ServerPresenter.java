@@ -4,22 +4,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fr.pederobien.dictionary.interfaces.IMessageCode;
+import fr.pederobien.fxstyle.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsServer;
 import fr.pederobien.mumble.client.gui.model.Server;
-import fr.pederobien.mumble.client.gui.properties.SimpleLanguageProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.text.Font;
 
 public class ServerPresenter extends PresenterBase implements IObsServer {
 	private static final Map<Server, ServerPresenter> PRESENTERS = new HashMap<Server, ServerPresenter>();
 	private Server server;
-	private ObjectProperty<Font> fontProperty;
 	private StringProperty serverNameProperty, serverIpAddressProperty;
 	private SimpleLanguageProperty serverReachableStatusProperty;
 	private ObjectProperty<Paint> textFillProperty;
@@ -40,8 +38,6 @@ public class ServerPresenter extends PresenterBase implements IObsServer {
 
 		isReachable = server.isReachable();
 		server.addObserver(this);
-
-		fontProperty = getPropertyHelper().fontProperty();
 
 		serverNameProperty = new SimpleStringProperty(server.getName());
 		serverIpAddressProperty = new SimpleStringProperty(server.getAddress() + ":" + server.getPort());
@@ -76,13 +72,6 @@ public class ServerPresenter extends PresenterBase implements IObsServer {
 	@Override
 	public void onCloseRequest() {
 		server.dispose();
-	}
-
-	/**
-	 * @return The font property to display messages.
-	 */
-	public ObjectProperty<Font> fontProperty() {
-		return fontProperty;
 	}
 
 	/**

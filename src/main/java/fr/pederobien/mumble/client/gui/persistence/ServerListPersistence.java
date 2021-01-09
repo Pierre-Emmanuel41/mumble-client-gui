@@ -42,10 +42,6 @@ public class ServerListPersistence extends AbstractXmlPersistence<ServerList> {
 		version.appendChild(doc.createTextNode(getVersion().toString()));
 		root.appendChild(version);
 
-		Element name = createElement(doc, ServersXmlTag.NAME);
-		name.appendChild(doc.createTextNode(get().getName()));
-		root.appendChild(name);
-
 		Element servers = createElement(doc, ServersXmlTag.SERVERS);
 		for (Server s : get().getServers()) {
 			Element server = createElement(doc, ServersXmlTag.SERVER);
@@ -56,7 +52,7 @@ public class ServerListPersistence extends AbstractXmlPersistence<ServerList> {
 		}
 		root.appendChild(servers);
 
-		saveDocument(doc, get().getName());
+		saveDocument(doc, ROOT_XML_DOCUMENT);
 		return true;
 	}
 

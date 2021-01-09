@@ -5,22 +5,16 @@ import java.util.Collections;
 import java.util.List;
 
 import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsServerList;
-import fr.pederobien.persistence.interfaces.IUnmodifiableNominable;
 import fr.pederobien.utils.IObservable;
 import fr.pederobien.utils.Observable;
 
-public class ServerList implements IUnmodifiableNominable, IObservable<IObsServerList> {
+public class ServerList implements IObservable<IObsServerList> {
 	private List<Server> servers;
 	private Observable<IObsServerList> observers;
 
 	public ServerList() {
 		servers = new ArrayList<Server>();
 		observers = new Observable<IObsServerList>();
-	}
-
-	@Override
-	public String getName() {
-		return "ServerList";
 	}
 
 	@Override
