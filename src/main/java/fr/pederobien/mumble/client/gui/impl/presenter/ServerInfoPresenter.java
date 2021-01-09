@@ -230,7 +230,7 @@ public abstract class ServerInfoPresenter extends PresenterBase {
 		return EMessageCode.CANCEL;
 	}
 
-	public void onOkClicked(ActionEvent event) {
+	public void ok(ActionEvent event) {
 		if (okDisableProperty.get())
 			return;
 		onOkButtonClicked(server, serverNameProperty().get(), serverIpAddressProperty().get(), Integer.parseInt(serverPortProperty().get()));
@@ -242,7 +242,7 @@ public abstract class ServerInfoPresenter extends PresenterBase {
 	 * 
 	 * @param event The event thrown event.
 	 */
-	public void onCancelClicked(ActionEvent event) {
+	public void cancel(ActionEvent event) {
 		stage.close();
 	}
 

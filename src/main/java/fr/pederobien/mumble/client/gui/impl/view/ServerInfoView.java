@@ -26,7 +26,7 @@ public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> {
 		getRoot().setAlignment(Pos.CENTER);
 		getRoot().addEventHandler(KeyEvent.KEY_RELEASED, e -> {
 			if (e.getCode() == KeyCode.ENTER)
-				getPresenter().onOkClicked(null);
+				getPresenter().ok(null);
 		});
 
 		// Server Name
@@ -95,14 +95,11 @@ public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> {
 		FlowPane buttons = new FlowPane();
 		buttons.setAlignment(Pos.CENTER_RIGHT);
 
-		Button ok = getStyle().createButton(getPresenter().okCode());
-		ok.setOnAction(e -> getPresenter().onOkClicked(e));
-		ok.disableProperty().bind(getPresenter().okDisableProperty());
+		Button ok = getStyle().createButton(getPresenter().okCode()).onAction(e -> getPresenter().ok(e)).disable(getPresenter().okDisableProperty()).build();
 		buttons.getChildren().add(ok);
 		FlowPane.setMargin(ok, new Insets(0, 10, 0, 0));
 
-		Button cancel = getStyle().createButton(getPresenter().cancelCode());
-		cancel.setOnAction(e -> getPresenter().onCancelClicked(e));
+		Button cancel = getStyle().createButton(getPresenter().cancelCode()).onAction(e -> getPresenter().cancel(e)).build();
 		buttons.getChildren().add(cancel);
 		FlowPane.setMargin(cancel, new Insets(0, 0, 0, 10));
 

@@ -34,70 +34,70 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 
 	@Override
 	public void onDoubleClickOnServer(Server server) {
-		onEditServerClicked();
+		onEdit();
 	}
 
 	/**
 	 * @return The code associated to the message to display in order to join the server.
 	 */
-	public IMessageCode joinServerCode() {
+	public IMessageCode joinCode() {
 		return EMessageCode.JOIN_SERVER;
 	}
 
 	/**
 	 * @return The property in order to enable/disable the "join server" functionality.
 	 */
-	public BooleanProperty joinServerDisableProperty() {
+	public BooleanProperty joinDisableProperty() {
 		return joinServerDisableProperty;
 	}
 
 	/**
 	 * @return The code associated to the message to display in order to add a server.
 	 */
-	public IMessageCode addServerCode() {
+	public IMessageCode addCode() {
 		return EMessageCode.ADD_SERVER;
 	}
 
 	/**
 	 * @return The property in order to enable/disable the "add server" functionality.
 	 */
-	public BooleanProperty addServerDisabledProperty() {
+	public BooleanProperty addDisableProperty() {
 		return addServerDisableProperty;
 	}
 
 	/**
 	 * @return The code associated to the message to display in order to edit the server.
 	 */
-	public IMessageCode editServerCode() {
+	public IMessageCode editCode() {
 		return EMessageCode.EDIT_SERVER;
 	}
 
 	/**
 	 * @return The property to enable/disable the "edit server" functionality.
 	 */
-	public BooleanProperty editServerDisableProperty() {
+	public BooleanProperty editDisableProperty() {
 		return editServerDisableProperty;
 	}
 
 	/**
 	 * @return The code associated to the message to display in order to delete the server.
 	 */
-	public IMessageCode deleteServerCode() {
+	public IMessageCode deleteCode() {
 		return EMessageCode.DELETE_SERVER;
 	}
 
 	/**
 	 * @return The property to enable/disable the "delete server" functionality.
 	 */
-	public BooleanProperty deleteServerDisableProperty() {
+	public BooleanProperty deleteDisableProperty() {
 		return deleteServerDisableProperty;
 	}
 
-	public void onJoinServerClicked() {
+	public void onJoin() {
 		System.out.println("Joining server");
 	}
 
-	public void onAddServerClicked() {
+	public void onAdd() {
 		new ServerInfoView(getPrimaryStage(), new ServerInfoPresenter(serverList, new Server()) {
 			@Override
 			protected void onOkButtonClicked(Server server, String name, String address, int port) {
@@ -107,7 +107,7 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 		});
 	}
 
-	public void onEditServerClicked() {
+	public void onEdit() {
 		new ServerInfoView(getPrimaryStage(), new ServerInfoPresenter(serverList, selectedServer) {
 			@Override
 			protected void onOkButtonClicked(Server server, String name, String address, int port) {
@@ -116,7 +116,7 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 		});
 	}
 
-	public void onDeleteServerClicked() {
+	public void onDelete() {
 		serverList.remove(selectedServer);
 	}
 
