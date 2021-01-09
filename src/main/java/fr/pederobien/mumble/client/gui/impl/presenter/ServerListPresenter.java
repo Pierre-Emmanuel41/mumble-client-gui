@@ -1,6 +1,7 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.view.ListCellView;
 import fr.pederobien.mumble.client.gui.impl.view.ServerView;
 import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsServerList;
 import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsServerListPresenter;
@@ -96,19 +97,7 @@ public class ServerListPresenter extends PresenterBase implements IObsServerList
 	 */
 	public Callback<ListView<Object>, ListCell<Object>> serverCellFactory() {
 		return listView -> {
-			return new ListCell<Object>() {
-
-				@Override
-				protected void updateItem(Object item, boolean empty) {
-					super.updateItem(item, empty);
-
-					if (empty || item == null) {
-						setText(null);
-						setGraphic(null);
-					} else
-						setGraphic(new ServerView(ServerPresenter.getOrCreateServerPresenter((Server) item)).getRoot());
-				}
-			};
+			return new ListCellView<Object>(item -> new ServerView(ServerPresenter.getOrCreateServerPresenter((Server) item)).getRoot());
 		};
 	}
 
