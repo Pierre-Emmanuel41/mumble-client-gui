@@ -3,7 +3,6 @@ package fr.pederobien.mumble.client.gui.impl.view;
 import fr.pederobien.mumble.client.gui.impl.presenter.ServerListPresenter;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.StackPane;
 
 public class ServerListView extends ViewBase<ServerListPresenter, StackPane> {
@@ -19,7 +18,6 @@ public class ServerListView extends ViewBase<ServerListPresenter, StackPane> {
 		listView.setMaxWidth(600);
 		listView.visibleProperty().bind(getPresenter().emptyServersListVisibilityProperty().not());
 		listView.setCellFactory(getPresenter().serverCellFactory());
-		listView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		listView.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> getPresenter().onServerSelectedChanged(oldValue, newValue));
 		listView.setOnMouseClicked(e -> getPresenter().onDoubleClickOnSelectedServer(e));
 		getRoot().getChildren().add(listView);
