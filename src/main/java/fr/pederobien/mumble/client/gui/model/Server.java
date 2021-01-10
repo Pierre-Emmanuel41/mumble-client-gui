@@ -1,8 +1,13 @@
 package fr.pederobien.mumble.client.gui.model;
 
+import java.util.function.Consumer;
+
 import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsServer;
 import fr.pederobien.mumble.client.impl.MumbleConnection;
+import fr.pederobien.mumble.client.interfaces.IChannelList;
 import fr.pederobien.mumble.client.interfaces.IMumbleConnection;
+import fr.pederobien.mumble.client.interfaces.IPlayer;
+import fr.pederobien.mumble.client.interfaces.IResponse;
 import fr.pederobien.mumble.client.interfaces.observers.IObsMumbleConnection;
 import fr.pederobien.utils.IObservable;
 import fr.pederobien.utils.Observable;
@@ -46,6 +51,62 @@ public class Server implements IObservable<IObsServer> {
 	@Override
 	public void removeObserver(IObsServer obs) {
 		observers.removeObserver(obs);
+	}
+
+	/**
+	 * Attempt a connection to the remove.
+	 */
+	public void connect() {
+		connection.connect();
+	}
+
+	/**
+	 * Abort the connection to the remote.
+	 */
+	public void disconnect() {
+		connection.disconnect();
+	}
+
+	/**
+	 * Close definitively this connection.
+	 */
+	public void dispose() {
+		connection.dispose();
+	}
+
+	@Override
+	public String toString() {
+		return "Server={" + name + "," + address + "," + port + "}";
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+
+		if (!(obj instanceof Server))
+			return false;
+
+		Server other = (Server) obj;
+		return name.equals(other.getName()) && address.equals(other.getAddress()) && port == other.getPort();
+	}
+
+	/**
+	 * Get the player associated to this client.
+	 * 
+	 * @param response Callback when the response is received.
+	 */
+	public void getPlayer(Consumer<IResponse<IPlayer>> response) {
+		connection.getPlayer(response);
+	}
+
+	/**
+	 * Get the list of channel currently registered on the server.
+	 * 
+	 * @param response Callback when response is received.
+	 */
+	public void getChannels(Consumer<IResponse<IChannelList>> response) {
+		connection.getChannels(response);
 	}
 
 	/**
@@ -115,44 +176,6 @@ public class Server implements IObservable<IObsServer> {
 	 */
 	public boolean isReachable() {
 		return isReachable;
-	}
-
-	/**
-	 * Attempt a connection to the remove.
-	 */
-	public void connect() {
-		connection.connect();
-	}
-
-	/**
-	 * Abort the connection to the remote.
-	 */
-	public void disconnect() {
-		connection.disconnect();
-	}
-
-	/**
-	 * Close definitively this connection.
-	 */
-	public void dispose() {
-		connection.dispose();
-	}
-
-	@Override
-	public String toString() {
-		return "Server={" + name + "," + address + "," + port + "}";
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-
-		if (!(obj instanceof Server))
-			return false;
-
-		Server other = (Server) obj;
-		return name.equals(other.getName()) && address.equals(other.getAddress()) && port == other.getPort();
 	}
 
 	private void initiateConnection() {
