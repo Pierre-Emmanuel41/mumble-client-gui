@@ -1,8 +1,10 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
+import java.util.function.Function;
+
 import fr.pederobien.dictionary.interfaces.IMessageCode;
+import fr.pederobien.fxstyle.impl.properties.ListCellView;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
-import fr.pederobien.mumble.client.gui.impl.view.ListCellView;
 import fr.pederobien.mumble.client.gui.impl.view.ServerView;
 import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsServerList;
 import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsServerListPresenter;
@@ -14,11 +16,9 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.Parent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.util.Callback;
 
 public class ServerListPresenter extends PresenterBase implements IObsServerList, IObservable<IObsServerListPresenter> {
 	private ObservableList<Object> servers;
@@ -78,12 +78,10 @@ public class ServerListPresenter extends PresenterBase implements IObsServerList
 	}
 
 	/**
-	 * @return The factory in order to get the view associated to a server.
+	 * @return The creator of server view.
 	 */
-	public Callback<ListView<Object>, ListCell<Object>> serverCellFactory() {
-		return listView -> {
-			return new ListCellView<Object>(item -> new ServerView(ServerPresenter.getOrCreateServerPresenter((Server) item)).getRoot());
-		};
+	public Function<Object, Parent> serverViewConstructor() {
+		return item -> new ServerView(ServerPresenter.getOrCreateServerPresenter((Server) item)).getRoot();
 	}
 
 	/**

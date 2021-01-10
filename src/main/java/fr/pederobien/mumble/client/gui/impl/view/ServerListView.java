@@ -1,10 +1,11 @@
 package fr.pederobien.mumble.client.gui.impl.view;
 
+import fr.pederobien.fxstyle.impl.wrapper.ListViewWrapper;
 import fr.pederobien.mumble.client.gui.impl.presenter.ServerListPresenter;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 
 public class ServerListView extends ViewBase<ServerListPresenter, StackPane> {
 
@@ -15,13 +16,11 @@ public class ServerListView extends ViewBase<ServerListPresenter, StackPane> {
 		emptyServerListLabel.visibleProperty().bind(getPresenter().emptyServersListVisibilityProperty());
 		getRoot().getChildren().add(emptyServerListLabel);
 
-		ListView<Object> listView = new ListView<Object>(getPresenter().getServers());
-		listView.setMaxWidth(600);
-		listView.setBackground(Background.EMPTY);
-		listView.visibleProperty().bind(getPresenter().emptyServersListVisibilityProperty().not());
-		listView.setCellFactory(getPresenter().serverCellFactory());
-		listView.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> getPresenter().onServerSelectedChanged(oldValue, newValue));
-		listView.setOnMouseClicked(e -> getPresenter().onDoubleClickOnSelectedServer(e));
-		getRoot().getChildren().add(listView);
+		ListViewWrapper<Object> listWrapper = getStyle().createListView(getPresenter().getServers()).background(Background.EMPTY);
+		listWrapper.onClick(e -> getPresenter().onDoubleClickOnSelectedServer(e));
+		listWrapper.onSelectedItemChanged((obs, oldValue, newValue) -> getPresenter().onServerSelectedChanged(oldValue, newValue));
+		listWrapper.cellView(getPresenter().serverViewConstructor(), Color.web("0x0096c9ff"));
+		listWrapper.get().setMaxWidth(600);
+		getRoot().getChildren().add(listWrapper.get());
 	}
 }
