@@ -17,7 +17,7 @@ public class ServerListView extends ViewBase<ServerListPresenter, StackPane> {
 		getRoot().getChildren().add(emptyServerListLabel);
 
 		ListViewWrapper<Object> listWrapper = getStyle().createListView(getPresenter().getServers()).background(Background.EMPTY);
-		listWrapper.onClick(e -> getPresenter().onDoubleClickOnSelectedServer(e));
+		listWrapper.visibleIfNotEmpty().onClick(e -> getPresenter().onDoubleClickOnSelectedServer(e));
 		listWrapper.onSelectedItemChanged((obs, oldValue, newValue) -> getPresenter().onServerSelectedChanged(oldValue, newValue));
 		listWrapper.cellView(getPresenter().serverViewConstructor(), Color.web("0x0096c9ff"));
 		listWrapper.get().setMaxWidth(600);
