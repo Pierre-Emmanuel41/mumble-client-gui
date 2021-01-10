@@ -1,12 +1,12 @@
 package fr.pederobien.mumble.client.gui.impl.view;
 
-import fr.pederobien.mumble.client.gui.impl.presenter.PlayerPresenter;
+import fr.pederobien.mumble.client.gui.impl.presenter.PlayerChannelPresenter;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 
-public class PlayerView extends ViewBase<PlayerPresenter, GridPane> {
+public class PlayerChannelView extends ViewBase<PlayerChannelPresenter, GridPane> {
 
-	public PlayerView(PlayerPresenter presenter) {
+	public PlayerChannelView(PlayerChannelPresenter presenter) {
 		super(presenter, new GridPane());
 
 		Label playerName = getStyle().createLabel(getPresenter().playerNameProperty());

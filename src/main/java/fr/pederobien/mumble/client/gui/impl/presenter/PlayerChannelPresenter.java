@@ -6,22 +6,22 @@ import java.util.Map;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class PlayerPresenter extends PresenterBase {
-	private static final Map<String, PlayerPresenter> PRESENTERS = new HashMap<String, PlayerPresenter>();
+public class PlayerChannelPresenter extends PresenterBase {
+	private static final Map<String, PlayerChannelPresenter> PRESENTERS = new HashMap<String, PlayerChannelPresenter>();
 
 	private StringProperty playerNameProperty;
 
-	public static PlayerPresenter getOrCreatePlayerPresenter(String player) {
-		PlayerPresenter presenter = PRESENTERS.get(player);
+	public static PlayerChannelPresenter getOrCreatePlayerPresenter(String player) {
+		PlayerChannelPresenter presenter = PRESENTERS.get(player);
 		if (presenter != null)
 			return presenter;
 
-		presenter = new PlayerPresenter(player);
+		presenter = new PlayerChannelPresenter(player);
 		PRESENTERS.put(player, presenter);
 		return presenter;
 	}
 
-	private PlayerPresenter(String player) {
+	private PlayerChannelPresenter(String player) {
 		playerNameProperty = new SimpleStringProperty(player);
 	}
 

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import fr.pederobien.mumble.client.gui.impl.view.PlayerView;
+import fr.pederobien.mumble.client.gui.impl.view.PlayerChannelView;
 import fr.pederobien.mumble.client.interfaces.IChannel;
 import fr.pederobien.mumble.client.interfaces.observers.IObsChannel;
 import javafx.beans.property.SimpleStringProperty;
@@ -71,6 +71,6 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel {
 	 * @return The creator of player view.
 	 */
 	public Function<Object, Parent> playerViewConstructor() {
-		return item -> new PlayerView(PlayerPresenter.getOrCreatePlayerPresenter((String) item)).getRoot();
+		return item -> new PlayerChannelView(PlayerChannelPresenter.getOrCreatePlayerPresenter((String) item)).getRoot();
 	}
 }
