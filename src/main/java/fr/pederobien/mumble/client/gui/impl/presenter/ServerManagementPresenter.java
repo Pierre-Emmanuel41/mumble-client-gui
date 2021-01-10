@@ -2,6 +2,7 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import fr.pederobien.dictionary.interfaces.IMessageCode;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.view.ChannelListView;
 import fr.pederobien.mumble.client.gui.impl.view.ServerInfoView;
 import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsServerListPresenter;
 import fr.pederobien.mumble.client.gui.model.Server;
@@ -34,7 +35,7 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 
 	@Override
 	public void onDoubleClickOnServer(Server server) {
-		onEdit();
+		onJoin();
 	}
 
 	/**
@@ -94,7 +95,7 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 	}
 
 	public void onJoin() {
-		System.out.println("Joining server");
+		getPrimaryStage().getScene().setRoot(new ChannelListView(new ChannelListPresenter(selectedServer)).getRoot());
 	}
 
 	public void onAdd() {
