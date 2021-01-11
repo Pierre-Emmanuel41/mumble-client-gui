@@ -25,6 +25,8 @@ public class ChannelView extends ViewBase<ChannelPresenter, GridPane> {
 		channelName.setOnMouseExited(e -> {
 			channelName.setBackground(Background.EMPTY);
 		});
+		channelName.setOnMouseClicked(e -> getPresenter().onChannelClicked());
+
 		getRoot().add(channelName, 0, 0);
 
 		ListViewWrapper<Object> listWrapper = getStyle().createListView(getPresenter().getPlayers()).visibleIfNotEmpty().background(Background.EMPTY);

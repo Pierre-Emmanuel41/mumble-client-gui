@@ -19,7 +19,6 @@ public class ChannelListView extends ViewBase<ChannelListPresenter, StackPane> {
 				consumeSelectionChanged = false;
 				return;
 			}
-			getPresenter().onChannelSelectedChanged(oldValue, newValue);
 			consumeSelectionChanged = true;
 			dispatch(() -> listWrapper.get().getSelectionModel().clearSelection());
 		});
