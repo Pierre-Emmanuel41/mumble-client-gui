@@ -4,6 +4,7 @@ import java.util.function.Function;
 
 import fr.pederobien.mumble.client.event.PlayerAddedToChannelEvent;
 import fr.pederobien.mumble.client.event.PlayerRemovedFromChannelEvent;
+import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.view.ChannelView;
 import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.interfaces.IChannel;
@@ -13,6 +14,8 @@ import fr.pederobien.mumble.client.interfaces.observers.IObsChannelList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 public class ChannelListPresenter extends PresenterBase implements IObsChannelList {
 	private Server server;
@@ -76,7 +79,13 @@ public class ChannelListPresenter extends PresenterBase implements IObsChannelLi
 	}
 
 	private void addPlayer(IResponse<PlayerAddedToChannelEvent> response) {
-		if (response.hasFailed())
-			System.out.println(response.getMessage());
+		if (response.hasFailed()) {
+			dispatch(() -> {
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.titleProperty().bind(getPropertyHelper().languageProperty(EMessageCode.PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL_TITLE));
+				alert.headerTextProperty().bind(getPropertyHelper().languageProperty(EMessageCode.PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL));
+				alert.showAndWait();
+			});
+		}
 	}
 }

@@ -88,5 +88,13 @@
 			<code>SERVER_PORT_NUMBER_TOOLTIP</code>
 			<value>Le numéro de port du serveur doit être un entier dans l'intervalle [0, 65535]</value>
 		</message>
+		<message>
+			<code>PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL_TITLE</code>
+			<value>Impossible de se connecter au channel</value>
+		</message>
+		<message>
+			<code>PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL</code>
+			<value>Vous ne pouvez pas rejoindre le channel, vous devez d'abord être connecté dans le jeu.</value>
+		</message>
 	</messages>
 </dictionary>

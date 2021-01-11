@@ -5,6 +5,8 @@ import fr.pederobien.mumble.client.gui.impl.presenter.ChannelPresenter;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
@@ -17,6 +19,12 @@ public class ChannelView extends ViewBase<ChannelPresenter, GridPane> {
 
 		Label channelName = getStyle().createLabel(getPresenter().channelNameProperty());
 		channelName.setTextFill(Color.BLACK);
+		channelName.setOnMouseEntered(e -> {
+			channelName.setBackground(new Background(new BackgroundFill(Color.web("0x0096c9ff"), new CornerRadii(4), null)));
+		});
+		channelName.setOnMouseExited(e -> {
+			channelName.setBackground(Background.EMPTY);
+		});
 		getRoot().add(channelName, 0, 0);
 
 		ListViewWrapper<Object> listWrapper = getStyle().createListView(getPresenter().getPlayers()).visibleIfNotEmpty().background(Background.EMPTY);

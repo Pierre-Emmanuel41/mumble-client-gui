@@ -72,7 +72,16 @@ public enum EMessageCode implements IMessageCode {
 	SERVER_PORT_NUMBER_PROMPT,
 
 	// Code for the server port number tooltip (text field)
-	SERVER_PORT_NUMBER_TOOLTIP;
+	SERVER_PORT_NUMBER_TOOLTIP,
+
+	// PLAYER STATUS CODE
+	// -----------------------------------------------------------------------------
+
+	// Code for the title of the alert when player try to connect to a channel but is not connected in game.
+	PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL_TITLE,
+
+	// Code when try to connect to a channel but is not connected in game.
+	PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL;
 
 	@Override
 	public String value() {
