@@ -43,7 +43,7 @@ public class GuiConfigurationPersistence extends AbstractXmlPersistence<IGuiConf
 		root.appendChild(version);
 
 		Element locale = createElement(doc, GuiConfigurationXmlTag.LOCALE);
-		locale.appendChild(doc.createTextNode(get().getLocale().toString()));
+		locale.appendChild(doc.createTextNode(get().getLocale().getLanguage()));
 		root.appendChild(locale);
 
 		Element font = createElement(doc, GuiConfigurationXmlTag.FONT);
