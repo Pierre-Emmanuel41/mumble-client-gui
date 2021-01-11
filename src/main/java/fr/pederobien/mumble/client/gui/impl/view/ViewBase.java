@@ -64,7 +64,7 @@ public abstract class ViewBase<T extends PresenterBase, U extends Parent> {
 	/**
 	 * @return The presenter associated to this view.
 	 */
-	protected T getPresenter() {
+	public T getPresenter() {
 		return presenter;
 	}
 
