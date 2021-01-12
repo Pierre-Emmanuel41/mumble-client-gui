@@ -87,7 +87,6 @@ public class ChannelListPresenter extends PresenterBase implements IObsChannelLi
 			return;
 		}
 
-		server.getPlayer(r -> System.out.println(r.get()));
 		channelList = response.get();
 		channelList.addObserver(this);
 		channels.addAll(channelList.getChannels());

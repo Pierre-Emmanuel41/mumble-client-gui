@@ -98,5 +98,13 @@
 			<code>PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL</code>
 			<value>You cannot join a channel, you should be connected in game first.</value>
 		</message>
+		<message>
+			<code>PLAYER_ONLINE</code>
+			<value>Online</value>
+		</message>
+				<message>
+			<code>PLAYER_OFFLINE</code>
+			<value>Offline</value>
+		</message>
 	</messages>
 </dictionary>

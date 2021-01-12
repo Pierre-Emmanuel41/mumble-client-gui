@@ -8,7 +8,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 public class ChannelView extends ViewBase<ChannelPresenter, GridPane> {
@@ -32,6 +31,6 @@ public class ChannelView extends ViewBase<ChannelPresenter, GridPane> {
 		listWrapper.cellView(getPresenter().playerViewConstructor(), Color.web("0x0096c9ff"));
 
 		getRoot().add(listWrapper.get(), 0, 1);
-		VBox.setMargin(listWrapper.get(), new Insets(0, 0, 0, 10));
+		GridPane.setMargin(listWrapper.get(), new Insets(0, 0, 0, 10));
 	}
 }
