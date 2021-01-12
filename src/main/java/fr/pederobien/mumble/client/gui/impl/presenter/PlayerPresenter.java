@@ -64,6 +64,7 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 
 	private void managedResponse(IResponse<IPlayer> response) {
 		this.player = response.get();
+		player.addObserver(this);
 		onConnectionStatusChanged(player.isOnline());
 	}
 
