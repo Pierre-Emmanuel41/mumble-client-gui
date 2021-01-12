@@ -30,7 +30,7 @@ public class ChannelListPresenter extends PresenterBase implements IObsChannelLi
 	public ChannelListPresenter(Server server) {
 		this.server = server;
 		channels = FXCollections.observableArrayList();
-		server.getChannels(response -> managedResponse(response));
+		server.getChannels(response -> manageResponse(response));
 		channelViews = new HashMap<IChannel, ChannelView>();
 	}
 
@@ -81,9 +81,9 @@ public class ChannelListPresenter extends PresenterBase implements IObsChannelLi
 		};
 	}
 
-	private void managedResponse(IResponse<IChannelList> response) {
+	private void manageResponse(IResponse<IChannelList> response) {
 		if (response.hasFailed()) {
-			server.getChannels(r -> managedResponse(r));
+			server.getChannels(r -> manageResponse(r));
 			return;
 		}
 
