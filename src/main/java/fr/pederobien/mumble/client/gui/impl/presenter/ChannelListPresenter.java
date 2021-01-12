@@ -36,21 +36,26 @@ public class ChannelListPresenter extends PresenterBase implements IObsChannelLi
 
 	@Override
 	public void onChannelAdded(IChannel channel) {
-		channels.add(channel);
+		dispatch(() -> channels.add(channel));
 	}
 
 	@Override
 	public void onChannelRemoved(IChannel channel) {
-		channels.remove(channel);
+		dispatch(() -> channels.remove(channel));
 	}
 
 	@Override
 	public void onChannelClicked(IChannel channel) {
-		if (selectedChannel != null)
-			selectedChannel.removePlayer(response -> removePlayer(response));
-
-		selectedChannel = channel;
-		selectedChannel.addPlayer(response -> addPlayer(response));
+		if (selectedChannel == null) {
+			selectedChannel = channel;
+			selectedChannel.addPlayer(response -> addPlayer(response));
+		} else {
+			selectedChannel.removePlayer(response -> {
+				removePlayer(response);
+				selectedChannel = channel;
+				selectedChannel.addPlayer(r -> addPlayer(r));
+			});
+		}
 	}
 
 	/**
@@ -82,9 +87,10 @@ public class ChannelListPresenter extends PresenterBase implements IObsChannelLi
 			return;
 		}
 
+		server.getPlayer(r -> System.out.println(r.get()));
 		channelList = response.get();
 		channelList.addObserver(this);
-		channels.addAll(channelList.getChannels().values());
+		channels.addAll(channelList.getChannels());
 	}
 
 	private void removePlayer(IResponse<PlayerRemovedFromChannelEvent> response) {

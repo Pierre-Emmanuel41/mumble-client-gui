@@ -32,7 +32,7 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel, IObs
 
 	@Override
 	public void onChannelRename(IChannel channel, String oldName, String newName) {
-		channelNameProperty.setValue(newName);
+		dispatch(() -> channelNameProperty.setValue(newName));
 	}
 
 	@Override
