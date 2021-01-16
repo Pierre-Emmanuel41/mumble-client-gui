@@ -7,6 +7,7 @@ import java.util.function.Function;
 import fr.pederobien.mumble.client.event.PlayerAddedToChannelEvent;
 import fr.pederobien.mumble.client.event.PlayerRemovedFromChannelEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
 import fr.pederobien.mumble.client.gui.impl.view.ChannelView;
 import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsChannelPresenter;
 import fr.pederobien.mumble.client.gui.model.Server;
@@ -94,7 +95,7 @@ public class ChannelListPresenter extends PresenterBase implements IObsChannelLi
 
 	private void removePlayer(IResponse<PlayerRemovedFromChannelEvent> response) {
 		if (response.hasFailed())
-			System.out.println(response.getMessage());
+			System.out.println(response.getErrorCode().getMessage());
 	}
 
 	private void addPlayer(IResponse<PlayerAddedToChannelEvent> response) {
@@ -103,7 +104,7 @@ public class ChannelListPresenter extends PresenterBase implements IObsChannelLi
 				Alert alert = new Alert(AlertType.INFORMATION);
 				alert.titleProperty().bind(getPropertyHelper().languageProperty(EMessageCode.PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL_TITLE));
 				alert.headerTextProperty().bind(getPropertyHelper().languageProperty(EMessageCode.PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL));
-				alert.setContentText(response.getMessage());
+				alert.contentTextProperty().bind(getPropertyHelper().languageProperty(ErrorCodeWrapper.getByErrorCode(response.getErrorCode()).getMessageCode()));
 				alert.showAndWait();
 			});
 		}

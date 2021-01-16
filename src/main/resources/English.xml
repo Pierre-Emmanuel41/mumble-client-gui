@@ -22,6 +22,52 @@
 			<code>CANCEL</code>
 			<value>Cancel</value>
 		</message>
+		<!-- ERROR CODE -->
+		<message>
+			<code>NONE</code>
+			<value>No error.</value>
+		</message>
+		<message>
+			<code>TIMEOUT</code>
+			<value>Request times out.</value>
+		</message>
+		<message>
+			<code>PERMISSION_REFUSED</code>
+			<value>Permission refused.</value>
+		</message>
+		<message>
+			<code>UNEXPECTED_ERROR</code>
+			<value>An unexpected error occurs.</value>
+		</message>
+		<message>
+			<code>INCOMPATIBLE_IDC_OID</code>
+			<value>The idc and the oid are incompatibles.</value>
+		</message>
+		<message>
+			<code>IDC_UNKNOWN</code>
+			<value>There is no treatment associated to the given idc.</value>
+		</message>
+		<message>
+			<code>CHANNEL_ALREADY_EXISTS</code>
+			<value>The channel already exists.</value>
+		</message>
+		<message>
+			<code>CHANNEL_DOES_NOT_EXISTS</code>
+			<value>The channel does not exists.</value>
+		</message>
+		<message>
+			<code>PLAYER_NOT_RECOGNIZED</code>
+			<value>The player is not recognized.</value>
+		</message>
+		<message>
+			<code>PLAYER_ALREADY_REGISTERED</code>
+			<value>The player is already registered in a channel.</value>
+		</message>
+		<message>
+			<code>UNKNOWN</code>
+			<value>Cannot parse the error code.</value>
+		</message>		
+		<!-- END ERROR CODE -->
 		<message>
 			<code>EMPTY_SERVER_LIST</code>
 			<value>There is no server</value>

@@ -20,6 +20,52 @@
 			<code>CANCEL</code>
 			<value>Annuler</value>
 		</message>
+		<!-- ERROR CODE -->
+		<message>
+			<code>NONE</code>
+			<value>Pas d'erreurs.</value>
+		</message>
+		<message>
+			<code>TIMEOUT</code>
+			<value>Le requête a eu un time out.</value>
+		</message>
+		<message>
+			<code>PERMISSION_REFUSED</code>
+			<value>Permission refusée.</value>
+		</message>
+		<message>
+			<code>UNEXPECTED_ERROR</code>
+			<value>Une erreur inattendue s'est produite.</value>
+		</message>
+		<message>
+			<code>INCOMPATIBLE_IDC_OID</code>
+			<value>L'Idc et l'Oid sont incompatibles.</value>
+		</message>
+		<message>
+			<code>IDC_UNKNOWN</code>
+			<value>Il n'y a pas de traitement associé à l'Idc.</value>
+		</message>
+		<message>
+			<code>CHANNEL_ALREADY_EXISTS</code>
+			<value>Le channel existe déjà.</value>
+		</message>
+		<message>
+			<code>CHANNEL_DOES_NOT_EXISTS</code>
+			<value>Le channel n'existe pas.</value>
+		</message>
+		<message>
+			<code>PLAYER_NOT_RECOGNIZED</code>
+			<value>Le joueur n'est pas reconnu.</value>
+		</message>
+		<message>
+			<code>PLAYER_ALREADY_REGISTERED</code>
+			<value>Le joueur est déjà enregistré dans un channel.</value>
+		</message>
+		<message>
+			<code>UNKNOWN</code>
+			<value>Impossible d'interpréter le code d'erreur.</value>
+		</message>		
+		<!-- END ERROR CODE -->
 		<message>
 			<code>EMPTY_SERVER_LIST</code>
 			<value>Il n'y a pas de serveur</value>
