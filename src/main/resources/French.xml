@@ -143,6 +143,10 @@
 			<value>Vous ne pouvez pas rejoindre le channel, vous devez d'abord être connecté dans le jeu.</value>
 		</message>
 		<message>
+			<code>DISCONNECT_FROM_CHANNEL</code>
+			<value>Se déconnecter</value>
+		</message>
+		<message>
 			<code>PLAYER_ONLINE</code>
 			<value>En ligne</value>
 		</message>

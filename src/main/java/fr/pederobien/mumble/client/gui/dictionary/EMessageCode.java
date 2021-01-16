@@ -83,6 +83,9 @@ public enum EMessageCode implements IMessageCode {
 	// Code when try to connect to a channel but is not connected in game.
 	PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL,
 
+	// Code when player try to disconnect from a channel.
+	DISCONNECT_FROM_CHANNEL,
+
 	// PLAYER STATUS CODE
 	// -----------------------------------------------------------------------------
 

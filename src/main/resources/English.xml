@@ -145,10 +145,14 @@
 			<value>You cannot join a channel, you should be connected in game first.</value>
 		</message>
 		<message>
+			<code>DISCONNECT_FROM_CHANNEL</code>
+			<value>Disconnect</value>
+		</message>
+		<message>
 			<code>PLAYER_ONLINE</code>
 			<value>Online</value>
 		</message>
-				<message>
+		<message>
 			<code>PLAYER_OFFLINE</code>
 			<value>Offline</value>
 		</message>
