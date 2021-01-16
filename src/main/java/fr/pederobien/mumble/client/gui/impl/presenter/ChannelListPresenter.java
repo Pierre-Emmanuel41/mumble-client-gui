@@ -9,6 +9,7 @@ import fr.pederobien.mumble.client.event.PlayerRemovedFromChannelEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
 import fr.pederobien.mumble.client.gui.impl.view.ChannelView;
+import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsServer;
 import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsChannelPresenter;
 import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.interfaces.IChannel;
@@ -21,7 +22,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
-public class ChannelListPresenter extends PresenterBase implements IObsChannelList, IObsChannelPresenter {
+public class ChannelListPresenter extends PresenterBase implements IObsChannelList, IObsServer, IObsChannelPresenter {
 	private Server server;
 	private IChannel selectedChannel;
 	private IChannelList channelList;
@@ -31,8 +32,10 @@ public class ChannelListPresenter extends PresenterBase implements IObsChannelLi
 	public ChannelListPresenter(Server server) {
 		this.server = server;
 		channels = FXCollections.observableArrayList();
-		server.getChannels(response -> manageResponse(response));
 		channelViews = new HashMap<IChannel, ChannelView>();
+
+		server.addObserver(this);
+		server.getChannels(response -> manageResponse(response));
 	}
 
 	@Override
@@ -43,6 +46,34 @@ public class ChannelListPresenter extends PresenterBase implements IObsChannelLi
 	@Override
 	public void onChannelRemoved(IChannel channel) {
 		dispatch(() -> channels.remove(channel));
+	}
+
+	@Override
+	public void onNameChanged(Server server, String oldName, String newName) {
+
+	}
+
+	@Override
+	public void onIpAddressChanged(Server server, String oldAddress, String newAddress) {
+
+	}
+
+	@Override
+	public void onPortChanged(Server server, int oldPort, int newPort) {
+
+	}
+
+	@Override
+	public void onReachableStatusChanged(Server server, boolean isReachable) {
+		if (isReachable)
+			server.getChannels(response -> dispatch(() -> manageResponse(response)));
+		else {
+			dispatch(() -> {
+				channels.clear();
+				if (channelList != null)
+					channelList.removeObserver(this);
+			});
+		}
 	}
 
 	@Override
@@ -84,7 +115,7 @@ public class ChannelListPresenter extends PresenterBase implements IObsChannelLi
 
 	private void manageResponse(IResponse<IChannelList> response) {
 		if (response.hasFailed()) {
-			server.getChannels(r -> manageResponse(r));
+			server.getChannels(r -> dispatch(() -> manageResponse(r)));
 			return;
 		}
 
