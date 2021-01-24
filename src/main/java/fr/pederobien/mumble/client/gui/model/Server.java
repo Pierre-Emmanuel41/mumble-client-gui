@@ -185,7 +185,7 @@ public class Server implements IObservable<IObsServer> {
 			setIsReachable(false);
 		}
 
-		connection = MumbleConnection.of(getAddress(), getPort());
+		connection = MumbleConnection.of(getAddress(), getPort(), 32000);
 		connection.addObserver(internalObserver);
 		connection.connect();
 	}
