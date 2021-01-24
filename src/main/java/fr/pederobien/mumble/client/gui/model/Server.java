@@ -3,6 +3,7 @@ package fr.pederobien.mumble.client.gui.model;
 import java.util.function.Consumer;
 
 import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsServer;
+import fr.pederobien.mumble.client.impl.AudioThread;
 import fr.pederobien.mumble.client.impl.MumbleConnection;
 import fr.pederobien.mumble.client.interfaces.IChannelList;
 import fr.pederobien.mumble.client.interfaces.IMumbleConnection;
@@ -53,6 +54,23 @@ public class Server implements IObservable<IObsServer> {
 		observers.removeObserver(obs);
 	}
 
+	@Override
+	public String toString() {
+		return "Server={" + name + "," + address + "," + port + "}";
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+
+		if (!(obj instanceof Server))
+			return false;
+
+		Server other = (Server) obj;
+		return name.equals(other.getName()) && address.equals(other.getAddress()) && port == other.getPort();
+	}
+
 	/**
 	 * Attempt a connection to the remove.
 	 */
@@ -74,21 +92,16 @@ public class Server implements IObservable<IObsServer> {
 		connection.dispose();
 	}
 
-	@Override
-	public String toString() {
-		return "Server={" + name + "," + address + "," + port + "}";
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-
-		if (!(obj instanceof Server))
-			return false;
-
-		Server other = (Server) obj;
-		return name.equals(other.getName()) && address.equals(other.getAddress()) && port == other.getPort();
+	/**
+	 * Get the audio thread. The thread is started but does not get the microphone input and does not play data received from the
+	 * remote. You have to call method {@link AudioThread#connect()} in order to get the microphone input and send it to the remote.
+	 * If you only want to stop getting data, but not stopping the thread, you have to call method {@link AudioThread#disconnect()}.
+	 * This will stop sending microphone data and receiving data from the remote.
+	 * 
+	 * @return The audio thread that capture the microphone input and play sound received from the remote.
+	 */
+	public AudioThread getAudioThread() {
+		return connection.getAudioThread();
 	}
 
 	/**
