@@ -1,5 +1,6 @@
 package fr.pederobien.mumble.client.gui.model;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsServer;
@@ -19,7 +20,8 @@ public class Server implements IObservable<IObsServer> {
 	public static final int DEFAULT_PORT = 0;
 	private String name, address;
 	private int port;
-	private boolean isReachable;
+	private boolean isOpen, isReachable;
+	private AtomicBoolean isDisposed;
 	private Observable<IObsServer> observers;
 	private IMumbleConnection connection;
 	private InternalObserver internalObserver;
@@ -28,12 +30,13 @@ public class Server implements IObservable<IObsServer> {
 		this.name = name;
 		this.address = address;
 		this.port = port;
-		observers = new Observable<IObsServer>();
 
+		observers = new Observable<IObsServer>();
 		internalObserver = new InternalObserver();
+		isDisposed = new AtomicBoolean(false);
 
 		if (connect)
-			initiateConnection();
+			open();
 	}
 
 	public Server(String name, String address, int port) {
@@ -74,22 +77,35 @@ public class Server implements IObservable<IObsServer> {
 	/**
 	 * Attempt a connection to the remove.
 	 */
-	public void connect() {
-		connection.connect();
+	public void open() {
+		checkIsDisposed();
+
+		if (isOpen)
+			return;
+
+		openConnection();
 	}
 
 	/**
 	 * Abort the connection to the remote.
 	 */
-	public void disconnect() {
-		connection.disconnect();
+	public void close() {
+		checkIsDisposed();
+
+		if (!isOpen)
+			return;
+
+		closeConnection();
 	}
 
 	/**
 	 * Close definitively this connection.
 	 */
 	public void dispose() {
-		connection.dispose();
+		if (!isDisposed.compareAndSet(false, true))
+			return;
+
+		closeConnection();
 	}
 
 	/**
@@ -160,7 +176,7 @@ public class Server implements IObservable<IObsServer> {
 		String oldAddress = this.address;
 		this.address = address;
 		observers.notifyObservers(obs -> obs.onIpAddressChanged(this, oldAddress, address));
-		initiateConnection();
+		reinitialize();
 	}
 
 	/**
@@ -181,7 +197,7 @@ public class Server implements IObservable<IObsServer> {
 		int oldPort = this.port;
 		this.port = port;
 		observers.notifyObservers(obs -> obs.onPortChanged(this, oldPort, port));
-		initiateConnection();
+		reinitialize();
 	}
 
 	/**
@@ -191,16 +207,15 @@ public class Server implements IObservable<IObsServer> {
 		return isReachable;
 	}
 
-	private void initiateConnection() {
-		if (this.connection != null && !this.connection.isDisposed()) {
-			this.connection.dispose();
-			this.connection.removeObserver(internalObserver);
-			setIsReachable(false);
-		}
+	private void checkIsDisposed() {
+		if (isDisposed.get())
+			throw new UnsupportedOperationException("Object disposed");
+	}
 
-		connection = MumbleConnection.of(getAddress(), getPort());
-		connection.addObserver(internalObserver);
-		connection.connect();
+	private void reinitialize() {
+		if (this.connection != null && !this.connection.isDisposed())
+			closeConnection();
+		openConnection();
 	}
 
 	private void setIsReachable(boolean isReachable) {
@@ -208,6 +223,20 @@ public class Server implements IObservable<IObsServer> {
 			return;
 		this.isReachable = isReachable;
 		observers.notifyObservers(obs -> obs.onReachableStatusChanged(this, isReachable));
+	}
+
+	private void openConnection() {
+		isOpen = true;
+		connection = MumbleConnection.of(getAddress(), getPort());
+		connection.addObserver(internalObserver);
+		connection.connect();
+	}
+
+	private void closeConnection() {
+		isOpen = false;
+		connection.dispose();
+		connection.removeObserver(internalObserver);
+		setIsReachable(false);
 	}
 
 	private class InternalObserver implements IObsMumbleConnection {
