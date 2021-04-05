@@ -4,8 +4,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsServer;
-import fr.pederobien.mumble.client.impl.AudioThread;
 import fr.pederobien.mumble.client.impl.MumbleConnection;
+import fr.pederobien.mumble.client.interfaces.IAudioConnection;
 import fr.pederobien.mumble.client.interfaces.IChannelList;
 import fr.pederobien.mumble.client.interfaces.IMumbleConnection;
 import fr.pederobien.mumble.client.interfaces.IPlayer;
@@ -116,8 +116,8 @@ public class Server implements IObservable<IObsServer> {
 	 * 
 	 * @return The audio thread that capture the microphone input and play sound received from the remote.
 	 */
-	public AudioThread getAudioThread() {
-		return connection.getAudioThread();
+	public IAudioConnection getAudioConnection() {
+		return connection.getAudioConnection();
 	}
 
 	/**

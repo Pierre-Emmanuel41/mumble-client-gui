@@ -5,7 +5,7 @@ import fr.pederobien.fxstyle.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.event.PlayerRemovedFromChannelEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.model.Server;
-import fr.pederobien.mumble.client.impl.AudioThread;
+import fr.pederobien.mumble.client.interfaces.IAudioConnection;
 import fr.pederobien.mumble.client.interfaces.IChannel;
 import fr.pederobien.mumble.client.interfaces.IPlayer;
 import fr.pederobien.mumble.client.interfaces.IResponse;
@@ -17,7 +17,7 @@ import javafx.beans.property.StringProperty;
 
 public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 	private IPlayer player;
-	private AudioThread audioThread;
+	private IAudioConnection audioConnection;
 
 	private StringProperty playerNameProperty;
 	private SimpleLanguageProperty playerStatusProperty;
@@ -27,7 +27,7 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 
 	public PlayerPresenter(Server server) {
 		server.getPlayer(response -> playerResponse(response));
-		audioThread = server.getAudioThread();
+		audioConnection = server.getAudioConnection();
 
 		playerNameProperty = new SimpleStringProperty("");
 		playerStatusProperty = getPropertyHelper().languageProperty(EMessageCode.PLAYER_OFFLINE);
@@ -54,9 +54,9 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 	public void onChannelChanged(IChannel channel) {
 		playerCanDisconnectFromChannel.setValue(channel != null);
 		if (channel == null)
-			audioThread.disconnect();
+			audioConnection.disconnect();
 		else
-			audioThread.connect();
+			audioConnection.connect();
 	}
 
 	/**
