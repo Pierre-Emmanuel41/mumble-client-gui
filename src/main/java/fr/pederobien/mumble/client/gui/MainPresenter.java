@@ -91,7 +91,7 @@ public class MainPresenter extends PresenterBase {
 					GuiConfigurationPersistence.getInstance().get().registerDictionary(parser.parse(Paths.get(Environment.RESOURCES_FOLDER.getFileName(), name)));
 
 			} else if (url.startsWith("jar")) {
-				Path jarPath = Paths.get(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath().substring(1));
+				Path jarPath = Paths.get(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath().substring(1).replace("%20", " "));
 				String internalPath = Environment.RESOURCES_FOLDER.getFileName();
 				JarDictionaryParser parser = new JarDictionaryParser(internalPath);
 				for (String name : dictionaryNames)
