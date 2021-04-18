@@ -2,9 +2,9 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import java.util.function.Function;
 
-import fr.pederobien.dictionary.interfaces.IMessageCode;
-import fr.pederobien.fxstyle.impl.properties.ListCellView;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.properties.ListCellView;
+import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.ServerView;
 import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsServerList;
 import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsServerListPresenter;
@@ -14,15 +14,21 @@ import fr.pederobien.utils.IObservable;
 import fr.pederobien.utils.Observable;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.util.Callback;
 
 public class ServerListPresenter extends PresenterBase implements IObsServerList, IObservable<IObsServerListPresenter> {
 	private ObservableList<Object> servers;
 	private BooleanProperty emptyServersListVisibilityProperty;
+	private SimpleLanguageProperty emptyServerTextProperty;
 	private Server selectedServer;
 	private Observable<IObsServerListPresenter> observers;
 
@@ -31,6 +37,7 @@ public class ServerListPresenter extends PresenterBase implements IObsServerList
 		servers = FXCollections.observableArrayList(serverList.getServers());
 
 		emptyServersListVisibilityProperty = new SimpleBooleanProperty(serverList.getServers().isEmpty());
+		emptyServerTextProperty = getPropertyHelper().languageProperty(EMessageCode.EMPTY_SERVER_LIST);
 		observers = new Observable<IObsServerListPresenter>();
 	}
 
@@ -66,8 +73,8 @@ public class ServerListPresenter extends PresenterBase implements IObsServerList
 	/**
 	 * @return The code associated to the message to display when there is no registered server.
 	 */
-	public IMessageCode emptyServerCode() {
-		return EMessageCode.EMPTY_SERVER_LIST;
+	public StringProperty emptyServerTextProperty() {
+		return emptyServerTextProperty;
 	}
 
 	/**
@@ -75,6 +82,10 @@ public class ServerListPresenter extends PresenterBase implements IObsServerList
 	 */
 	public BooleanProperty emptyServersListVisibilityProperty() {
 		return emptyServersListVisibilityProperty;
+	}
+
+	public <T> Callback<ListView<T>, ListCell<T>> serverViewFactory(Color enteredColor) {
+		return listView -> getPropertyHelper().cellView(item -> new ServerView(ServerPresenter.getOrCreateServerPresenter((Server) item)).getRoot(), enteredColor);
 	}
 
 	/**

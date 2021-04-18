@@ -1,9 +1,11 @@
 package fr.pederobien.mumble.client.gui.impl.view;
 
-import fr.pederobien.fxstyle.impl.wrapper.ListViewWrapper;
 import fr.pederobien.mumble.client.gui.impl.presenter.ChannelPresenter;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -15,22 +17,33 @@ public class ChannelView extends ViewBase<ChannelPresenter, GridPane> {
 	public ChannelView(ChannelPresenter presenter) {
 		super(presenter, new GridPane());
 
-		Label channelName = getStyle().createLabel(getPresenter().channelNameProperty());
+		Label channelName = new Label();
+		channelName.textProperty().bind(getPresenter().channelNameProperty());
 		channelName.setTextFill(Color.BLACK);
+
 		channelName.setOnMouseEntered(e -> {
 			channelName.setBackground(new Background(new BackgroundFill(Color.web("0x0096c9ff"), new CornerRadii(4), null)));
 		});
+
 		channelName.setOnMouseExited(e -> {
 			channelName.setBackground(Background.EMPTY);
 		});
+
 		channelName.setOnMouseClicked(e -> getPresenter().onChannelClicked());
 
 		getRoot().add(channelName, 0, 0);
 
-		ListViewWrapper<Object> listWrapper = getStyle().createListView(getPresenter().getPlayers()).visibleIfNotEmpty().background(Background.EMPTY);
-		listWrapper.cellView(getPresenter().playerViewConstructor(), Color.web("0x0096c9ff"));
+		ListView<Object> playerListView = new ListView<Object>();
+		playerListView.setItems(getPresenter().getPlayers());
 
-		getRoot().add(listWrapper.get(), 0, 1);
-		GridPane.setMargin(listWrapper.get(), new Insets(0, 0, 0, 10));
+		// Visible if the list view is not empty.
+		playerListView.visibleProperty().bind(Bindings.greaterThan(Bindings.size(playerListView.getItems()), new SimpleIntegerProperty(0)));
+		playerListView.managedProperty().bind(playerListView.visibleProperty());
+
+		playerListView.setBackground(Background.EMPTY);
+		playerListView.setCellFactory(getPresenter().playerViewFactory(Color.web("0x0096c9ff")));
+
+		getRoot().add(playerListView, 0, 1);
+		GridPane.setMargin(playerListView, new Insets(0, 0, 0, 10));
 	}
 }

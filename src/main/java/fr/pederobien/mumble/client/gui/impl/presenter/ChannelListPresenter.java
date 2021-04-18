@@ -2,7 +2,6 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 import fr.pederobien.mumble.client.event.PlayerAddedToChannelEvent;
 import fr.pederobien.mumble.client.event.PlayerRemovedFromChannelEvent;
@@ -18,9 +17,12 @@ import fr.pederobien.mumble.client.interfaces.IResponse;
 import fr.pederobien.mumble.client.interfaces.observers.IObsChannelList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.paint.Color;
+import javafx.util.Callback;
 
 public class ChannelListPresenter extends PresenterBase implements IObsChannelList, IObsServer, IObsChannelPresenter {
 	private Server server;
@@ -97,11 +99,8 @@ public class ChannelListPresenter extends PresenterBase implements IObsChannelLi
 		return channels;
 	}
 
-	/**
-	 * @return The channel view constructor.
-	 */
-	public Function<Object, Parent> channelCellFactory() {
-		return item -> {
+	public <T> Callback<ListView<T>, ListCell<T>> channelViewFactory(Color enteredColor) {
+		return listView -> getPropertyHelper().cellView(item -> {
 			ChannelView view = channelViews.get(item);
 			if (view == null) {
 				ChannelPresenter presenter = new ChannelPresenter((IChannel) item);
@@ -110,7 +109,7 @@ public class ChannelListPresenter extends PresenterBase implements IObsChannelLi
 				channelViews.put((IChannel) item, view);
 			}
 			return view.getRoot();
-		};
+		}, enteredColor);
 	}
 
 	private void manageResponse(IResponse<IChannelList> response) {

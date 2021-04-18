@@ -1,7 +1,7 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
-import fr.pederobien.dictionary.interfaces.IMessageCode;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.ServerChannelsView;
 import fr.pederobien.mumble.client.gui.impl.view.ServerInfoView;
 import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsServerListPresenter;
@@ -9,9 +9,24 @@ import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.gui.model.ServerList;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.StringProperty;
 
 public class ServerManagementPresenter extends PresenterBase implements IObsServerListPresenter {
-	private BooleanProperty joinServerDisableProperty, addServerDisableProperty, editServerDisableProperty, deleteServerDisableProperty;
+	// Join server -----------------------------------------------------
+	private SimpleLanguageProperty joinServerTextProperty;
+	private BooleanProperty joinServerDisableProperty;
+
+	// Add server -----------------------------------------------------
+	private SimpleLanguageProperty addServerTextProperty;
+	private BooleanProperty addServerDisableProperty;
+
+	// Edit server -----------------------------------------------------
+	private SimpleLanguageProperty editServerTextProperty;
+	private BooleanProperty editServerDisableProperty;
+
+	// Delete server -----------------------------------------------------
+	private SimpleLanguageProperty deleteServerTextProperty;
+	private BooleanProperty deleteServerDisableProperty;
 
 	private ServerList serverList;
 	private Server selectedServer;
@@ -19,9 +34,16 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 	public ServerManagementPresenter(ServerList serverList) {
 		this.serverList = serverList;
 
+		joinServerTextProperty = getPropertyHelper().languageProperty(EMessageCode.JOIN_SERVER);
 		joinServerDisableProperty = new SimpleBooleanProperty(true);
+
+		addServerTextProperty = getPropertyHelper().languageProperty(EMessageCode.ADD_SERVER);
 		addServerDisableProperty = new SimpleBooleanProperty(false);
+
+		editServerTextProperty = getPropertyHelper().languageProperty(EMessageCode.EDIT_SERVER);
 		editServerDisableProperty = new SimpleBooleanProperty(true);
+
+		deleteServerTextProperty = getPropertyHelper().languageProperty(EMessageCode.DELETE_SERVER);
 		deleteServerDisableProperty = new SimpleBooleanProperty(true);
 	}
 
@@ -38,11 +60,8 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 		onJoin();
 	}
 
-	/**
-	 * @return The code associated to the message to display in order to join the server.
-	 */
-	public IMessageCode joinCode() {
-		return EMessageCode.JOIN_SERVER;
+	public StringProperty joinServerTextProperty() {
+		return joinServerTextProperty;
 	}
 
 	/**
@@ -52,11 +71,8 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 		return joinServerDisableProperty;
 	}
 
-	/**
-	 * @return The code associated to the message to display in order to add a server.
-	 */
-	public IMessageCode addCode() {
-		return EMessageCode.ADD_SERVER;
+	public StringProperty addServerTextProperty() {
+		return addServerTextProperty;
 	}
 
 	/**
@@ -66,11 +82,8 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 		return addServerDisableProperty;
 	}
 
-	/**
-	 * @return The code associated to the message to display in order to edit the server.
-	 */
-	public IMessageCode editCode() {
-		return EMessageCode.EDIT_SERVER;
+	public StringProperty editServerTextProperty() {
+		return editServerTextProperty;
 	}
 
 	/**
@@ -80,11 +93,8 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 		return editServerDisableProperty;
 	}
 
-	/**
-	 * @return The code associated to the message to display in order to delete the server.
-	 */
-	public IMessageCode deleteCode() {
-		return EMessageCode.DELETE_SERVER;
+	public StringProperty deleteServerTextProperty() {
+		return deleteServerTextProperty;
 	}
 
 	/**

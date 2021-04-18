@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fr.pederobien.dictionary.interfaces.IMessageCode;
-import fr.pederobien.fxstyle.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsServer;
 import fr.pederobien.mumble.client.gui.model.Server;
 import javafx.beans.property.ObjectProperty;

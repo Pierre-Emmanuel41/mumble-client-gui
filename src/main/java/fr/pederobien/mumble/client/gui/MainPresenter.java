@@ -6,17 +6,15 @@ import java.nio.file.Paths;
 
 import fr.pederobien.dictionary.impl.DefaultDictionaryParser;
 import fr.pederobien.dictionary.impl.JarDictionaryParser;
-import fr.pederobien.fxstyle.impl.Styles;
-import fr.pederobien.fxstyle.interfaces.IStyle;
 import fr.pederobien.mumble.client.gui.configuration.persistence.GuiConfigurationPersistence;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.Environment;
 import fr.pederobien.mumble.client.gui.impl.presenter.PresenterBase;
 import fr.pederobien.mumble.client.gui.impl.presenter.ServerListPresenter;
 import fr.pederobien.mumble.client.gui.impl.presenter.ServerManagementPresenter;
+import fr.pederobien.mumble.client.gui.impl.properties.PropertyHelper;
 import fr.pederobien.mumble.client.gui.impl.view.ServerListView;
 import fr.pederobien.mumble.client.gui.impl.view.ServerManagementView;
-import fr.pederobien.mumble.client.gui.impl.view.ViewBase;
 import fr.pederobien.mumble.client.gui.persistence.ServerListPersistence;
 import javafx.beans.property.StringProperty;
 
@@ -38,10 +36,7 @@ public class MainPresenter extends PresenterBase {
 			GuiConfigurationPersistence.getInstance().saveDefault();
 		}
 
-		IStyle style = Styles.simple(GuiConfigurationPersistence.getInstance().get());
-
-		ViewBase.setStyle(style);
-		setPropertyHelper(style.getPropertyHelper());
+		setPropertyHelper(new PropertyHelper(GuiConfigurationPersistence.getInstance().get()));
 		registerDictionaries("French.xml", "English.xml");
 
 		ServerListPresenter serverListPresenter = new ServerListPresenter(ServerListPersistence.getInstance().get());

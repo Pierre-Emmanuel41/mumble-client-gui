@@ -1,8 +1,7 @@
 package fr.pederobien.mumble.client.gui.impl.properties;
 
-import fr.pederobien.fxstyle.impl.properties.InternalProperty;
-import fr.pederobien.fxstyle.impl.properties.InternalProperty.Action;
-import fr.pederobien.fxstyle.interfaces.IGuiConfiguration;
+import fr.pederobien.mumble.client.gui.impl.properties.InternalProperty.Action;
+import fr.pederobien.mumble.client.gui.interfaces.observers.IGuiConfiguration;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.text.Font;
 

@@ -1,9 +1,9 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import fr.pederobien.dictionary.interfaces.IMessageCode;
-import fr.pederobien.fxstyle.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.event.PlayerRemovedFromChannelEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.interfaces.IAudioConnection;
 import fr.pederobien.mumble.client.interfaces.IChannel;
@@ -21,6 +21,7 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 
 	private StringProperty playerNameProperty;
 	private SimpleLanguageProperty playerStatusProperty;
+	private SimpleLanguageProperty disconnectFromChannelTextProperty;
 	private BooleanProperty playerConnectedProperty;
 
 	private BooleanProperty playerCanDisconnectFromChannel;
@@ -31,6 +32,7 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 
 		playerNameProperty = new SimpleStringProperty("");
 		playerStatusProperty = getPropertyHelper().languageProperty(EMessageCode.PLAYER_OFFLINE);
+		disconnectFromChannelTextProperty = getPropertyHelper().languageProperty(EMessageCode.DISCONNECT_FROM_CHANNEL);
 		playerConnectedProperty = new SimpleBooleanProperty(false);
 
 		playerCanDisconnectFromChannel = new SimpleBooleanProperty(false);
@@ -80,11 +82,8 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 		return playerConnectedProperty;
 	}
 
-	/**
-	 * @return The code associated to the message to display in order to disconnect the player from its channel.
-	 */
-	public IMessageCode disconnectFromChannelCode() {
-		return EMessageCode.DISCONNECT_FROM_CHANNEL;
+	public StringProperty disconnectFromChannelTextProperty() {
+		return disconnectFromChannelTextProperty;
 	}
 
 	/**

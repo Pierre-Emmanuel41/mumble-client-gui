@@ -6,8 +6,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import fr.pederobien.fxstyle.interfaces.IGuiConfiguration;
-import fr.pederobien.fxstyle.interfaces.IObsGuiConfiguration;
+import fr.pederobien.mumble.client.gui.interfaces.observers.IGuiConfiguration;
+import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsGuiConfiguration;
 import javafx.scene.text.Font;
 
 public class InternalProperty {

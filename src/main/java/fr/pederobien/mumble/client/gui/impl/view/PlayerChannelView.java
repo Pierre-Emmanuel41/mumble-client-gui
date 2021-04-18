@@ -9,7 +9,8 @@ public class PlayerChannelView extends ViewBase<PlayerChannelPresenter, GridPane
 	public PlayerChannelView(PlayerChannelPresenter presenter) {
 		super(presenter, new GridPane());
 
-		Label playerName = getStyle().createLabel(getPresenter().playerNameProperty());
+		Label playerName = new Label();
+		playerName.textProperty().bind(getPresenter().playerNameProperty());
 		getRoot().add(playerName, 0, 0);
 	}
 }

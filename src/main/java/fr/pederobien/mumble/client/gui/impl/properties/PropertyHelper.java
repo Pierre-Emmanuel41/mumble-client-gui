@@ -3,7 +3,7 @@ package fr.pederobien.mumble.client.gui.impl.properties;
 import java.util.function.Function;
 
 import fr.pederobien.dictionary.interfaces.IMessageCode;
-import fr.pederobien.fxstyle.interfaces.IGuiConfiguration;
+import fr.pederobien.mumble.client.gui.interfaces.observers.IGuiConfiguration;
 import javafx.scene.Parent;
 import javafx.scene.paint.Color;
 

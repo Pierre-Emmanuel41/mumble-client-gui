@@ -4,6 +4,7 @@ import fr.pederobien.mumble.client.gui.impl.presenter.ServerManagementPresenter;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.layout.FlowPane;
 
 public class ServerManagementView extends ViewBase<ServerManagementPresenter, FlowPane> {
@@ -13,11 +14,29 @@ public class ServerManagementView extends ViewBase<ServerManagementPresenter, Fl
 
 		getRoot().setAlignment(Pos.CENTER);
 
-		add(getStyle().createButton(getPresenter().joinCode()).disable(getPresenter().joinDisableProperty()).onAction(e -> getPresenter().onJoin()).get());
-		add(getStyle().createButton(getPresenter().addCode()).disable(getPresenter().addDisableProperty()).onAction(e -> getPresenter().onAdd()).get());
-		add(getStyle().createButton(getPresenter().editCode()).disable(getPresenter().editDisableProperty()).onAction(e -> getPresenter().onEdit()).get());
-		add(getStyle().createButton(getPresenter().deleteCode()).disable(getPresenter().deleteDisableProperty()).onAction(e -> getPresenter().onDelete()).get());
+		Button joinButton = new Button();
+		joinButton.textProperty().bind(getPresenter().joinServerTextProperty());
+		joinButton.disableProperty().bind(getPresenter().joinDisableProperty());
+		joinButton.setOnAction(e -> getPresenter().onJoin());
+		add(joinButton);
 
+		Button addButton = new Button();
+		addButton.textProperty().bind(getPresenter().addServerTextProperty());
+		addButton.disableProperty().bind(getPresenter().addDisableProperty());
+		addButton.setOnAction(e -> getPresenter().onAdd());
+		add(addButton);
+
+		Button editButton = new Button();
+		editButton.textProperty().bind(getPresenter().editServerTextProperty());
+		editButton.disableProperty().bind(getPresenter().editDisableProperty());
+		editButton.setOnAction(e -> getPresenter().onEdit());
+		add(editButton);
+
+		Button deleteButton = new Button();
+		deleteButton.textProperty().bind(getPresenter().deleteServerTextProperty());
+		deleteButton.disableProperty().bind(getPresenter().deleteDisableProperty());
+		deleteButton.setOnAction(e -> getPresenter().onDelete());
+		add(deleteButton);
 	}
 
 	private void add(Node node) {

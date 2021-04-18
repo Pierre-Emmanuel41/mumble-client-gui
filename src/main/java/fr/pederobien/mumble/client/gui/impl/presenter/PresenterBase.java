@@ -3,7 +3,7 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.pederobien.fxstyle.impl.properties.PropertyHelper;
+import fr.pederobien.mumble.client.gui.impl.properties.PropertyHelper;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 

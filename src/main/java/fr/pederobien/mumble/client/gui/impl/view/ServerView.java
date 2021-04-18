@@ -13,13 +13,16 @@ public class ServerView extends ViewBase<ServerPresenter, BorderPane> {
 
 		VBox vbox = new VBox(2.5);
 
-		Label serverNameLabel = getStyle().createLabel(getPresenter().serverNameProperty());
+		Label serverNameLabel = new Label();
+		serverNameLabel.textProperty().bind(getPresenter().serverNameProperty());
 
-		Label serverIpAddress = getStyle().createLabel(getPresenter().serverIpAddressProperty());
+		Label serverIpAddress = new Label();
+		serverIpAddress.textProperty().bind(getPresenter().serverIpAddressProperty());
 
 		vbox.getChildren().addAll(serverNameLabel, serverIpAddress);
 
-		Label serverReachableLabel = getStyle().createLabel(getPresenter().serverStatusProperty());
+		Label serverReachableLabel = new Label();
+		serverReachableLabel.textProperty().bind(getPresenter().serverStatusProperty());
 		serverReachableLabel.textFillProperty().bind(getPresenter().textFillProperty());
 
 		getRoot().setPadding(new Insets(5, 5, 5, 5));

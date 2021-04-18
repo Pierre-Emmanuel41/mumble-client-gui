@@ -2,8 +2,9 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import java.util.regex.Pattern;
 
-import fr.pederobien.dictionary.interfaces.IMessageCode;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
+import fr.pederobien.mumble.client.gui.impl.properties.SimpleTooltipProperty;
 import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.gui.model.ServerList;
 import javafx.beans.property.BooleanProperty;
@@ -15,6 +16,7 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Border;
@@ -30,29 +32,62 @@ public abstract class ServerInfoPresenter extends PresenterBase {
 	private Server server;
 	private InternalObserver observer;
 
+	private SimpleLanguageProperty titleTextProperty;
+
+	// Server name ---------------------------------------------
 	private StringProperty serverNameProperty;
+	private SimpleLanguageProperty serverNameTextProperty;
 	private ObjectProperty<Border> serverNameBorderProperty;
+	private SimpleLanguageProperty serverNamePromptProperty;
+	private SimpleTooltipProperty serverNameTooltipProperty;
+
+	// Server Ip address -----------------------------------------
 	private StringProperty serverIpAddressProperty;
+	private SimpleLanguageProperty serverIpAddressTextProperty;
 	private ObjectProperty<Border> serverIpAddressBorderProperty;
+	private SimpleLanguageProperty serverIpAddressPromptProperty;
+	private SimpleTooltipProperty serverIpAddressTooltipProperty;
+
+	// Server port number ----------------------------------------
 	private StringProperty serverPortProperty;
+	private SimpleLanguageProperty serverPortTextProperty;
 	private ObjectProperty<Border> serverPortBorderProperty;
+	private SimpleLanguageProperty serverPortPromptProperty;
+	private SimpleTooltipProperty serverPortTooltipProperty;
+
+	// Buttons ---------------------------------------------------
+	private SimpleLanguageProperty okTextProperty;
 	private BooleanProperty okDisableProperty;
+	private SimpleLanguageProperty cancelTextProperty;
 	private Stage stage;
 
 	public ServerInfoPresenter(ServerList serverList, Server server) {
 		this.serverList = serverList;
 		this.server = server;
 
-		serverNameBorderProperty = new SimpleObjectProperty<Border>(null);
+		titleTextProperty = getPropertyHelper().languageProperty(EMessageCode.ADD_NEW_SERVER_TITLE);
+
 		serverNameProperty = new SimpleStringProperty(server.getName().equals(Server.DEFAULT_NAME) ? null : server.getName());
+		serverNameTextProperty = getPropertyHelper().languageProperty(EMessageCode.SERVER_NAME);
+		serverNameBorderProperty = new SimpleObjectProperty<Border>(null);
+		serverNamePromptProperty = getPropertyHelper().languageProperty(EMessageCode.SERVER_NAME_PROMPT);
+		serverNameTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.SERVER_NAME_TOOLTIP);
 
-		serverIpAddressBorderProperty = new SimpleObjectProperty<Border>(null);
 		serverIpAddressProperty = new SimpleStringProperty(server.getAddress().equals(Server.DEFAULT_ADDRESS) ? null : server.getAddress());
+		serverIpAddressTextProperty = getPropertyHelper().languageProperty(EMessageCode.SERVER_IP_ADDRESS);
+		serverIpAddressBorderProperty = new SimpleObjectProperty<Border>(null);
+		serverIpAddressPromptProperty = getPropertyHelper().languageProperty(EMessageCode.SERVER_IP_ADDRESS_PROMPT);
+		serverIpAddressTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.SERVER_IP_ADDRESS_TOOLTIP);
 
-		serverPortBorderProperty = new SimpleObjectProperty<Border>(null);
 		serverPortProperty = new SimpleStringProperty(server.getPort() == Server.DEFAULT_PORT ? null : "" + server.getPort());
+		serverPortTextProperty = getPropertyHelper().languageProperty(EMessageCode.SERVER_PORT_NUMBER);
+		serverPortBorderProperty = new SimpleObjectProperty<Border>(null);
+		serverPortPromptProperty = getPropertyHelper().languageProperty(EMessageCode.SERVER_PORT_NUMBER_PROMPT);
+		serverPortTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.SERVER_PORT_NUMBER_TOOLTIP);
 
+		okTextProperty = getPropertyHelper().languageProperty(EMessageCode.OK);
 		okDisableProperty = new SimpleBooleanProperty(true);
+		cancelTextProperty = getPropertyHelper().languageProperty(EMessageCode.CANCEL);
 
 		observer = new InternalObserver();
 		serverNameProperty.addListener(observer);
@@ -85,21 +120,15 @@ public abstract class ServerInfoPresenter extends PresenterBase {
 		return stage;
 	}
 
-	/**
-	 * @return The code associated to the title of the server info view.
-	 */
-	public IMessageCode titleCode() {
-		return EMessageCode.ADD_NEW_SERVER_TITLE;
+	public StringProperty titleTextProperty() {
+		return titleTextProperty;
 	}
 
 	// Server name
 	// -------------------------------------------------------------------------------------------------------------------
 
-	/**
-	 * @return The code associated to the server name message.
-	 */
-	public IMessageCode serverNameCode() {
-		return EMessageCode.SERVER_NAME;
+	public StringProperty serverNameTextProperty() {
+		return serverNameTextProperty;
 	}
 
 	/**
@@ -109,18 +138,12 @@ public abstract class ServerInfoPresenter extends PresenterBase {
 		return serverNameBorderProperty;
 	}
 
-	/**
-	 * @return The code associated to the prompt text of the text field that receive the server name.
-	 */
-	public IMessageCode serverNamePromptCode() {
-		return EMessageCode.SERVER_NAME_PROMPT;
+	public StringProperty serverNamePromptProperty() {
+		return serverNamePromptProperty;
 	}
 
-	/**
-	 * @return The code associated to the text of the tooltip for the text field that receive the server name.
-	 */
-	public IMessageCode serverNameTooltipCode() {
-		return EMessageCode.SERVER_NAME_TOOLTIP;
+	public ObjectProperty<Tooltip> serverNameTooltipProperty() {
+		return serverNameTooltipProperty;
 	}
 
 	/**
@@ -133,11 +156,8 @@ public abstract class ServerInfoPresenter extends PresenterBase {
 	// Server ip address
 	// -------------------------------------------------------------------------------------------------------------------
 
-	/**
-	 * @return The code associated to the server ip address message.
-	 */
-	public IMessageCode serverIpAddressCode() {
-		return EMessageCode.SERVER_IP_ADDRESS;
+	public StringProperty serverIpAddressTextProperty() {
+		return serverIpAddressTextProperty;
 	}
 
 	/**
@@ -147,18 +167,12 @@ public abstract class ServerInfoPresenter extends PresenterBase {
 		return serverIpAddressBorderProperty;
 	}
 
-	/**
-	 * @return The code associated to the prompt text of the text field that receive the server ip address.
-	 */
-	public IMessageCode serverIpAddressPromptCode() {
-		return EMessageCode.SERVER_IP_ADDRESS_PROMPT;
+	public StringProperty serverIpAddressPromptProperty() {
+		return serverIpAddressPromptProperty;
 	}
 
-	/**
-	 * @return The code associated to the text of the tooltip for the text field that receive the server ip address.
-	 */
-	public IMessageCode serverIpAddressTooltipCode() {
-		return EMessageCode.SERVER_IP_ADDRESS_TOOLTIP;
+	public ObjectProperty<Tooltip> serverIpAddressTooltipProperty() {
+		return serverIpAddressTooltipProperty;
 	}
 
 	/**
@@ -171,11 +185,8 @@ public abstract class ServerInfoPresenter extends PresenterBase {
 	// Server port
 	// -------------------------------------------------------------------------------------------------------------------
 
-	/**
-	 * @return The code associated to the server port number message.
-	 */
-	public IMessageCode serverPortCode() {
-		return EMessageCode.SERVER_PORT_NUMBER;
+	public StringProperty serverPortTextProperty() {
+		return serverPortTextProperty;
 	}
 
 	/**
@@ -185,18 +196,12 @@ public abstract class ServerInfoPresenter extends PresenterBase {
 		return serverPortBorderProperty;
 	}
 
-	/**
-	 * @return The code associated to the prompt text of the text field that receive the server port number.
-	 */
-	public IMessageCode serverPortPromptCode() {
-		return EMessageCode.SERVER_PORT_NUMBER_PROMPT;
+	public StringProperty serverPortPromptProperty() {
+		return serverPortPromptProperty;
 	}
 
-	/**
-	 * @return The code associated to the text of the tooltip for the text field that receive the server port number.
-	 */
-	public IMessageCode serverPortTooltipCode() {
-		return EMessageCode.SERVER_PORT_NUMBER_TOOLTIP;
+	public ObjectProperty<Tooltip> serverPortTooltipProperty() {
+		return serverPortTooltipProperty;
 	}
 
 	/**
@@ -209,11 +214,8 @@ public abstract class ServerInfoPresenter extends PresenterBase {
 	// Buttons
 	// -------------------------------------------------------------------------------------------------------------------
 
-	/**
-	 * @return The code associated to the ok message.
-	 */
-	public IMessageCode okCode() {
-		return EMessageCode.OK;
+	public StringProperty okTextProperty() {
+		return okTextProperty;
 	}
 
 	/**
@@ -223,11 +225,8 @@ public abstract class ServerInfoPresenter extends PresenterBase {
 		return okDisableProperty;
 	}
 
-	/**
-	 * @return The code associated to the cancel message.
-	 */
-	public IMessageCode cancelCode() {
-		return EMessageCode.CANCEL;
+	public StringProperty cancelTextProperty() {
+		return cancelTextProperty;
 	}
 
 	public void ok(ActionEvent event) {

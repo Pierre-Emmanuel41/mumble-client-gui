@@ -1,7 +1,5 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
-import java.util.function.Function;
-
 import fr.pederobien.mumble.client.gui.impl.view.PlayerChannelView;
 import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsChannelPresenter;
 import fr.pederobien.mumble.client.interfaces.IChannel;
@@ -12,7 +10,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Parent;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.paint.Color;
+import javafx.util.Callback;
 
 public class ChannelPresenter extends PresenterBase implements IObsChannel, IObservable<IObsChannelPresenter> {
 	private IChannel channel;
@@ -69,11 +70,9 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel, IObs
 		return channelNameProperty;
 	}
 
-	/**
-	 * @return The creator of player view.
-	 */
-	public Function<Object, Parent> playerViewConstructor() {
-		return item -> new PlayerChannelView(PlayerChannelPresenter.getOrCreatePlayerPresenter((String) item)).getRoot();
+	public <T> Callback<ListView<T>, ListCell<T>> playerViewFactory(Color enteredColor) {
+		return listView -> getPropertyHelper().cellView(item -> new PlayerChannelView(PlayerChannelPresenter.getOrCreatePlayerPresenter((String) item)).getRoot(),
+				enteredColor);
 	}
 
 	public void onChannelClicked() {
