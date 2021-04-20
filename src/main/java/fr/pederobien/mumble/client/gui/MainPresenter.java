@@ -15,7 +15,7 @@ import fr.pederobien.mumble.client.gui.impl.presenter.ServerManagementPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.PropertyHelper;
 import fr.pederobien.mumble.client.gui.impl.view.ServerListView;
 import fr.pederobien.mumble.client.gui.impl.view.ServerManagementView;
-import fr.pederobien.mumble.client.gui.persistence.ServerListPersistence;
+import fr.pederobien.mumble.client.gui.persistence.model.ServerListPersistence;
 import javafx.beans.property.StringProperty;
 
 public class MainPresenter extends PresenterBase {

@@ -1,4 +1,4 @@
-package fr.pederobien.mumble.client.gui.persistence;
+package fr.pederobien.mumble.client.gui.persistence.model;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -8,7 +8,7 @@ import org.w3c.dom.Element;
 
 import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.gui.model.ServerList;
-import fr.pederobien.mumble.client.gui.persistence.loaders.ServerListLoaderV10;
+import fr.pederobien.mumble.client.gui.persistence.model.loaders.ServerListLoaderV10;
 import fr.pederobien.persistence.impl.xml.AbstractXmlPersistence;
 
 public class ServerListPersistence extends AbstractXmlPersistence<ServerList> {

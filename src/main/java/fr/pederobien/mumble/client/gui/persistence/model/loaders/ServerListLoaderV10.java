@@ -1,4 +1,4 @@
-package fr.pederobien.mumble.client.gui.persistence.loaders;
+package fr.pederobien.mumble.client.gui.persistence.model.loaders;
 
 import org.w3c.dom.Element;
 

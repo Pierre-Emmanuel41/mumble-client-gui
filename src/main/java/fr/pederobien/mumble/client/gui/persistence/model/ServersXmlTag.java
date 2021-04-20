@@ -1,4 +1,4 @@
-package fr.pederobien.mumble.client.gui.persistence;
+package fr.pederobien.mumble.client.gui.persistence.model;
 
 public enum ServersXmlTag {
 	NAME("name"), SERVERS("servers"), SERVER("server"), SERVER_ADDRESS("address"), SERVER_PORT("port");
