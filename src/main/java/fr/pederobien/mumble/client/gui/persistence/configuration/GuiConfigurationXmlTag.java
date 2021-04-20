@@ -1,4 +1,4 @@
-package fr.pederobien.mumble.client.gui.configuration.persistence;
+package fr.pederobien.mumble.client.gui.persistence.configuration;
 
 public enum GuiConfigurationXmlTag {
 	NAME("name"), LOCALE("locale"), FONT("font"), FONT_FAMILY("fontFamily"), FONT_SIZE("fontSize");

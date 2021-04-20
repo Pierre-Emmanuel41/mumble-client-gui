@@ -1,4 +1,4 @@
-package fr.pederobien.mumble.client.gui.configuration.persistence;
+package fr.pederobien.mumble.client.gui.persistence.configuration;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -6,9 +6,9 @@ import java.nio.file.Paths;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import fr.pederobien.mumble.client.gui.configuration.persistence.loaders.GuiConfigurationLoaderV10;
 import fr.pederobien.mumble.client.gui.impl.GuiConfiguration;
 import fr.pederobien.mumble.client.gui.interfaces.IGuiConfiguration;
+import fr.pederobien.mumble.client.gui.persistence.configuration.loaders.GuiConfigurationLoaderV10;
 import fr.pederobien.persistence.impl.xml.AbstractXmlPersistence;
 
 public class GuiConfigurationPersistence extends AbstractXmlPersistence<IGuiConfiguration> {

@@ -6,7 +6,6 @@ import java.nio.file.Paths;
 
 import fr.pederobien.dictionary.impl.DefaultDictionaryParser;
 import fr.pederobien.dictionary.impl.JarDictionaryParser;
-import fr.pederobien.mumble.client.gui.configuration.persistence.GuiConfigurationPersistence;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.Environment;
 import fr.pederobien.mumble.client.gui.impl.presenter.PresenterBase;
@@ -15,6 +14,7 @@ import fr.pederobien.mumble.client.gui.impl.presenter.ServerManagementPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.PropertyHelper;
 import fr.pederobien.mumble.client.gui.impl.view.ServerListView;
 import fr.pederobien.mumble.client.gui.impl.view.ServerManagementView;
+import fr.pederobien.mumble.client.gui.persistence.configuration.GuiConfigurationPersistence;
 import fr.pederobien.mumble.client.gui.persistence.model.ServerListPersistence;
 import javafx.beans.property.StringProperty;
 

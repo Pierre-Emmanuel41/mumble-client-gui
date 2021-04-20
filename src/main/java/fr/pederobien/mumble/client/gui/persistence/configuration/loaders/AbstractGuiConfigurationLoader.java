@@ -1,13 +1,13 @@
-package fr.pederobien.mumble.client.gui.configuration.persistence.loaders;
+package fr.pederobien.mumble.client.gui.persistence.configuration.loaders;
 
 import java.util.Locale;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import fr.pederobien.mumble.client.gui.configuration.persistence.GuiConfigurationXmlTag;
 import fr.pederobien.mumble.client.gui.impl.GuiConfiguration;
 import fr.pederobien.mumble.client.gui.interfaces.IGuiConfiguration;
+import fr.pederobien.mumble.client.gui.persistence.configuration.GuiConfigurationXmlTag;
 import fr.pederobien.persistence.impl.xml.AbstractXmlPersistenceLoader;
 import javafx.scene.text.Font;
 
