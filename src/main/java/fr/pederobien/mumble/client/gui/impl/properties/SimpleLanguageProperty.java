@@ -5,7 +5,7 @@ import fr.pederobien.dictionary.impl.NotificationCenter;
 import fr.pederobien.dictionary.interfaces.IDictionaryContext;
 import fr.pederobien.dictionary.interfaces.IMessageCode;
 import fr.pederobien.mumble.client.gui.impl.properties.InternalProperty.Action;
-import fr.pederobien.mumble.client.gui.interfaces.observers.IGuiConfiguration;
+import fr.pederobien.mumble.client.gui.interfaces.IGuiConfiguration;
 import javafx.beans.property.SimpleStringProperty;
 
 public class SimpleLanguageProperty extends SimpleStringProperty {

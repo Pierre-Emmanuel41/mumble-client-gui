@@ -1,7 +1,7 @@
 package fr.pederobien.mumble.client.gui.impl.properties;
 
 import fr.pederobien.dictionary.interfaces.IMessageCode;
-import fr.pederobien.mumble.client.gui.interfaces.observers.IGuiConfiguration;
+import fr.pederobien.mumble.client.gui.interfaces.IGuiConfiguration;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Tooltip;
 

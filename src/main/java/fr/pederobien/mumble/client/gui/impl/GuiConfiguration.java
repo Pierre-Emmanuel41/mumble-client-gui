@@ -4,7 +4,7 @@ import java.util.Locale;
 
 import fr.pederobien.dictionary.impl.NotificationCenter;
 import fr.pederobien.dictionary.interfaces.IDictionary;
-import fr.pederobien.mumble.client.gui.interfaces.observers.IGuiConfiguration;
+import fr.pederobien.mumble.client.gui.interfaces.IGuiConfiguration;
 import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsGuiConfiguration;
 import fr.pederobien.utils.Observable;
 import javafx.scene.text.Font;

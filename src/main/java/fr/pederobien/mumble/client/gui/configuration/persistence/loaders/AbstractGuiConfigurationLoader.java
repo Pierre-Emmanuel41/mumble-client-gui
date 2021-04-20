@@ -7,7 +7,7 @@ import org.w3c.dom.Node;
 
 import fr.pederobien.mumble.client.gui.configuration.persistence.GuiConfigurationXmlTag;
 import fr.pederobien.mumble.client.gui.impl.GuiConfiguration;
-import fr.pederobien.mumble.client.gui.interfaces.observers.IGuiConfiguration;
+import fr.pederobien.mumble.client.gui.interfaces.IGuiConfiguration;
 import fr.pederobien.persistence.impl.xml.AbstractXmlPersistenceLoader;
 import javafx.scene.text.Font;
 

@@ -6,7 +6,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import fr.pederobien.mumble.client.gui.interfaces.observers.IGuiConfiguration;
+import fr.pederobien.mumble.client.gui.interfaces.IGuiConfiguration;
 import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsGuiConfiguration;
 import javafx.scene.text.Font;
 

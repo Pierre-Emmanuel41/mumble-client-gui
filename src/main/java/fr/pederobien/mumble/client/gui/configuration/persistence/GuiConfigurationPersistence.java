@@ -8,7 +8,7 @@ import org.w3c.dom.Element;
 
 import fr.pederobien.mumble.client.gui.configuration.persistence.loaders.GuiConfigurationLoaderV10;
 import fr.pederobien.mumble.client.gui.impl.GuiConfiguration;
-import fr.pederobien.mumble.client.gui.interfaces.observers.IGuiConfiguration;
+import fr.pederobien.mumble.client.gui.interfaces.IGuiConfiguration;
 import fr.pederobien.persistence.impl.xml.AbstractXmlPersistence;
 
 public class GuiConfigurationPersistence extends AbstractXmlPersistence<IGuiConfiguration> {
