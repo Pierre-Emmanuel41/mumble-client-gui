@@ -1,12 +1,9 @@
 package fr.pederobien.mumble.client.gui;
 
 import java.io.FileNotFoundException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
-import fr.pederobien.dictionary.impl.DefaultDictionaryParser;
-import fr.pederobien.dictionary.impl.JarDictionaryParser;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
+import fr.pederobien.mumble.client.gui.environment.Environments;
 import fr.pederobien.mumble.client.gui.environment.Variables;
 import fr.pederobien.mumble.client.gui.impl.presenter.PresenterBase;
 import fr.pederobien.mumble.client.gui.impl.presenter.ServerListPresenter;
@@ -37,7 +34,8 @@ public class MainPresenter extends PresenterBase {
 		}
 
 		setPropertyHelper(new PropertyHelper(GuiConfigurationPersistence.getInstance().get()));
-		registerDictionaries("French.xml", "English.xml");
+
+		Environments.registerDictionaries();
 
 		ServerListPresenter serverListPresenter = new ServerListPresenter(ServerListPersistence.getInstance().get());
 		serverListView = new ServerListView(serverListPresenter);
@@ -74,28 +72,5 @@ public class MainPresenter extends PresenterBase {
 	 */
 	public ServerManagementView getServerManagementView() {
 		return serverManagementView;
-	}
-
-	private void registerDictionaries(String... dictionaryNames) {
-		String url = getClass().getResource(getClass().getSimpleName() + ".class").toExternalForm();
-
-		try {
-			if (url.startsWith("file")) {
-				DefaultDictionaryParser parser = new DefaultDictionaryParser();
-				for (String name : dictionaryNames)
-					GuiConfigurationPersistence.getInstance().get().registerDictionary(parser.parse(Paths.get(Variables.RESOURCES_FOLDER.getFileName(), name)));
-
-			} else if (url.startsWith("jar")) {
-				Path jarPath = Paths.get(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath().substring(1).replace("%20", " "));
-				String internalPath = Variables.RESOURCES_FOLDER.getFileName();
-				JarDictionaryParser parser = new JarDictionaryParser(internalPath);
-				for (String name : dictionaryNames)
-					GuiConfigurationPersistence.getInstance().get().registerDictionary(parser.setName(internalPath.concat(name)).parse(jarPath));
-
-			} else
-				throw new UnsupportedOperationException("Technical error");
-		} catch (FileNotFoundException e) {
-
-		}
 	}
 }
