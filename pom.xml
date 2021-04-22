@@ -39,9 +39,9 @@
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<resources>
 		<resource>
-				<targetPath>./src/main/resources</targetPath>
+				<targetPath>./src/main/resources/dictionaries</targetPath>
 				<filtering>true</filtering>
-				<directory>${basedir}/src/main/resources</directory>
+				<directory>${basedir}/src/main/resources/dictionaries</directory>
 				<includes>
 					<include>*.xml</include>
 				</includes>

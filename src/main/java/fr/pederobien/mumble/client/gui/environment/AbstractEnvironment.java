@@ -34,19 +34,12 @@ public class AbstractEnvironment implements IEnvironment {
 	}
 
 	/**
-	 * @return The path associated to the resource folder.
-	 */
-	protected String getResourcesFolder() {
-		return Variables.RESOURCES_FOLDER.getFileName();
-	}
-
-	/**
 	 * Get the path associated to the given dictionary name.
 	 * 
 	 * @param dictionaryName The dictionary name used to get the path associated to the its file.
 	 * @return The concatenated path.
 	 */
 	protected String getDictionaryPath(String dictionaryName) {
-		return getResourcesFolder().concat(dictionaryName);
+		return Variables.DICTIONARIES_FOLDER.getFileName().concat(dictionaryName);
 	}
 }

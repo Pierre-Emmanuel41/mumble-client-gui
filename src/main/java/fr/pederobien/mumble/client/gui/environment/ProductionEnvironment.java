@@ -14,7 +14,7 @@ public class ProductionEnvironment extends AbstractEnvironment implements IEnvir
 
 	public ProductionEnvironment(String url, IGuiConfiguration guiConfiguration) {
 		super(url, guiConfiguration);
-		dictionaryParser = new JarDictionaryParser(getResourcesFolder().toString());
+		dictionaryParser = new JarDictionaryParser(null);
 		jarPath = Paths.get(getUrl().split("!")[0].substring(String.format("%s:%s:/", IEnvironment.FILE_PREFIX, IEnvironment.JAR_PREFIX).length()));
 	}
 

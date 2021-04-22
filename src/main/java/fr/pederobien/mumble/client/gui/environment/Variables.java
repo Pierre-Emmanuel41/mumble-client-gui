@@ -4,6 +4,9 @@ public enum Variables {
 	// Folder that contains resources files
 	RESOURCES_FOLDER("src/main/resources/"),
 
+	// Folder that contains dictionaries
+	DICTIONARIES_FOLDER(RESOURCES_FOLDER.getFileName().concat("dictionaries").concat("/")),
+
 	// File that contains gui configuration parameters.
 	GUI_CONFIGURATION("GuiConfiguration"),
 
