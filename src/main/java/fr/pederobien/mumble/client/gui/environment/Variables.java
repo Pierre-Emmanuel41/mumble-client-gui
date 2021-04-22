@@ -1,6 +1,6 @@
-package fr.pederobien.mumble.client.gui.impl;
+package fr.pederobien.mumble.client.gui.environment;
 
-public enum Environment {
+public enum Variables {
 	// Folder that contains resources files
 	RESOURCES_FOLDER("src/main/resources/"),
 
@@ -12,7 +12,7 @@ public enum Environment {
 
 	private String fileName;
 
-	private Environment(String fileName) {
+	private Variables(String fileName) {
 		this.fileName = fileName;
 	}
 

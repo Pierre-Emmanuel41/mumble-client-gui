@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 import fr.pederobien.dictionary.impl.DefaultDictionaryParser;
 import fr.pederobien.dictionary.impl.JarDictionaryParser;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
-import fr.pederobien.mumble.client.gui.impl.Environment;
+import fr.pederobien.mumble.client.gui.environment.Variables;
 import fr.pederobien.mumble.client.gui.impl.presenter.PresenterBase;
 import fr.pederobien.mumble.client.gui.impl.presenter.ServerListPresenter;
 import fr.pederobien.mumble.client.gui.impl.presenter.ServerManagementPresenter;
@@ -25,13 +25,13 @@ public class MainPresenter extends PresenterBase {
 
 	public MainPresenter() {
 		try {
-			ServerListPersistence.getInstance().load(Environment.SERVER_LIST.getFileName());
+			ServerListPersistence.getInstance().load(Variables.SERVER_LIST.getFileName());
 		} catch (FileNotFoundException e) {
 			ServerListPersistence.getInstance().saveDefault();
 		}
 
 		try {
-			GuiConfigurationPersistence.getInstance().load(Environment.GUI_CONFIGURATION.getFileName());
+			GuiConfigurationPersistence.getInstance().load(Variables.GUI_CONFIGURATION.getFileName());
 		} catch (FileNotFoundException e) {
 			GuiConfigurationPersistence.getInstance().saveDefault();
 		}
@@ -83,11 +83,11 @@ public class MainPresenter extends PresenterBase {
 			if (url.startsWith("file")) {
 				DefaultDictionaryParser parser = new DefaultDictionaryParser();
 				for (String name : dictionaryNames)
-					GuiConfigurationPersistence.getInstance().get().registerDictionary(parser.parse(Paths.get(Environment.RESOURCES_FOLDER.getFileName(), name)));
+					GuiConfigurationPersistence.getInstance().get().registerDictionary(parser.parse(Paths.get(Variables.RESOURCES_FOLDER.getFileName(), name)));
 
 			} else if (url.startsWith("jar")) {
 				Path jarPath = Paths.get(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath().substring(1).replace("%20", " "));
-				String internalPath = Environment.RESOURCES_FOLDER.getFileName();
+				String internalPath = Variables.RESOURCES_FOLDER.getFileName();
 				JarDictionaryParser parser = new JarDictionaryParser(internalPath);
 				for (String name : dictionaryNames)
 					GuiConfigurationPersistence.getInstance().get().registerDictionary(parser.setName(internalPath.concat(name)).parse(jarPath));
