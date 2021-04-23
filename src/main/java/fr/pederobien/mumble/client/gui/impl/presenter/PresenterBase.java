@@ -37,7 +37,7 @@ public abstract class PresenterBase {
 	 * 
 	 * @param primaryStage The primary stage.
 	 */
-	public void setPrimaryStage(Stage primaryStage) {
+	protected void setPrimaryStage(Stage primaryStage) {
 		PresenterBase.primaryStage = primaryStage;
 		PRESENTERS.add(this);
 	}

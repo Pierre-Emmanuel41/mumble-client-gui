@@ -1,6 +1,6 @@
-package fr.pederobien.mumble.client.gui;
+package fr.pederobien.mumble.client.gui.impl.view;
 
-import fr.pederobien.mumble.client.gui.impl.view.ViewBase;
+import fr.pederobien.mumble.client.gui.impl.presenter.MainPresenter;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;

@@ -1,9 +1,6 @@
-package fr.pederobien.mumble.client.gui;
+package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
-import fr.pederobien.mumble.client.gui.impl.presenter.PresenterBase;
-import fr.pederobien.mumble.client.gui.impl.presenter.ServerListPresenter;
-import fr.pederobien.mumble.client.gui.impl.presenter.ServerManagementPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.PropertyHelper;
 import fr.pederobien.mumble.client.gui.impl.view.ServerListView;
 import fr.pederobien.mumble.client.gui.impl.view.ServerManagementView;
