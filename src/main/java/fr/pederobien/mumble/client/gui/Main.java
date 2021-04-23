@@ -10,6 +10,7 @@ import fr.pederobien.mumble.client.gui.impl.view.MainView;
 import fr.pederobien.mumble.client.gui.persistence.configuration.GuiConfigurationPersistence;
 import fr.pederobien.mumble.client.gui.persistence.model.ServerListPersistence;
 import javafx.application.Application;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -42,7 +43,14 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		Main.primaryStage = primaryStage;
-		new MainView(new MainPresenter(), primaryStage);
+
+		MainPresenter mainPresenter = new MainPresenter();
+		MainView mainView = new MainView(mainPresenter);
+
+		primaryStage.titleProperty().bind(mainPresenter.titleLanguageProperty());
+		primaryStage.setScene(new Scene(mainView.getRoot()));
+		primaryStage.setMaximized(true);
+		primaryStage.show();
 	}
 
 	/**
