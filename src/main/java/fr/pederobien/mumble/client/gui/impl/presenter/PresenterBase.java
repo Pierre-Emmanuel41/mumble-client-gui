@@ -3,19 +3,17 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.pederobien.mumble.client.gui.Main;
 import fr.pederobien.mumble.client.gui.impl.properties.PropertyHelper;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
 public abstract class PresenterBase {
 	private static final List<PresenterBase> PRESENTERS = new ArrayList<PresenterBase>();
-	private static Stage primaryStage;
-	private static PropertyHelper propertyHelper;
 
 	protected PresenterBase() {
 		PRESENTERS.add(this);
-		if (primaryStage != null)
-			primaryStage.setOnCloseRequest(e -> PRESENTERS.forEach(presenter -> presenter.onCloseRequest()));
+		getPrimaryStage().setOnCloseRequest(e -> PRESENTERS.forEach(presenter -> presenter.onCloseRequest()));
 	}
 
 	/**
@@ -29,33 +27,14 @@ public abstract class PresenterBase {
 	 * @return The primary stage of the application.
 	 */
 	protected Stage getPrimaryStage() {
-		return primaryStage;
-	}
-
-	/**
-	 * Set the primary stage for all future presenter in order to modify it later.
-	 * 
-	 * @param primaryStage The primary stage.
-	 */
-	protected void setPrimaryStage(Stage primaryStage) {
-		PresenterBase.primaryStage = primaryStage;
-		PRESENTERS.add(this);
-	}
-
-	/**
-	 * Set the property helper used to create properties.
-	 * 
-	 * @param propertyHelper The helper that creates properties.
-	 */
-	protected void setPropertyHelper(PropertyHelper propertyHelper) {
-		PresenterBase.propertyHelper = propertyHelper;
+		return Main.getStage();
 	}
 
 	/**
 	 * @return The helper that creates properties.
 	 */
 	protected PropertyHelper getPropertyHelper() {
-		return propertyHelper;
+		return Main.getPropertyHelper();
 	}
 
 	/**

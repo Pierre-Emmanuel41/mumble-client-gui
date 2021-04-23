@@ -13,6 +13,8 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+	private static PropertyHelper propertyHelper;
+	private static Stage primaryStage;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -33,10 +35,27 @@ public class Main extends Application {
 		}
 
 		Environments.registerDictionaries();
+
+		propertyHelper = new PropertyHelper(GuiConfigurationPersistence.getInstance().get());
 	}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		new MainView(new MainPresenter(new PropertyHelper(GuiConfigurationPersistence.getInstance().get()), primaryStage), primaryStage);
+		Main.primaryStage = primaryStage;
+		new MainView(new MainPresenter(), primaryStage);
+	}
+
+	/**
+	 * @return The helper that creates properties.
+	 */
+	public static PropertyHelper getPropertyHelper() {
+		return propertyHelper;
+	}
+
+	/**
+	 * @return The primary stage of the application.
+	 */
+	public static Stage getStage() {
+		return primaryStage;
 	}
 }
