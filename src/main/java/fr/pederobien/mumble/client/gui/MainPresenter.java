@@ -1,10 +1,6 @@
 package fr.pederobien.mumble.client.gui;
 
-import java.io.FileNotFoundException;
-
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
-import fr.pederobien.mumble.client.gui.environment.Environments;
-import fr.pederobien.mumble.client.gui.environment.Variables;
 import fr.pederobien.mumble.client.gui.impl.presenter.PresenterBase;
 import fr.pederobien.mumble.client.gui.impl.presenter.ServerListPresenter;
 import fr.pederobien.mumble.client.gui.impl.presenter.ServerManagementPresenter;
@@ -14,28 +10,16 @@ import fr.pederobien.mumble.client.gui.impl.view.ServerManagementView;
 import fr.pederobien.mumble.client.gui.persistence.configuration.GuiConfigurationPersistence;
 import fr.pederobien.mumble.client.gui.persistence.model.ServerListPersistence;
 import javafx.beans.property.StringProperty;
+import javafx.stage.Stage;
 
 public class MainPresenter extends PresenterBase {
 	private ServerListView serverListView;
 	private ServerManagementView serverManagementView;
 	private StringProperty titleLanguageProperty;
 
-	public MainPresenter() {
-		try {
-			ServerListPersistence.getInstance().load(Variables.SERVER_LIST.getFileName());
-		} catch (FileNotFoundException e) {
-			ServerListPersistence.getInstance().saveDefault();
-		}
-
-		try {
-			GuiConfigurationPersistence.getInstance().load(Variables.GUI_CONFIGURATION.getFileName());
-		} catch (FileNotFoundException e) {
-			GuiConfigurationPersistence.getInstance().saveDefault();
-		}
-
-		setPropertyHelper(new PropertyHelper(GuiConfigurationPersistence.getInstance().get()));
-
-		Environments.registerDictionaries();
+	public MainPresenter(PropertyHelper propertyHelper, Stage primaryStage) {
+		setPropertyHelper(propertyHelper);
+		setPrimaryStage(primaryStage);
 
 		ServerListPresenter serverListPresenter = new ServerListPresenter(ServerListPersistence.getInstance().get());
 		serverListView = new ServerListView(serverListPresenter);
