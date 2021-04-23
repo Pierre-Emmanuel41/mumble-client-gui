@@ -1,6 +1,9 @@
 package fr.pederobien.mumble.client.gui.interfaces;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import javafx.scene.image.Image;
 
 public interface IEnvironment {
 	public static final String FILE_PREFIX = "file";
@@ -15,4 +18,15 @@ public interface IEnvironment {
 	 * @throws FileNotFoundException if there is no file associated to the given dictionary name.
 	 */
 	void registerDictionary(String dictionaryName) throws FileNotFoundException;
+
+	/**
+	 * Try to find the file associated to given image name. If found, then the file is parsed and an image is returned.
+	 * 
+	 * @param imageName The image name to load.
+	 * 
+	 * @return The associated image.
+	 * 
+	 * @throws IOException If there is no file associated to the given dictionary name.
+	 */
+	Image loadImage(String imageName) throws IOException;
 }
