@@ -30,9 +30,16 @@ public class PlayerView extends ViewBase<PlayerPresenter, VBox> {
 
 		Button disconnectButton = new Button();
 		disconnectButton.textProperty().bind(getPresenter().disconnectFromChannelTextProperty());
-		disconnectButton.setOnAction(e -> getPresenter().disconnect());
+		disconnectButton.setOnAction(e -> getPresenter().disconnectFromChannel());
 		disconnectButton.visibleProperty().bind(getPresenter().playerCanDisconnectFromChannelProperty());
+		disconnectButton.managedProperty().bind(getPresenter().playerCanDisconnectFromChannelProperty());
 		getRoot().getChildren().add(disconnectButton);
 		VBox.setMargin(disconnectButton, new Insets(5, 5, 0, 0));
+
+		Button disconnectFromServerButton = new Button();
+		disconnectFromServerButton.textProperty().bind(getPresenter().disconnectFromServerTextProperty());
+		disconnectFromServerButton.setOnAction(e -> getPresenter().disconnectFromServer());
+		getRoot().getChildren().add(disconnectFromServerButton);
+		VBox.setMargin(disconnectFromServerButton, new Insets(5, 5, 0, 0));
 	}
 }

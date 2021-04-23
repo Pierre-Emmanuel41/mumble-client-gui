@@ -3,6 +3,7 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.view.ServerListView;
 import fr.pederobien.mumble.client.gui.impl.view.ServerManagementView;
+import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.gui.persistence.configuration.GuiConfigurationPersistence;
 import fr.pederobien.mumble.client.gui.persistence.model.ServerListPersistence;
 import javafx.beans.property.StringProperty;
@@ -13,6 +14,9 @@ public class MainPresenter extends PresenterBase {
 	private StringProperty titleLanguageProperty;
 
 	public MainPresenter() {
+		for (Server server : ServerListPersistence.getInstance().get().getServers())
+			server.open();
+
 		ServerListPresenter serverListPresenter = new ServerListPresenter(ServerListPersistence.getInstance().get());
 		serverListView = new ServerListView(serverListPresenter);
 

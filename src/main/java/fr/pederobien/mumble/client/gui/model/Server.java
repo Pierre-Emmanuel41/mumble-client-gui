@@ -110,9 +110,9 @@ public class Server implements IObservable<IObsServer> {
 
 	/**
 	 * Get the audio thread. The thread is started but does not get the microphone input and does not play data received from the
-	 * remote. You have to call method {@link AudioThread#connect()} in order to get the microphone input and send it to the remote.
-	 * If you only want to stop getting data, but not stopping the thread, you have to call method {@link AudioThread#disconnect()}.
-	 * This will stop sending microphone data and receiving data from the remote.
+	 * remote. You have to call method {@link IAudioConnection#connect()} in order to get the microphone input and send it to the
+	 * remote. If you only want to stop getting data, but not stopping the thread, you have to call method
+	 * {@link IAudioConnection#disconnect()}. This will stop sending microphone data and receiving data from the remote.
 	 * 
 	 * @return The audio thread that capture the microphone input and play sound received from the remote.
 	 */

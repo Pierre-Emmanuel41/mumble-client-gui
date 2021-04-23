@@ -4,6 +4,7 @@ import fr.pederobien.dictionary.interfaces.IMessageCode;
 import fr.pederobien.mumble.client.event.PlayerRemovedFromChannelEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
+import fr.pederobien.mumble.client.gui.impl.view.MainView;
 import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.interfaces.IAudioConnection;
 import fr.pederobien.mumble.client.interfaces.IChannel;
@@ -22,6 +23,7 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 	private StringProperty playerNameProperty;
 	private SimpleLanguageProperty playerStatusProperty;
 	private SimpleLanguageProperty disconnectFromChannelTextProperty;
+	private SimpleLanguageProperty disconnectFromServerTextProperty;
 	private BooleanProperty playerConnectedProperty;
 
 	private BooleanProperty playerCanDisconnectFromChannel;
@@ -33,6 +35,7 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 		playerNameProperty = new SimpleStringProperty("");
 		playerStatusProperty = getPropertyHelper().languageProperty(EMessageCode.PLAYER_OFFLINE);
 		disconnectFromChannelTextProperty = getPropertyHelper().languageProperty(EMessageCode.DISCONNECT_FROM_CHANNEL);
+		disconnectFromServerTextProperty = getPropertyHelper().languageProperty(EMessageCode.DISCONNECT_FROM_CHANNEL);
 		playerConnectedProperty = new SimpleBooleanProperty(false);
 
 		playerCanDisconnectFromChannel = new SimpleBooleanProperty(false);
@@ -89,7 +92,7 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 	/**
 	 * Disconnect the player from its channel.
 	 */
-	public void disconnect() {
+	public void disconnectFromChannel() {
 		player.getChannel().removePlayer(response -> removePlayerResponse(response));
 	}
 
@@ -98,6 +101,16 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 	 */
 	public BooleanProperty playerCanDisconnectFromChannelProperty() {
 		return playerCanDisconnectFromChannel;
+	}
+
+	public StringProperty disconnectFromServerTextProperty() {
+		return disconnectFromServerTextProperty;
+	}
+
+	public void disconnectFromServer() {
+		if (player.getChannel() != null)
+			disconnectFromChannel();
+		getPrimaryStage().getScene().setRoot(new MainView(new MainPresenter()).getRoot());
 	}
 
 	private void playerResponse(IResponse<IPlayer> response) {
