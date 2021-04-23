@@ -105,6 +105,9 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 	}
 
 	public void onJoin() {
+		if (!selectedServer.isReachable())
+			return;
+
 		getPrimaryStage().getScene().setRoot(new ServerChannelsView(new ServerChannelsPresenter(selectedServer)).getRoot());
 		serverList.getServers().forEach(server -> {
 			if (!server.equals(selectedServer))
