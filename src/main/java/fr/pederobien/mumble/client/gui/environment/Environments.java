@@ -1,9 +1,11 @@
 package fr.pederobien.mumble.client.gui.environment;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import fr.pederobien.mumble.client.gui.interfaces.IEnvironment;
 import fr.pederobien.mumble.client.gui.persistence.configuration.GuiConfigurationPersistence;
+import javafx.scene.image.Image;
 
 public class Environments {
 	private static final String[] DICTIONARIES_LIST;
@@ -34,5 +36,18 @@ public class Environments {
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
+	}
+
+	/**
+	 * Try to find the file associated to given image name. If found, then the file is parsed and an image is returned.
+	 * 
+	 * @param imageName The image name to load.
+	 * 
+	 * @return The associated image.
+	 * 
+	 * @throws IOException If there is no file associated to the given dictionary name.
+	 */
+	public static Image loadImage(String imageName) throws IOException {
+		return current.loadImage(imageName);
 	}
 }

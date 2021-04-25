@@ -38,12 +38,20 @@
 		<finalName>mumble-client-gui</finalName>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<resources>
-		<resource>
+			<resource>
 				<targetPath>./src/main/resources/dictionaries</targetPath>
 				<filtering>true</filtering>
 				<directory>${basedir}/src/main/resources/dictionaries</directory>
 				<includes>
 					<include>*.xml</include>
+				</includes>
+			</resource>
+			<resource>
+				<targetPath>./src/main/resources/images</targetPath>
+				<filtering>true</filtering>
+				<directory>${basedir}/src/main/resources/images</directory>
+				<includes>
+					<include>*.png</include>
 				</includes>
 			</resource>
 		</resources>

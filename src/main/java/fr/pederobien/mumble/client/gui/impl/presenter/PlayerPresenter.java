@@ -1,8 +1,12 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
+import java.io.IOException;
+
 import fr.pederobien.dictionary.interfaces.IMessageCode;
 import fr.pederobien.mumble.client.event.PlayerRemovedFromChannelEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
+import fr.pederobien.mumble.client.gui.environment.Environments;
+import fr.pederobien.mumble.client.gui.environment.Variables;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.MainView;
 import fr.pederobien.mumble.client.gui.model.Server;
@@ -15,6 +19,8 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 	private IPlayer player;
@@ -25,8 +31,11 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 	private SimpleLanguageProperty disconnectFromChannelTextProperty;
 	private SimpleLanguageProperty disconnectFromServerTextProperty;
 	private BooleanProperty playerConnectedProperty;
-
 	private BooleanProperty playerCanDisconnectFromChannel;
+
+	private boolean isMute;
+	private Image unmuteImage, muteImage;
+	private ImageView muteOrUnmuteImageView;
 
 	public PlayerPresenter(Server server) {
 		server.getPlayer(response -> playerResponse(response));
@@ -37,8 +46,16 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 		disconnectFromChannelTextProperty = getPropertyHelper().languageProperty(EMessageCode.DISCONNECT_FROM_CHANNEL);
 		disconnectFromServerTextProperty = getPropertyHelper().languageProperty(EMessageCode.DISCONNECT_FROM_CHANNEL);
 		playerConnectedProperty = new SimpleBooleanProperty(false);
-
 		playerCanDisconnectFromChannel = new SimpleBooleanProperty(false);
+
+		isMute = false;
+		try {
+			unmuteImage = Environments.loadImage(Variables.MICROPHONE_UNMUTE.getFileName());
+			muteImage = Environments.loadImage(Variables.MICROPHONE_MUTE.getFileName());
+			muteOrUnmuteImageView = new ImageView(unmuteImage);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -62,6 +79,8 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 			audioConnection.disconnect();
 		else
 			audioConnection.connect();
+		isMute = false;
+		muteOrUnmuteImageView.setImage(unmuteImage);
 	}
 
 	/**
@@ -76,6 +95,19 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 	 */
 	public StringProperty playerStatusProperty() {
 		return playerStatusProperty;
+	}
+
+	public ImageView muteOrUnmuteImageView() {
+		return muteOrUnmuteImageView;
+	}
+
+	public void onMuteOrUnmute() {
+		isMute = !isMute;
+		if (isMute)
+			audioConnection.pauseMicrophone();
+		else
+			audioConnection.resumeMicrophone();
+		muteOrUnmuteImageView.setImage(isMute ? muteImage : unmuteImage);
 	}
 
 	/**

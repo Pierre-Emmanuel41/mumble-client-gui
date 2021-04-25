@@ -2,8 +2,10 @@ package fr.pederobien.mumble.client.gui.impl.view;
 
 import fr.pederobien.mumble.client.gui.impl.presenter.PlayerPresenter;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -13,6 +15,7 @@ public class PlayerView extends ViewBase<PlayerPresenter, VBox> {
 		super(presenter, new VBox());
 
 		HBox playerInfo = new HBox();
+		playerInfo.setAlignment(Pos.CENTER_LEFT);
 
 		Label playerName = new Label();
 		playerName.textProperty().bind(getPresenter().playerNameProperty());
@@ -25,6 +28,22 @@ public class PlayerView extends ViewBase<PlayerPresenter, VBox> {
 		playerStatus.textProperty().bind(getPresenter().playerStatusProperty());
 		playerInfo.getChildren().add(playerStatus);
 		HBox.setMargin(playerStatus, new Insets(0, 5, 0, 0));
+
+		// Setting image size
+		getPresenter().muteOrUnmuteImageView().setPreserveRatio(true);
+		getPresenter().muteOrUnmuteImageView().setFitHeight(30);
+
+		Button muteOrUnmuteButton = new Button();
+		muteOrUnmuteButton.setBackground(Background.EMPTY);
+		muteOrUnmuteButton.setGraphic(getPresenter().muteOrUnmuteImageView());
+		muteOrUnmuteButton.setOnAction(e -> {
+			getPresenter().onMuteOrUnmute();
+			muteOrUnmuteButton.setGraphic(getPresenter().muteOrUnmuteImageView());
+		});
+		muteOrUnmuteButton.visibleProperty().bind(getPresenter().playerCanDisconnectFromChannelProperty());
+		muteOrUnmuteButton.managedProperty().bind(getPresenter().playerCanDisconnectFromChannelProperty());
+		playerInfo.getChildren().add(muteOrUnmuteButton);
+		HBox.setMargin(muteOrUnmuteButton, new Insets(0, 5, 0, 0));
 
 		getRoot().getChildren().add(playerInfo);
 
