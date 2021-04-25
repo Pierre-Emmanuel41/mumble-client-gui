@@ -26,7 +26,7 @@ public enum Variables {
 	MICROPHONE_OFF("MicroOff.png"),
 
 	// File that correspond to the hang up.
-	HANG_UP("HangUp.png");
+	HANG_UP("Hangup.png");
 
 	private String fileName;
 
