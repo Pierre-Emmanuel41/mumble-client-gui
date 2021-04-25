@@ -37,6 +37,7 @@ public class PlayerChannelPresenter extends PresenterBase implements IObsPlayer 
 		this.playerPresenter = playerPresenter;
 		playerNameProperty = new SimpleStringProperty(player.getName());
 		isPlayerMute = new SimpleBooleanProperty(false);
+		player.addObserver(this);
 
 		try {
 			muteImage = Environments.loadImage(Variables.MICROPHONE_OFF.getFileName());
