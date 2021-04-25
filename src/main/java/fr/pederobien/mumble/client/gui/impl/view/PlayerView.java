@@ -30,26 +30,24 @@ public class PlayerView extends ViewBase<PlayerPresenter, VBox> {
 		HBox.setMargin(playerStatus, new Insets(0, 5, 0, 0));
 
 		// Setting image size
-		getPresenter().setFitHeight(30);
+		getPresenter().setFitHeight(20);
 
 		Button muteOrUnmuteButton = new Button();
 		muteOrUnmuteButton.setBackground(Background.EMPTY);
 		muteOrUnmuteButton.graphicProperty().bind(getPresenter().muteOrUnmuteGraphicProperty());
 		muteOrUnmuteButton.setOnAction(e -> getPresenter().onMuteOrUnmute());
 		muteOrUnmuteButton.visibleProperty().bind(getPresenter().playerCanDisconnectFromChannelProperty());
-		muteOrUnmuteButton.managedProperty().bind(getPresenter().playerCanDisconnectFromChannelProperty());
 		playerInfo.getChildren().add(muteOrUnmuteButton);
 		HBox.setMargin(muteOrUnmuteButton, new Insets(0, 5, 0, 0));
 
-		getRoot().getChildren().add(playerInfo);
+		Button hangupButton = new Button();
+		hangupButton.setBackground(Background.EMPTY);
+		hangupButton.graphicProperty().bind(getPresenter().hangupGraphicProperty());
+		hangupButton.setOnAction(e -> getPresenter().disconnectFromChannel());
+		hangupButton.visibleProperty().bind(getPresenter().playerCanDisconnectFromChannelProperty());
+		playerInfo.getChildren().add(hangupButton);
 
-		Button disconnectButton = new Button();
-		disconnectButton.textProperty().bind(getPresenter().disconnectFromChannelTextProperty());
-		disconnectButton.setOnAction(e -> getPresenter().disconnectFromChannel());
-		disconnectButton.visibleProperty().bind(getPresenter().playerCanDisconnectFromChannelProperty());
-		disconnectButton.managedProperty().bind(getPresenter().playerCanDisconnectFromChannelProperty());
-		getRoot().getChildren().add(disconnectButton);
-		VBox.setMargin(disconnectButton, new Insets(5, 5, 0, 0));
+		getRoot().getChildren().add(playerInfo);
 
 		Button disconnectFromServerButton = new Button();
 		disconnectFromServerButton.textProperty().bind(getPresenter().disconnectFromServerTextProperty());

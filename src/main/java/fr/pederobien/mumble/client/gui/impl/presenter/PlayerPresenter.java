@@ -38,8 +38,9 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 
 	private boolean isMute;
 	private double fitHeight;
-	private Image unmuteImage, muteImage;
+	private Image unmuteImage, muteImage, hangupImage;
 	private ObjectProperty<Node> muteOrUnmuteGraphicProperty;
+	private ObjectProperty<Node> hangupGraphicProperty;
 
 	public PlayerPresenter(Server server) {
 		server.getPlayer(response -> playerResponse(response));
@@ -56,7 +57,9 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 		try {
 			unmuteImage = Environments.loadImage(Variables.MICROPHONE_UNMUTE.getFileName());
 			muteImage = Environments.loadImage(Variables.MICROPHONE_MUTE.getFileName());
+			hangupImage = Environments.loadImage(Variables.HANG_UP.getFileName());
 			muteOrUnmuteGraphicProperty = new SimpleObjectProperty<Node>();
+			hangupGraphicProperty = new SimpleObjectProperty<Node>();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -110,6 +113,11 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 	public void setFitHeight(double fitHeight) {
 		this.fitHeight = fitHeight;
 		updateMuteOrUnmute();
+
+		ImageView hangupView = new ImageView(hangupImage);
+		hangupView.setPreserveRatio(true);
+		hangupView.setFitHeight(fitHeight);
+		hangupGraphicProperty.set(hangupView);
 	}
 
 	public ObjectProperty<Node> muteOrUnmuteGraphicProperty() {
@@ -133,6 +141,10 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 
 	public StringProperty disconnectFromChannelTextProperty() {
 		return disconnectFromChannelTextProperty;
+	}
+
+	public ObjectProperty<Node> hangupGraphicProperty() {
+		return hangupGraphicProperty;
 	}
 
 	/**
