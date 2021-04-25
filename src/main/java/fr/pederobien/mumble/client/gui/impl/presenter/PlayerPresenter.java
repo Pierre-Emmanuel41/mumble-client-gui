@@ -40,7 +40,6 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 	private SimpleTooltipProperty muteOrUnmuteTooltipProperty;
 	private SimpleTooltipProperty hangupTooltipProperty;
 
-	private boolean isMute;
 	private double fitHeight;
 	private Image unmuteImage, muteImage, hangupImage;
 	private ObjectProperty<Node> muteOrUnmuteGraphicProperty;
@@ -59,7 +58,6 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 		muteOrUnmuteTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.MUTE_TOOLTIP);
 		hangupTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.HANG_UP_TOOLTIP);
 
-		isMute = false;
 		try {
 			unmuteImage = Environments.loadImage(Variables.MICROPHONE_UNMUTE.getFileName());
 			muteImage = Environments.loadImage(Variables.MICROPHONE_MUTE.getFileName());
@@ -92,13 +90,12 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 			audioConnection.disconnect();
 		else
 			audioConnection.connect();
-		isMute = false;
+
 		updateMuteOrUnmute();
 	}
 
 	@Override
 	public void onMuteChanged(boolean isMute) {
-		this.isMute = isMute;
 		updateMuteOrUnmute();
 	}
 
@@ -135,11 +132,7 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 	}
 
 	public void onMuteOrUnmute() {
-		isMute = !isMute;
-		if (isMute)
-			audioConnection.pauseMicrophone();
-		else
-			audioConnection.resumeMicrophone();
+		player.setMute(!player.isMute());
 	}
 
 	/**
@@ -204,6 +197,7 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 	}
 
 	private void updateMuteOrUnmute() {
+		boolean isMute = player == null ? false : player.isMute();
 		ImageView imageView = new ImageView(isMute ? muteImage : unmuteImage);
 		imageView.setPreserveRatio(true);
 		imageView.setFitHeight(fitHeight);

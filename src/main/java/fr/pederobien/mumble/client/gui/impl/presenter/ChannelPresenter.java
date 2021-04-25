@@ -74,8 +74,8 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel, IObs
 	}
 
 	public <T> Callback<ListView<T>, ListCell<T>> playerViewFactory(Color enteredColor) {
-		return listView -> getPropertyHelper()
-				.cellView(item -> new PlayerChannelView(PlayerChannelPresenter.getOrCreatePlayerPresenter(playerPresenter, (IOtherPlayer) item)).getRoot(), enteredColor);
+		return listView -> getPropertyHelper().cellView(item -> new PlayerChannelView(new PlayerChannelPresenter(playerPresenter, (IOtherPlayer) item)).getRoot(),
+				enteredColor);
 	}
 
 	public void onChannelClicked() {

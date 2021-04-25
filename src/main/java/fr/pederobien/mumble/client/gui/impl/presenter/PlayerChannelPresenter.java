@@ -1,8 +1,6 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import fr.pederobien.mumble.client.gui.environment.Environments;
 import fr.pederobien.mumble.client.gui.environment.Variables;
@@ -16,27 +14,15 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.image.Image;
 
 public class PlayerChannelPresenter extends PresenterBase implements IObsPlayer {
-	private static final Map<String, PlayerChannelPresenter> PRESENTERS = new HashMap<String, PlayerChannelPresenter>();
-
 	private PlayerPresenter playerPresenter;
 	private StringProperty playerNameProperty;
 	private BooleanProperty isPlayerMute;
 	private Image muteImage;
 
-	public static PlayerChannelPresenter getOrCreatePlayerPresenter(PlayerPresenter playerPresenter, IOtherPlayer player) {
-		PlayerChannelPresenter presenter = PRESENTERS.get(player.getName());
-		if (presenter != null)
-			return presenter;
-
-		presenter = new PlayerChannelPresenter(playerPresenter, player);
-		PRESENTERS.put(player.getName(), presenter);
-		return presenter;
-	}
-
-	private PlayerChannelPresenter(PlayerPresenter playerPresenter, IOtherPlayer player) {
+	public PlayerChannelPresenter(PlayerPresenter playerPresenter, IOtherPlayer player) {
 		this.playerPresenter = playerPresenter;
 		playerNameProperty = new SimpleStringProperty(player.getName());
-		isPlayerMute = new SimpleBooleanProperty(false);
+		isPlayerMute = new SimpleBooleanProperty(player.isMute());
 		player.addObserver(this);
 
 		try {
