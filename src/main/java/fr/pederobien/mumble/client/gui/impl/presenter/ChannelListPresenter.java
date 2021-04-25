@@ -25,13 +25,15 @@ import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
 public class ChannelListPresenter extends PresenterBase implements IObsChannelList, IObsServer, IObsChannelPresenter {
+	private PlayerPresenter playerPresenter;
 	private Server server;
 	private IChannel selectedChannel;
 	private IChannelList channelList;
 	private ObservableList<Object> channels;
 	private Map<IChannel, ChannelView> channelViews;
 
-	public ChannelListPresenter(Server server) {
+	public ChannelListPresenter(PlayerPresenter playerPresenter, Server server) {
+		this.playerPresenter = playerPresenter;
 		this.server = server;
 		channels = FXCollections.observableArrayList();
 		channelViews = new HashMap<IChannel, ChannelView>();
@@ -103,7 +105,7 @@ public class ChannelListPresenter extends PresenterBase implements IObsChannelLi
 		return listView -> getPropertyHelper().cellView(item -> {
 			ChannelView view = channelViews.get(item);
 			if (view == null) {
-				ChannelPresenter presenter = new ChannelPresenter((IChannel) item);
+				ChannelPresenter presenter = new ChannelPresenter(playerPresenter, (IChannel) item);
 				presenter.addObserver(this);
 				view = new ChannelView(presenter);
 				channelViews.put((IChannel) item, view);

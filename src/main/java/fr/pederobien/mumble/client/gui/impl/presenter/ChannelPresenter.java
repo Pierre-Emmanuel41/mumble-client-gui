@@ -3,6 +3,7 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 import fr.pederobien.mumble.client.gui.impl.view.PlayerChannelView;
 import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsChannelPresenter;
 import fr.pederobien.mumble.client.interfaces.IChannel;
+import fr.pederobien.mumble.client.interfaces.IOtherPlayer;
 import fr.pederobien.mumble.client.interfaces.observers.IObsChannel;
 import fr.pederobien.utils.IObservable;
 import fr.pederobien.utils.Observable;
@@ -16,13 +17,15 @@ import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
 public class ChannelPresenter extends PresenterBase implements IObsChannel, IObservable<IObsChannelPresenter> {
+	private PlayerPresenter playerPresenter;
 	private IChannel channel;
 	private Observable<IObsChannelPresenter> observers;
 
 	private ObservableList<Object> players;
 	private StringProperty channelNameProperty;
 
-	public ChannelPresenter(IChannel channel) {
+	public ChannelPresenter(PlayerPresenter playerPresenter, IChannel channel) {
+		this.playerPresenter = playerPresenter;
 		this.channel = channel;
 		this.channel.addObserver(this);
 
@@ -37,12 +40,12 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel, IObs
 	}
 
 	@Override
-	public void onPlayerAdded(IChannel channel, String player) {
+	public void onPlayerAdded(IChannel channel, IOtherPlayer player) {
 		dispatch(() -> players.add(player));
 	}
 
 	@Override
-	public void onPlayerRemoved(IChannel channel, String player) {
+	public void onPlayerRemoved(IChannel channel, IOtherPlayer player) {
 		dispatch(() -> players.remove(player));
 	}
 
@@ -71,8 +74,8 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel, IObs
 	}
 
 	public <T> Callback<ListView<T>, ListCell<T>> playerViewFactory(Color enteredColor) {
-		return listView -> getPropertyHelper().cellView(item -> new PlayerChannelView(PlayerChannelPresenter.getOrCreatePlayerPresenter((String) item)).getRoot(),
-				enteredColor);
+		return listView -> getPropertyHelper()
+				.cellView(item -> new PlayerChannelView(PlayerChannelPresenter.getOrCreatePlayerPresenter(playerPresenter, (IOtherPlayer) item)).getRoot(), enteredColor);
 	}
 
 	public void onChannelClicked() {

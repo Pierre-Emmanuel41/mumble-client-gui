@@ -83,6 +83,11 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 		muteOrUnmuteImageView.setImage(unmuteImage);
 	}
 
+	@Override
+	public void onMuteChanged(boolean isMute) {
+
+	}
+
 	/**
 	 * @return The property that displays the player name.
 	 */
@@ -137,6 +142,13 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 
 	public StringProperty disconnectFromServerTextProperty() {
 		return disconnectFromServerTextProperty;
+	}
+
+	/**
+	 * @return The client mumble player.
+	 */
+	public IPlayer getPlayer() {
+		return player;
 	}
 
 	public void disconnectFromServer() {
