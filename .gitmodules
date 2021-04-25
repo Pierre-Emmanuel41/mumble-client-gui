@@ -4,6 +4,3 @@
 [submodule "dictionary"]
 	path = dictionary
 	url = https://github.com/Pierre-Emmanuel41/dictionary.git
-[submodule "fx-style"]
-	path = fx-style
-	url = https://github.com/Pierre-Emmanuel41/fx-style.git
