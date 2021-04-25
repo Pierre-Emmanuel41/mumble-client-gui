@@ -16,9 +16,12 @@ import fr.pederobien.mumble.client.interfaces.IPlayer;
 import fr.pederobien.mumble.client.interfaces.IResponse;
 import fr.pederobien.mumble.client.interfaces.observers.IObsPlayer;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -34,8 +37,9 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 	private BooleanProperty playerCanDisconnectFromChannel;
 
 	private boolean isMute;
+	private double fitHeight;
 	private Image unmuteImage, muteImage;
-	private ImageView muteOrUnmuteImageView;
+	private ObjectProperty<Node> muteOrUnmuteGraphicProperty;
 
 	public PlayerPresenter(Server server) {
 		server.getPlayer(response -> playerResponse(response));
@@ -52,7 +56,7 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 		try {
 			unmuteImage = Environments.loadImage(Variables.MICROPHONE_UNMUTE.getFileName());
 			muteImage = Environments.loadImage(Variables.MICROPHONE_MUTE.getFileName());
-			muteOrUnmuteImageView = new ImageView(unmuteImage);
+			muteOrUnmuteGraphicProperty = new SimpleObjectProperty<Node>();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -80,12 +84,13 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 		else
 			audioConnection.connect();
 		isMute = false;
-		muteOrUnmuteImageView.setImage(unmuteImage);
+		updateMuteOrUnmute();
 	}
 
 	@Override
 	public void onMuteChanged(boolean isMute) {
-
+		this.isMute = isMute;
+		updateMuteOrUnmute();
 	}
 
 	/**
@@ -102,8 +107,13 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 		return playerStatusProperty;
 	}
 
-	public ImageView muteOrUnmuteImageView() {
-		return muteOrUnmuteImageView;
+	public void setFitHeight(double fitHeight) {
+		this.fitHeight = fitHeight;
+		updateMuteOrUnmute();
+	}
+
+	public ObjectProperty<Node> muteOrUnmuteGraphicProperty() {
+		return muteOrUnmuteGraphicProperty;
 	}
 
 	public void onMuteOrUnmute() {
@@ -112,7 +122,6 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 			audioConnection.pauseMicrophone();
 		else
 			audioConnection.resumeMicrophone();
-		muteOrUnmuteImageView.setImage(isMute ? muteImage : unmuteImage);
 	}
 
 	/**
@@ -170,5 +179,12 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 	private void removePlayerResponse(IResponse<PlayerRemovedFromChannelEvent> response) {
 		if (response.hasFailed())
 			System.out.println(response.getErrorCode().getMessage());
+	}
+
+	private void updateMuteOrUnmute() {
+		ImageView imageView = new ImageView(isMute ? muteImage : unmuteImage);
+		imageView.setPreserveRatio(true);
+		imageView.setFitHeight(fitHeight);
+		dispatch(() -> muteOrUnmuteGraphicProperty.set(imageView));
 	}
 }

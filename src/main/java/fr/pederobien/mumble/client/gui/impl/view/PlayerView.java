@@ -30,16 +30,12 @@ public class PlayerView extends ViewBase<PlayerPresenter, VBox> {
 		HBox.setMargin(playerStatus, new Insets(0, 5, 0, 0));
 
 		// Setting image size
-		getPresenter().muteOrUnmuteImageView().setPreserveRatio(true);
-		getPresenter().muteOrUnmuteImageView().setFitHeight(30);
+		getPresenter().setFitHeight(30);
 
 		Button muteOrUnmuteButton = new Button();
 		muteOrUnmuteButton.setBackground(Background.EMPTY);
-		muteOrUnmuteButton.setGraphic(getPresenter().muteOrUnmuteImageView());
-		muteOrUnmuteButton.setOnAction(e -> {
-			getPresenter().onMuteOrUnmute();
-			muteOrUnmuteButton.setGraphic(getPresenter().muteOrUnmuteImageView());
-		});
+		muteOrUnmuteButton.graphicProperty().bind(getPresenter().muteOrUnmuteGraphicProperty());
+		muteOrUnmuteButton.setOnAction(e -> getPresenter().onMuteOrUnmute());
 		muteOrUnmuteButton.visibleProperty().bind(getPresenter().playerCanDisconnectFromChannelProperty());
 		muteOrUnmuteButton.managedProperty().bind(getPresenter().playerCanDisconnectFromChannelProperty());
 		playerInfo.getChildren().add(muteOrUnmuteButton);
