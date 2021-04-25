@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Tooltip;
 
 public class SimpleTooltipProperty extends SimpleObjectProperty<Tooltip> {
+	private SimpleLanguageProperty textProperty;
 
 	/**
 	 * Create a tooltip property based on the given gui configuration. if the font or local parameter in the gui configuration changes
@@ -17,7 +18,18 @@ public class SimpleTooltipProperty extends SimpleObjectProperty<Tooltip> {
 	 */
 	public SimpleTooltipProperty(IGuiConfiguration guiConfiguration, IMessageCode code, Object... args) {
 		super(new Tooltip());
+		textProperty = new SimpleLanguageProperty(guiConfiguration, code, args);
 		getValue().fontProperty().bind(new SimpleFontProperty(guiConfiguration));
-		getValue().textProperty().bind(new SimpleLanguageProperty(guiConfiguration, code, args));
+		getValue().textProperty().bind(textProperty);
+	}
+
+	/**
+	 * Set the code associated to this tooltip. This will automatically change the displayed text.
+	 * 
+	 * @param code The new code associated to the message to display.
+	 * @param args The new arguments array associated to the code.
+	 */
+	public void setMessageCode(IMessageCode code, Object... args) {
+		textProperty.setCode(code, args);
 	}
 }

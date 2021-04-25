@@ -143,8 +143,20 @@
 			<value>Vous ne pouvez pas rejoindre le channel, vous devez d'abord être connecté dans le jeu.</value>
 		</message>
 		<message>
-			<code>DISCONNECT_FROM_CHANNEL</code>
-			<value>Se déconnecter</value>
+			<code>MUTE_TOOLTIP</code>
+			<value>Muet</value>
+		</message>
+		<message>
+			<code>UNMUTE_TOOLTIP</code>
+			<value>Rétablir</value>
+		</message>
+		<message>
+			<code>HANG_UP_TOOLTIP</code>
+			<value>Raccrocher</value>
+		</message>
+		<message>
+			<code>DISCONNECT_FROM_SERVER</code>
+			<value>Se déconnecter du serveur</value>
 		</message>
 		<message>
 			<code>PLAYER_ONLINE</code>

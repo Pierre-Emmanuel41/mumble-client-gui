@@ -37,6 +37,7 @@ public class PlayerView extends ViewBase<PlayerPresenter, VBox> {
 		muteOrUnmuteButton.graphicProperty().bind(getPresenter().muteOrUnmuteGraphicProperty());
 		muteOrUnmuteButton.setOnAction(e -> getPresenter().onMuteOrUnmute());
 		muteOrUnmuteButton.visibleProperty().bind(getPresenter().playerCanDisconnectFromChannelProperty());
+		muteOrUnmuteButton.tooltipProperty().bind(getPresenter().muteOrUnmuteTooltipProperty());
 		playerInfo.getChildren().add(muteOrUnmuteButton);
 		HBox.setMargin(muteOrUnmuteButton, new Insets(0, 5, 0, 0));
 
@@ -45,6 +46,7 @@ public class PlayerView extends ViewBase<PlayerPresenter, VBox> {
 		hangupButton.graphicProperty().bind(getPresenter().hangupGraphicProperty());
 		hangupButton.setOnAction(e -> getPresenter().disconnectFromChannel());
 		hangupButton.visibleProperty().bind(getPresenter().playerCanDisconnectFromChannelProperty());
+		hangupButton.tooltipProperty().bind(getPresenter().hangupTooltipProperty());
 		playerInfo.getChildren().add(hangupButton);
 
 		getRoot().getChildren().add(playerInfo);

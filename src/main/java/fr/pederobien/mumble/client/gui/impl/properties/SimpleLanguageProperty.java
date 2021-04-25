@@ -40,7 +40,7 @@ public class SimpleLanguageProperty extends SimpleStringProperty {
 	/**
 	 * Set the code associated to this property. This will automatically change the displayed text.
 	 * 
-	 * @param code
+	 * @param code The new code associated to the message to display.
 	 * @param args The new arguments array associated to the code.
 	 */
 	public void setCode(IMessageCode code, Object... args) {

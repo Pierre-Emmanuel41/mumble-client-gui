@@ -8,6 +8,7 @@ import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.environment.Environments;
 import fr.pederobien.mumble.client.gui.environment.Variables;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
+import fr.pederobien.mumble.client.gui.impl.properties.SimpleTooltipProperty;
 import fr.pederobien.mumble.client.gui.impl.view.MainView;
 import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.interfaces.IAudioConnection;
@@ -22,6 +23,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Node;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -31,10 +33,12 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 
 	private StringProperty playerNameProperty;
 	private SimpleLanguageProperty playerStatusProperty;
-	private SimpleLanguageProperty disconnectFromChannelTextProperty;
 	private SimpleLanguageProperty disconnectFromServerTextProperty;
 	private BooleanProperty playerConnectedProperty;
 	private BooleanProperty playerCanDisconnectFromChannel;
+
+	private SimpleTooltipProperty muteOrUnmuteTooltipProperty;
+	private SimpleTooltipProperty hangupTooltipProperty;
 
 	private boolean isMute;
 	private double fitHeight;
@@ -48,10 +52,12 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 
 		playerNameProperty = new SimpleStringProperty("");
 		playerStatusProperty = getPropertyHelper().languageProperty(EMessageCode.PLAYER_OFFLINE);
-		disconnectFromChannelTextProperty = getPropertyHelper().languageProperty(EMessageCode.DISCONNECT_FROM_CHANNEL);
-		disconnectFromServerTextProperty = getPropertyHelper().languageProperty(EMessageCode.DISCONNECT_FROM_CHANNEL);
+		disconnectFromServerTextProperty = getPropertyHelper().languageProperty(EMessageCode.DISCONNECT_FROM_SERVER);
 		playerConnectedProperty = new SimpleBooleanProperty(false);
 		playerCanDisconnectFromChannel = new SimpleBooleanProperty(false);
+
+		muteOrUnmuteTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.MUTE_TOOLTIP);
+		hangupTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.HANG_UP_TOOLTIP);
 
 		isMute = false;
 		try {
@@ -124,6 +130,10 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 		return muteOrUnmuteGraphicProperty;
 	}
 
+	public ObjectProperty<Tooltip> muteOrUnmuteTooltipProperty() {
+		return muteOrUnmuteTooltipProperty;
+	}
+
 	public void onMuteOrUnmute() {
 		isMute = !isMute;
 		if (isMute)
@@ -139,12 +149,12 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 		return playerConnectedProperty;
 	}
 
-	public StringProperty disconnectFromChannelTextProperty() {
-		return disconnectFromChannelTextProperty;
-	}
-
 	public ObjectProperty<Node> hangupGraphicProperty() {
 		return hangupGraphicProperty;
+	}
+
+	public ObjectProperty<Tooltip> hangupTooltipProperty() {
+		return hangupTooltipProperty;
 	}
 
 	/**
@@ -197,6 +207,9 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 		ImageView imageView = new ImageView(isMute ? muteImage : unmuteImage);
 		imageView.setPreserveRatio(true);
 		imageView.setFitHeight(fitHeight);
-		dispatch(() -> muteOrUnmuteGraphicProperty.set(imageView));
+		dispatch(() -> {
+			muteOrUnmuteGraphicProperty.set(imageView);
+			muteOrUnmuteTooltipProperty.setMessageCode(isMute ? EMessageCode.UNMUTE_TOOLTIP : EMessageCode.MUTE_TOOLTIP);
+		});
 	}
 }

@@ -141,12 +141,24 @@
 			<value>Cannot connect to channel</value>
 		</message>
 		<message>
+			<code>MUTE_TOOLTIP</code>
+			<value>Mute</value>
+		</message>
+		<message>
+			<code>UNMUTE_TOOLTIP</code>
+			<value>Unmute</value>
+		</message>
+		<message>
+			<code>HANG_UP_TOOLTIP</code>
+			<value>Hang up</value>
+		</message>
+		<message>
 			<code>PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL</code>
 			<value>You cannot join a channel, you should be connected in game first.</value>
 		</message>
 		<message>
-			<code>DISCONNECT_FROM_CHANNEL</code>
-			<value>Disconnect</value>
+			<code>DISCONNECT_FROM_SERVER</code>
+			<value>Disconnect from server</value>
 		</message>
 		<message>
 			<code>PLAYER_ONLINE</code>
