@@ -25,6 +25,15 @@ public enum Variables {
 	// File that correspond to the microphone off.
 	MICROPHONE_OFF("MicroOff.png"),
 
+	// File that correspond to the undeafen headset.
+	HEADSET_UNDEAFEN("Undeafen.png"),
+
+	// File that correspond to the deafen headset.
+	HEADSET_DEAFEN("Deafen.png"),
+
+	// File that correspond to the headset off.
+	HEADSET_OFF("HeadsetOff.png"),
+
 	// File that correspond to the hang up.
 	HANG_UP("Hangup.png");
 

@@ -89,6 +89,12 @@ public enum EMessageCode implements IMessageCode {
 	// Code for the unmute button tooltip.
 	UNMUTE_TOOLTIP,
 
+	// Code for the deafen button tooltip.
+	DEAFEN_TOOLTIP,
+
+	// Code for the undeafen button tooltip.
+	UNDEAFEN_TOOLTIP,
+
 	// Code for the hang up button tooltip.
 	HANG_UP_TOOLTIP,
 

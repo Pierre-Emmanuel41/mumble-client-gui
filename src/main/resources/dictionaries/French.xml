@@ -151,6 +151,14 @@
 			<value>Rétablir</value>
 		</message>
 		<message>
+			<code>DEAFEN_TOOLTIP</code>
+			<value>Mettre en sourdine</value>
+		</message>
+		<message>
+			<code>UNDEAFEN_TOOLTIP</code>
+			<value>Rétablir le son</value>
+		</message>
+		<message>
 			<code>HANG_UP_TOOLTIP</code>
 			<value>Raccrocher</value>
 		</message>

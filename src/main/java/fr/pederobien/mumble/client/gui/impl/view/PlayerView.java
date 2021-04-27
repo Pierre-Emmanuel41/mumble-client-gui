@@ -41,6 +41,15 @@ public class PlayerView extends ViewBase<PlayerPresenter, VBox> {
 		playerInfo.getChildren().add(muteOrUnmuteButton);
 		HBox.setMargin(muteOrUnmuteButton, new Insets(0, 5, 0, 0));
 
+		Button deafenOrUndeafenButton = new Button();
+		deafenOrUndeafenButton.setBackground(Background.EMPTY);
+		deafenOrUndeafenButton.graphicProperty().bind(getPresenter().deafenOrUndeafenGraphicProperty());
+		deafenOrUndeafenButton.setOnAction(e -> getPresenter().onDeafenOrUndeafen());
+		deafenOrUndeafenButton.visibleProperty().bind(getPresenter().playerCanDisconnectFromChannelProperty());
+		deafenOrUndeafenButton.tooltipProperty().bind(getPresenter().deafenOrUndeafenTooltipProperty());
+		playerInfo.getChildren().add(deafenOrUndeafenButton);
+		HBox.setMargin(deafenOrUndeafenButton, new Insets(0, 5, 0, 0));
+
 		Button hangupButton = new Button();
 		hangupButton.setBackground(Background.EMPTY);
 		hangupButton.graphicProperty().bind(getPresenter().hangupGraphicProperty());

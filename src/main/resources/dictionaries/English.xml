@@ -149,6 +149,14 @@
 			<value>Unmute</value>
 		</message>
 		<message>
+			<code>DEAFEN_TOOLTIP</code>
+			<value>Deafen</value>
+		</message>
+		<message>
+			<code>UNDEAFEN_TOOLTIP</code>
+			<value>Undeafen</value>
+		</message>
+		<message>
 			<code>HANG_UP_TOOLTIP</code>
 			<value>Hang up</value>
 		</message>

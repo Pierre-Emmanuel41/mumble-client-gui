@@ -38,11 +38,13 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 	private BooleanProperty playerCanDisconnectFromChannel;
 
 	private SimpleTooltipProperty muteOrUnmuteTooltipProperty;
+	private SimpleTooltipProperty deafenOrUndeafenTooltipProperty;
 	private SimpleTooltipProperty hangupTooltipProperty;
 
 	private double fitHeight;
-	private Image unmuteImage, muteImage, hangupImage;
+	private Image unmuteImage, muteImage, deafenImage, undeafenImage, hangupImage;
 	private ObjectProperty<Node> muteOrUnmuteGraphicProperty;
+	private ObjectProperty<Node> deafenOrUndeafenGraphicProperty;
 	private ObjectProperty<Node> hangupGraphicProperty;
 
 	public PlayerPresenter(Server server) {
@@ -56,13 +58,17 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 		playerCanDisconnectFromChannel = new SimpleBooleanProperty(false);
 
 		muteOrUnmuteTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.MUTE_TOOLTIP);
+		deafenOrUndeafenTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.DEAFEN_TOOLTIP);
 		hangupTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.HANG_UP_TOOLTIP);
 
 		try {
 			unmuteImage = Environments.loadImage(Variables.MICROPHONE_UNMUTE.getFileName());
 			muteImage = Environments.loadImage(Variables.MICROPHONE_MUTE.getFileName());
-			hangupImage = Environments.loadImage(Variables.HANG_UP.getFileName());
 			muteOrUnmuteGraphicProperty = new SimpleObjectProperty<Node>();
+			deafenImage = Environments.loadImage(Variables.HEADSET_DEAFEN.getFileName());
+			undeafenImage = Environments.loadImage(Variables.HEADSET_UNDEAFEN.getFileName());
+			deafenOrUndeafenGraphicProperty = new SimpleObjectProperty<Node>();
+			hangupImage = Environments.loadImage(Variables.HANG_UP.getFileName());
 			hangupGraphicProperty = new SimpleObjectProperty<Node>();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -86,17 +92,26 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 	@Override
 	public void onChannelChanged(IChannel channel) {
 		playerCanDisconnectFromChannel.setValue(channel != null);
-		if (channel == null)
+		if (channel == null) {
+			// Need to unmute and undeafen before disconnection in order to update internal player boolean.
+			player.setMute(false);
+			player.setDeafen(false);
 			audioConnection.disconnect();
-		else
+		} else
 			audioConnection.connect();
 
 		updateMuteOrUnmute();
+		updateDeafenOrUndeafen();
 	}
 
 	@Override
 	public void onMuteChanged(boolean isMute) {
 		updateMuteOrUnmute();
+	}
+
+	@Override
+	public void onDeafenChanged(boolean isDeafen) {
+		updateDeafenOrUndeafen();
 	}
 
 	/**
@@ -116,6 +131,7 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 	public void setFitHeight(double fitHeight) {
 		this.fitHeight = fitHeight;
 		updateMuteOrUnmute();
+		updateDeafenOrUndeafen();
 
 		ImageView hangupView = new ImageView(hangupImage);
 		hangupView.setPreserveRatio(true);
@@ -133,6 +149,18 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 
 	public void onMuteOrUnmute() {
 		player.setMute(!player.isMute());
+	}
+
+	public ObjectProperty<Node> deafenOrUndeafenGraphicProperty() {
+		return deafenOrUndeafenGraphicProperty;
+	}
+
+	public ObjectProperty<Tooltip> deafenOrUndeafenTooltipProperty() {
+		return deafenOrUndeafenTooltipProperty;
+	}
+
+	public void onDeafenOrUndeafen() {
+		player.setDeafen(!player.isDeafen());
 	}
 
 	/**
@@ -204,6 +232,17 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 		dispatch(() -> {
 			muteOrUnmuteGraphicProperty.set(imageView);
 			muteOrUnmuteTooltipProperty.setMessageCode(isMute ? EMessageCode.UNMUTE_TOOLTIP : EMessageCode.MUTE_TOOLTIP);
+		});
+	}
+
+	private void updateDeafenOrUndeafen() {
+		boolean isDeafen = player == null ? false : player.isDeafen();
+		ImageView imageView = new ImageView(isDeafen ? deafenImage : undeafenImage);
+		imageView.setPreserveRatio(true);
+		imageView.setFitHeight(fitHeight);
+		dispatch(() -> {
+			deafenOrUndeafenGraphicProperty.set(imageView);
+			deafenOrUndeafenTooltipProperty.setMessageCode(isDeafen ? EMessageCode.UNDEAFEN_TOOLTIP : EMessageCode.DEAFEN_TOOLTIP);
 		});
 	}
 }
