@@ -91,17 +91,15 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 
 	@Override
 	public void onChannelChanged(IChannel channel) {
-		playerCanDisconnectFromChannel.setValue(channel != null);
-		if (channel == null) {
-			// Need to unmute and undeafen before disconnection in order to update internal player boolean.
+		if (channel == null)
+			audioConnection.disconnect();
+		else {
 			player.setMute(false);
 			player.setDeafen(false);
-			audioConnection.disconnect();
-		} else
 			audioConnection.connect();
+		}
 
-		updateMuteOrUnmute();
-		updateDeafenOrUndeafen();
+		playerCanDisconnectFromChannel.setValue(channel != null);
 	}
 
 	@Override
