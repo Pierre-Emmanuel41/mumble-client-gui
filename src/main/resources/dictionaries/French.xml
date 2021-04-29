@@ -62,6 +62,14 @@
 			<value>Le joueur est déjà enregistré dans un channel.</value>
 		</message>
 		<message>
+			<code>BAD_PLAYER_NAME</code>
+			<value>Le nom du joueur qui rend muet ou qui ne rend plus muet un autre joueur doit correspondre au nom du joueur côté client.</value>
+		</message>
+		<message>
+			<code>PLAYERS_IN_DIFFERENT_CHANNELS</code>
+			<value>Un joueur peut uniquement rendre muet ou ne plus rendre muet un autre joueur qui se trouve dans le même channel que lui.</value>
+		</message>
+		<message>
 			<code>UNKNOWN</code>
 			<value>Impossible d'interpréter le code d'erreur.</value>
 		</message>		
@@ -165,6 +173,14 @@
 		<message>
 			<code>DISCONNECT_FROM_SERVER</code>
 			<value>Se déconnecter du serveur</value>
+		</message>
+		<message>
+			<code>CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE_TITLE</code>
+			<value>Impossible de rendre muet ou de ne plus rendre muet le joueur %s</value>
+		</message>
+		<message>
+			<code>CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE</code>
+			<value>Vous ne pouvez pas rendre muet ou ne plus rendre muet le joueur %s pour la raison suivante :</value>
 		</message>
 		<message>
 			<code>PLAYER_ONLINE</code>

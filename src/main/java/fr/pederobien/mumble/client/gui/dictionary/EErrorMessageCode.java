@@ -33,6 +33,12 @@ public enum EErrorMessageCode implements IMessageCode {
 	// Code when trying to add an already registered player in a channel.
 	PLAYER_ALREADY_REGISTERED,
 
+	// Code when trying to mute/unmute a player whereas the player name is wrong.
+	BAD_PLAYER_NAME,
+
+	// Code when player tries to mute/unmute another player that is not in same channel.
+	PLAYERS_IN_DIFFERENT_CHANNELS,
+
 	// Code when cannot be parsed.
 	UNKNOWN;
 

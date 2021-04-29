@@ -17,7 +17,6 @@ import fr.pederobien.mumble.client.interfaces.IResponse;
 import fr.pederobien.mumble.client.interfaces.observers.IObsChannelList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -131,14 +130,13 @@ public class ChannelListPresenter extends PresenterBase implements IObsChannelLi
 	}
 
 	private void addPlayer(IResponse<PlayerAddedToChannelEvent> response) {
-		if (response.hasFailed()) {
+		if (response.hasFailed())
 			dispatch(() -> {
-				Alert alert = new Alert(AlertType.INFORMATION);
-				alert.titleProperty().bind(getPropertyHelper().languageProperty(EMessageCode.PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL_TITLE));
-				alert.headerTextProperty().bind(getPropertyHelper().languageProperty(EMessageCode.PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL));
-				alert.contentTextProperty().bind(getPropertyHelper().languageProperty(ErrorCodeWrapper.getByErrorCode(response.getErrorCode()).getMessageCode()));
-				alert.showAndWait();
+				AlertPresenter alertPresenter = new AlertPresenter(AlertType.INFORMATION);
+				alertPresenter.setTitle(EMessageCode.PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL_TITLE);
+				alertPresenter.setHeader(EMessageCode.PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL);
+				alertPresenter.setContent(ErrorCodeWrapper.getByErrorCode(response.getErrorCode()).getMessageCode());
+				alertPresenter.getAlert().showAndWait();
 			});
-		}
 	}
 }

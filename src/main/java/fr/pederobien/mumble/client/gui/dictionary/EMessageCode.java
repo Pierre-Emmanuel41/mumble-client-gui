@@ -101,6 +101,15 @@ public enum EMessageCode implements IMessageCode {
 	// Code when player try to disconnect from a server.
 	DISCONNECT_FROM_SERVER,
 
+	// PLAYER CONTEXT MENU CODE
+	// -----------------------------------------------------------------------------
+
+	// Code for the title of the alert when a player try to mute/unmute a player but it fails.
+	CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE_TITLE,
+
+	// Code for the header of the alert when a player try to mute/unmute a player but it fails.
+	CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE,
+
 	// PLAYER STATUS CODE
 	// -----------------------------------------------------------------------------
 
