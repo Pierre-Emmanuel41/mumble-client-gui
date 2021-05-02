@@ -64,12 +64,12 @@
 			<value>The player is already registered in a channel.</value>
 		</message>
 		<message>
-			<code>BAD_PLAYER_NAME</code>
-			<value>The player name that mute or unmute another player should correspond to the player name on the client side.</value>
-		</message>
-		<message>
 			<code>PLAYERS_IN_DIFFERENT_CHANNELS</code>
 			<value>A player can only mute or unmute another player that is in the same channel as him.</value>
+		</message>
+		<message>
+			<code>PLAYER_NOT_REGISTERED</code>
+			<value>A player can be kicked from a channel if and only if it is registered in a channel.</value>
 		</message>
 		<message>
 			<code>UNKNOWN</code>
@@ -183,6 +183,18 @@
 		<message>
 			<code>CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE</code>
 			<value>You cannot mute or unmute the player %s for the following reason :</value>
+		</message>
+		<message>
+			<code>KICK_PLAYER</code>
+			<value>Kick %s</value>
+		</message>
+		<message>
+			<code>CANNOT_KICK_PLAYER_RESPONSE_TITLE</code>
+			<value>Fail to kick player %s</value>
+		</message>
+		<message>
+			<code>CANNOT_KICK_PLAYER_RESPONSE</code>
+			<value>You cannot kick the player %s for the following reason :</value>
 		</message>
 		<message>
 			<code>PLAYER_ONLINE</code>

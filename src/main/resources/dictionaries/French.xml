@@ -62,12 +62,12 @@
 			<value>Le joueur est déjà enregistré dans un channel.</value>
 		</message>
 		<message>
-			<code>BAD_PLAYER_NAME</code>
-			<value>Le nom du joueur qui rend muet ou qui ne rend plus muet un autre joueur doit correspondre au nom du joueur côté client.</value>
-		</message>
-		<message>
 			<code>PLAYERS_IN_DIFFERENT_CHANNELS</code>
 			<value>Un joueur peut uniquement rendre muet ou ne plus rendre muet un autre joueur qui se trouve dans le même channel que lui.</value>
+		</message>
+		<message>
+			<code>PLAYER_NOT_REGISTERED</code>
+			<value>Un joueur ne peut être kické d'un channel que si il est enregistré dans un channel</value>
 		</message>
 		<message>
 			<code>UNKNOWN</code>
@@ -181,6 +181,18 @@
 		<message>
 			<code>CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE</code>
 			<value>Vous ne pouvez pas rendre muet ou ne plus rendre muet le joueur %s pour la raison suivante :</value>
+		</message>
+		<message>
+			<code>KICK_PLAYER</code>
+			<value>Kick %s</value>
+		</message>
+		<message>
+			<code>CANNOT_KICK_PLAYER_RESPONSE_TITLE</code>
+			<value>Impossible de kicker le joueur %s</value>
+		</message>
+		<message>
+			<code>CANNOT_KICK_PLAYER_RESPONSE</code>
+			<value>Vous ne pouvez pas kicker le joueur %s pour la raison suivante :</value>
 		</message>
 		<message>
 			<code>PLAYER_ONLINE</code>

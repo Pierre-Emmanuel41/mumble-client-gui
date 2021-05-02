@@ -38,7 +38,6 @@ public class PlayerChannelView extends ViewBase<PlayerChannelPresenter, BorderPa
 		deafenView.setFitHeight(15);
 		playerStatus.getChildren().add(deafenView);
 		HBox.setMargin(deafenView, new Insets(0, 0, 0, 5));
-
 		getRoot().setRight(playerStatus);
 
 		ContextMenu contextMenu = new ContextMenu();
@@ -47,6 +46,12 @@ public class PlayerChannelView extends ViewBase<PlayerChannelPresenter, BorderPa
 		muteOrUnmute.visibleProperty().bind(getPresenter().muteOrUnmuteVisibleProperty());
 		muteOrUnmute.setOnAction(e -> getPresenter().onMuteOrUnmute());
 		contextMenu.getItems().add(muteOrUnmute);
+
+		MenuItem kick = new MenuItem();
+		kick.textProperty().bind(getPresenter().kickPlayerTextProperty());
+		kick.visibleProperty().bind(getPresenter().kickPlayerVisibility());
+		kick.setOnAction(e -> getPresenter().onKickPlayer());
+		contextMenu.getItems().add(kick);
 
 		getRoot().setOnMouseClicked(e -> displayContextMenu(contextMenu, e));
 	}

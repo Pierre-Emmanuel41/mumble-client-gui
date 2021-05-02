@@ -38,11 +38,11 @@ public enum ErrorCodeWrapper {
 	// Code when trying to add an already registered player in a channel.
 	PLAYER_ALREADY_REGISTERED(ErrorCode.PLAYER_ALREADY_REGISTERED, EErrorMessageCode.PLAYER_ALREADY_REGISTERED),
 
-	// Code when trying to mute/unmute a player whereas the player name is wrong.
-	BAD_PLAYER_NAME(ErrorCode.BAD_PLAYER_NAME, EErrorMessageCode.BAD_PLAYER_NAME),
-
 	// Code when player tries to mute/unmute another player that is not in same channel.
 	PLAYERS_IN_DIFFERENT_CHANNELS(ErrorCode.PLAYERS_IN_DIFFERENT_CHANNELS, EErrorMessageCode.PLAYERS_IN_DIFFERENT_CHANNELS),
+
+	// Code when player tries to kick another player that is not in a channel.
+	PLAYER_NOT_REGISTERED(ErrorCode.PLAYER_NOT_REGISTERED, EErrorMessageCode.PLAYER_NOT_REGISTERED),
 
 	// Code when cannot be parsed.
 	UNKNOWN(ErrorCode.UNKNOWN, EErrorMessageCode.UNKNOWN);
