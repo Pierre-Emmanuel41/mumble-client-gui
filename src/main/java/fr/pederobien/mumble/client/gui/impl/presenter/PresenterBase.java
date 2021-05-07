@@ -6,14 +6,18 @@ import java.util.List;
 import fr.pederobien.mumble.client.gui.Main;
 import fr.pederobien.mumble.client.gui.impl.properties.PropertyHelper;
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public abstract class PresenterBase {
 	private static final List<PresenterBase> PRESENTERS = new ArrayList<PresenterBase>();
+	private ObjectProperty<Font> fontProperty;
 
 	protected PresenterBase() {
 		PRESENTERS.add(this);
 		getPrimaryStage().setOnCloseRequest(e -> PRESENTERS.forEach(presenter -> presenter.onCloseRequest()));
+		fontProperty = getPropertyHelper().fontProperty();
 	}
 
 	/**
@@ -21,6 +25,10 @@ public abstract class PresenterBase {
 	 * performed.
 	 */
 	public void onCloseRequest() {
+	}
+
+	public ObjectProperty<Font> fontProperty() {
+		return fontProperty;
 	}
 
 	/**

@@ -11,6 +11,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 
 public class PlayerChannelView extends ViewBase<PlayerChannelPresenter, BorderPane> {
 
@@ -18,6 +19,7 @@ public class PlayerChannelView extends ViewBase<PlayerChannelPresenter, BorderPa
 		super(presenter, new BorderPane());
 
 		Label playerName = new Label();
+		playerName.fontProperty().bind(getPresenter().fontProperty());
 		playerName.textProperty().bind(getPresenter().playerNameProperty());
 		getRoot().setLeft(playerName);
 
@@ -41,14 +43,27 @@ public class PlayerChannelView extends ViewBase<PlayerChannelPresenter, BorderPa
 		getRoot().setRight(playerStatus);
 
 		ContextMenu contextMenu = new ContextMenu();
+
+		// Graphic for muteOrUnmute menuItem
+		Label muteOrUnmuteLabel = new Label();
+		muteOrUnmuteLabel.fontProperty().bind(getPresenter().fontProperty());
+		muteOrUnmuteLabel.textProperty().bind(getPresenter().muteOrUnmuteTextProperty());
+		muteOrUnmuteLabel.setTextFill(Color.BLACK);
+
 		MenuItem muteOrUnmute = new MenuItem();
-		muteOrUnmute.textProperty().bind(getPresenter().muteOrUnmuteTextProperty());
+		muteOrUnmute.setGraphic(muteOrUnmuteLabel);
 		muteOrUnmute.visibleProperty().bind(getPresenter().muteOrUnmuteVisibleProperty());
 		muteOrUnmute.setOnAction(e -> getPresenter().onMuteOrUnmute());
 		contextMenu.getItems().add(muteOrUnmute);
 
+		// Graphic for kick menuItem
+		Label kickLabel = new Label();
+		kickLabel.fontProperty().bind(getPresenter().fontProperty());
+		kickLabel.textProperty().bind(getPresenter().kickPlayerTextProperty());
+		kickLabel.setTextFill(Color.BLACK);
+
 		MenuItem kick = new MenuItem();
-		kick.textProperty().bind(getPresenter().kickPlayerTextProperty());
+		kick.setGraphic(kickLabel);
 		kick.visibleProperty().bind(getPresenter().kickPlayerVisibility());
 		kick.setOnAction(e -> getPresenter().onKickPlayer());
 		contextMenu.getItems().add(kick);

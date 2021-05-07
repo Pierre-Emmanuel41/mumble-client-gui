@@ -16,6 +16,7 @@ public class ServerListView extends ViewBase<ServerListPresenter, StackPane> {
 
 		// Label to display when there is no registered server.
 		Label emptyServerListLabel = new Label();
+		emptyServerListLabel.fontProperty().bind(getPresenter().fontProperty());
 		emptyServerListLabel.textProperty().bind(getPresenter().emptyServerTextProperty());
 		emptyServerListLabel.visibleProperty().bind(getPresenter().emptyServersListVisibilityProperty());
 		getRoot().getChildren().add(emptyServerListLabel);

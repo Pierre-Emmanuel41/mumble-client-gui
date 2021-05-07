@@ -36,10 +36,12 @@ public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> {
 		serverName.setPrefWidth(490);
 
 		Label serverNameLabel = new Label();
+		serverNameLabel.fontProperty().bind(getPresenter().fontProperty());
 		serverNameLabel.textProperty().bind(getPresenter().serverNameTextProperty());
 		serverName.getChildren().add(serverNameLabel);
 
 		TextField serverNameTextField = new TextField();
+		serverNameTextField.fontProperty().bind(getPresenter().fontProperty());
 		serverNameTextField.promptTextProperty().bind(getPresenter().serverNamePromptProperty());
 		serverNameTextField.textProperty().bindBidirectional(getPresenter().serverNameProperty());
 		serverNameTextField.borderProperty().bind(getPresenter().serverNameBorderProperty());
@@ -58,10 +60,12 @@ public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> {
 		FlowPane serverIpAddress = new FlowPane();
 
 		Label serverIpAddressLabel = new Label();
+		serverIpAddressLabel.fontProperty().bind(getPresenter().fontProperty());
 		serverIpAddressLabel.textProperty().bind(getPresenter().serverIpAddressTextProperty());
 		serverIpAddress.getChildren().add(serverIpAddressLabel);
 
 		TextField ipTextField = new TextField();
+		ipTextField.fontProperty().bind(getPresenter().fontProperty());
 		ipTextField.promptTextProperty().bind(getPresenter().serverIpAddressPromptProperty());
 		ipTextField.textProperty().bindBidirectional(getPresenter().serverIpAddressProperty());
 		ipTextField.borderProperty().bind(getPresenter().serverIpAddressBorderProperty());
@@ -80,10 +84,12 @@ public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> {
 		FlowPane serverPort = new FlowPane();
 
 		Label serverPortLabel = new Label();
+		serverPortLabel.fontProperty().bind(getPresenter().fontProperty());
 		serverPortLabel.textProperty().bind(getPresenter().serverPortTextProperty());
 		serverPort.getChildren().add(serverPortLabel);
 
 		TextField serverPortTextField = new TextField();
+		serverPortTextField.fontProperty().bind(getPresenter().fontProperty());
 		serverPortTextField.promptTextProperty().bind(getPresenter().serverPortPromptProperty());
 		serverPortTextField.textProperty().bindBidirectional(getPresenter().serverPortProperty());
 		serverPortTextField.borderProperty().bind(getPresenter().serverPortBorderProperty());
@@ -103,6 +109,7 @@ public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> {
 		buttons.setAlignment(Pos.CENTER_RIGHT);
 
 		Button ok = new Button();
+		ok.fontProperty().bind(getPresenter().fontProperty());
 		ok.textProperty().bind(getPresenter().okTextProperty());
 		ok.setOnAction(e -> getPresenter().ok(e));
 		ok.disableProperty().bind(getPresenter().okDisableProperty());
@@ -110,6 +117,7 @@ public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> {
 		FlowPane.setMargin(ok, new Insets(0, 10, 0, 0));
 
 		Button cancel = new Button();
+		cancel.fontProperty().bind(getPresenter().fontProperty());
 		cancel.textProperty().bind(getPresenter().cancelTextProperty());
 		cancel.setOnAction(e -> getPresenter().cancel(e));
 		buttons.getChildren().add(cancel);

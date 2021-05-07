@@ -15,24 +15,28 @@ public class ServerManagementView extends ViewBase<ServerManagementPresenter, Fl
 		getRoot().setAlignment(Pos.CENTER);
 
 		Button joinButton = new Button();
+		joinButton.fontProperty().bind(getPresenter().fontProperty());
 		joinButton.textProperty().bind(getPresenter().joinServerTextProperty());
 		joinButton.disableProperty().bind(getPresenter().joinDisableProperty());
 		joinButton.setOnAction(e -> getPresenter().onJoin());
 		add(joinButton);
 
 		Button addButton = new Button();
+		addButton.fontProperty().bind(getPresenter().fontProperty());
 		addButton.textProperty().bind(getPresenter().addServerTextProperty());
 		addButton.disableProperty().bind(getPresenter().addDisableProperty());
 		addButton.setOnAction(e -> getPresenter().onAdd());
 		add(addButton);
 
 		Button editButton = new Button();
+		editButton.fontProperty().bind(getPresenter().fontProperty());
 		editButton.textProperty().bind(getPresenter().editServerTextProperty());
 		editButton.disableProperty().bind(getPresenter().editDisableProperty());
 		editButton.setOnAction(e -> getPresenter().onEdit());
 		add(editButton);
 
 		Button deleteButton = new Button();
+		addButton.fontProperty().bind(getPresenter().fontProperty());
 		deleteButton.textProperty().bind(getPresenter().deleteServerTextProperty());
 		deleteButton.disableProperty().bind(getPresenter().deleteDisableProperty());
 		deleteButton.setOnAction(e -> getPresenter().onDelete());

@@ -18,6 +18,7 @@ public class PlayerView extends ViewBase<PlayerPresenter, VBox> {
 		playerInfo.setAlignment(Pos.CENTER_LEFT);
 
 		Label playerName = new Label();
+		playerName.fontProperty().bind(getPresenter().fontProperty());
 		playerName.textProperty().bind(getPresenter().playerNameProperty());
 		playerName.visibleProperty().bind(getPresenter().playerConnectedProperty());
 		playerName.managedProperty().bind(getPresenter().playerConnectedProperty());
@@ -25,6 +26,7 @@ public class PlayerView extends ViewBase<PlayerPresenter, VBox> {
 		HBox.setMargin(playerName, new Insets(0, 5, 0, 0));
 
 		Label playerStatus = new Label();
+		playerStatus.fontProperty().bind(getPresenter().fontProperty());
 		playerStatus.textProperty().bind(getPresenter().playerStatusProperty());
 		playerInfo.getChildren().add(playerStatus);
 		HBox.setMargin(playerStatus, new Insets(0, 5, 0, 0));
@@ -33,6 +35,7 @@ public class PlayerView extends ViewBase<PlayerPresenter, VBox> {
 		getPresenter().setFitHeight(20);
 
 		Button muteOrUnmuteButton = new Button();
+		muteOrUnmuteButton.fontProperty().bind(getPresenter().fontProperty());
 		muteOrUnmuteButton.setBackground(Background.EMPTY);
 		muteOrUnmuteButton.graphicProperty().bind(getPresenter().muteOrUnmuteGraphicProperty());
 		muteOrUnmuteButton.setOnAction(e -> getPresenter().onMuteOrUnmute());
@@ -42,6 +45,7 @@ public class PlayerView extends ViewBase<PlayerPresenter, VBox> {
 		HBox.setMargin(muteOrUnmuteButton, new Insets(0, 5, 0, 0));
 
 		Button deafenOrUndeafenButton = new Button();
+		deafenOrUndeafenButton.fontProperty().bind(getPresenter().fontProperty());
 		deafenOrUndeafenButton.setBackground(Background.EMPTY);
 		deafenOrUndeafenButton.graphicProperty().bind(getPresenter().deafenOrUndeafenGraphicProperty());
 		deafenOrUndeafenButton.setOnAction(e -> getPresenter().onDeafenOrUndeafen());
@@ -51,6 +55,7 @@ public class PlayerView extends ViewBase<PlayerPresenter, VBox> {
 		HBox.setMargin(deafenOrUndeafenButton, new Insets(0, 5, 0, 0));
 
 		Button hangupButton = new Button();
+		hangupButton.fontProperty().bind(getPresenter().fontProperty());
 		hangupButton.setBackground(Background.EMPTY);
 		hangupButton.graphicProperty().bind(getPresenter().hangupGraphicProperty());
 		hangupButton.setOnAction(e -> getPresenter().disconnectFromChannel());
@@ -61,6 +66,7 @@ public class PlayerView extends ViewBase<PlayerPresenter, VBox> {
 		getRoot().getChildren().add(playerInfo);
 
 		Button disconnectFromServerButton = new Button();
+		disconnectFromServerButton.fontProperty().bind(getPresenter().fontProperty());
 		disconnectFromServerButton.textProperty().bind(getPresenter().disconnectFromServerTextProperty());
 		disconnectFromServerButton.setOnAction(e -> getPresenter().disconnectFromServer());
 		getRoot().getChildren().add(disconnectFromServerButton);

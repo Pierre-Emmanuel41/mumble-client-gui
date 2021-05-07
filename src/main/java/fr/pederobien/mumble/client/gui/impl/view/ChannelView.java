@@ -18,6 +18,7 @@ public class ChannelView extends ViewBase<ChannelPresenter, GridPane> {
 		super(presenter, new GridPane());
 
 		Label channelName = new Label();
+		channelName.fontProperty().bind(getPresenter().fontProperty());
 		channelName.textProperty().bind(getPresenter().channelNameProperty());
 		channelName.setTextFill(Color.BLACK);
 
