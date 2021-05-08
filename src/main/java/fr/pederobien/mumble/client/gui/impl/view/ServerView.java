@@ -5,6 +5,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 public class ServerView extends ViewBase<ServerPresenter, BorderPane> {
 
@@ -16,10 +17,12 @@ public class ServerView extends ViewBase<ServerPresenter, BorderPane> {
 		Label serverNameLabel = new Label();
 		serverNameLabel.fontProperty().bind(getPresenter().fontProperty());
 		serverNameLabel.textProperty().bind(getPresenter().serverNameProperty());
+		serverNameLabel.setTextFill(Color.BLACK);
 
 		Label serverIpAddress = new Label();
 		serverIpAddress.fontProperty().bind(getPresenter().fontProperty());
 		serverIpAddress.textProperty().bind(getPresenter().serverIpAddressProperty());
+		serverIpAddress.setTextFill(Color.BLACK);
 
 		vbox.getChildren().addAll(serverNameLabel, serverIpAddress);
 

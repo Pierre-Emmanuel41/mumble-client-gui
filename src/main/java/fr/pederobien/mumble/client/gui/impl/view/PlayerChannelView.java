@@ -21,6 +21,7 @@ public class PlayerChannelView extends ViewBase<PlayerChannelPresenter, BorderPa
 		Label playerName = new Label();
 		playerName.fontProperty().bind(getPresenter().fontProperty());
 		playerName.textProperty().bind(getPresenter().playerNameProperty());
+		playerName.setTextFill(Color.BLACK);
 		getRoot().setLeft(playerName);
 
 		HBox playerStatus = new HBox();
