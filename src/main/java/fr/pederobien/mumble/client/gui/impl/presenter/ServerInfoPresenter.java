@@ -17,15 +17,12 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Tooltip;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
 public abstract class ServerInfoPresenter extends PresenterBase {
 	private ServerList serverList;
@@ -59,7 +56,6 @@ public abstract class ServerInfoPresenter extends PresenterBase {
 	private SimpleLanguageProperty okTextProperty;
 	private BooleanProperty okDisableProperty;
 	private SimpleLanguageProperty cancelTextProperty;
-	private Stage stage;
 
 	public ServerInfoPresenter(ServerList serverList, Server server) {
 		this.serverList = serverList;
@@ -95,11 +91,6 @@ public abstract class ServerInfoPresenter extends PresenterBase {
 		serverPortProperty.addListener(observer);
 
 		observer.updateOkDisableProperty();
-		stage = new Stage();
-		stage.addEventHandler(KeyEvent.KEY_RELEASED, e -> {
-			if (e.getCode() == KeyCode.ESCAPE)
-				stage.close();
-		});
 	}
 
 	/**
@@ -112,13 +103,6 @@ public abstract class ServerInfoPresenter extends PresenterBase {
 	 * @param port    The server port number.
 	 */
 	protected abstract void onOkButtonClicked(Server server, String name, String address, int port);
-
-	/**
-	 * @return The stage on which graphical components are displayed.
-	 */
-	public Stage getStage() {
-		return stage;
-	}
 
 	public StringProperty titleTextProperty() {
 		return titleTextProperty;
@@ -229,20 +213,11 @@ public abstract class ServerInfoPresenter extends PresenterBase {
 		return cancelTextProperty;
 	}
 
-	public void ok(ActionEvent event) {
+	public boolean ok(ActionEvent event) {
 		if (okDisableProperty.get())
-			return;
+			return false;
 		onOkButtonClicked(server, serverNameProperty().get(), serverIpAddressProperty().get(), Integer.parseInt(serverPortProperty().get()));
-		stage.close();
-	}
-
-	/**
-	 * Action to perform when the cancel button is clicked
-	 * 
-	 * @param event The event thrown event.
-	 */
-	public void cancel(ActionEvent event) {
-		stage.close();
+		return true;
 	}
 
 	/**

@@ -22,6 +22,9 @@ public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> {
 	public ServerInfoView(Stage initOwner, ServerInfoPresenter presenter) {
 		super(presenter, new GridPane());
 
+		// Secondary stage in order to display this view
+		Stage stage = new Stage();
+
 		getRoot().setPadding(new Insets(marginBetweenRootAndChildren));
 		getRoot().setAlignment(Pos.CENTER);
 		getRoot().addEventHandler(KeyEvent.KEY_RELEASED, e -> {
@@ -111,7 +114,10 @@ public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> {
 		Button ok = new Button();
 		ok.fontProperty().bind(getPresenter().fontProperty());
 		ok.textProperty().bind(getPresenter().okTextProperty());
-		ok.setOnAction(e -> getPresenter().ok(e));
+		ok.setOnAction(e -> {
+			if (getPresenter().ok(e))
+				stage.close();
+		});
 		ok.disableProperty().bind(getPresenter().okDisableProperty());
 		buttons.getChildren().add(ok);
 		FlowPane.setMargin(ok, new Insets(0, 10, 0, 0));
@@ -119,7 +125,7 @@ public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> {
 		Button cancel = new Button();
 		cancel.fontProperty().bind(getPresenter().fontProperty());
 		cancel.textProperty().bind(getPresenter().cancelTextProperty());
-		cancel.setOnAction(e -> getPresenter().cancel(e));
+		cancel.setOnAction(e -> stage.close());
 		buttons.getChildren().add(cancel);
 		FlowPane.setMargin(cancel, new Insets(0, 0, 0, 10));
 
@@ -128,13 +134,18 @@ public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> {
 
 		// --------------------------------------------------------------------------------------------------
 
-		getPresenter().getStage().titleProperty().bind(getPresenter().titleTextProperty());
-		getPresenter().getStage().setScene(new Scene(getRoot()));
-		getPresenter().getStage().sizeToScene();
-		getPresenter().getStage().setResizable(false);
-		getPresenter().getStage().initOwner(initOwner);
-		getPresenter().getStage().initModality(Modality.APPLICATION_MODAL);
-		getPresenter().getStage().show();
+		stage.addEventHandler(KeyEvent.KEY_RELEASED, e -> {
+			if (e.getCode() == KeyCode.ESCAPE)
+				stage.close();
+		});
+
+		stage.titleProperty().bind(getPresenter().titleTextProperty());
+		stage.setScene(new Scene(getRoot()));
+		stage.sizeToScene();
+		stage.setResizable(false);
+		stage.initOwner(initOwner);
+		stage.initModality(Modality.APPLICATION_MODAL);
+		stage.show();
 
 		maxWidthLabel(serverNameLabel, serverIpAddressLabel, serverPortLabel);
 		maxWidthTextField(serverNameTextField, ipTextField, serverPortTextField);
