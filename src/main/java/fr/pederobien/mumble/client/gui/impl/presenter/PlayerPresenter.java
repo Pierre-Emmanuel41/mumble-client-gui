@@ -10,12 +10,15 @@ import fr.pederobien.mumble.client.gui.environment.Variables;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleTooltipProperty;
 import fr.pederobien.mumble.client.gui.impl.view.MainView;
+import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsPlayerPresenter;
 import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.interfaces.IAudioConnection;
 import fr.pederobien.mumble.client.interfaces.IChannel;
 import fr.pederobien.mumble.client.interfaces.IPlayer;
 import fr.pederobien.mumble.client.interfaces.IResponse;
 import fr.pederobien.mumble.client.interfaces.observers.IObsPlayer;
+import fr.pederobien.utils.IObservable;
+import fr.pederobien.utils.Observable;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -27,9 +30,10 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class PlayerPresenter extends PresenterBase implements IObsPlayer {
+public class PlayerPresenter extends PresenterBase implements IObsPlayer, IObservable<IObsPlayerPresenter> {
 	private IPlayer player;
 	private IAudioConnection audioConnection;
+	private Observable<IObsPlayerPresenter> observers;
 
 	private StringProperty playerNameProperty;
 	private SimpleLanguageProperty playerStatusProperty;
@@ -48,6 +52,7 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 	private ObjectProperty<Node> hangupGraphicProperty;
 
 	public PlayerPresenter(Server server) {
+		observers = new Observable<IObsPlayerPresenter>();
 		server.getPlayer(response -> playerResponse(response));
 		audioConnection = server.getAudioConnection();
 
@@ -73,6 +78,16 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void addObserver(IObsPlayerPresenter obs) {
+		observers.addObserver(obs);
+	}
+
+	@Override
+	public void removeObserver(IObsPlayerPresenter obs) {
+		observers.removeObserver(obs);
 	}
 
 	@Override
@@ -210,6 +225,7 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer {
 	private void playerResponse(IResponse<IPlayer> response) {
 		this.player = response.get();
 		player.addObserver(this);
+		observers.notifyObservers(obs -> obs.onPlayerDefined(player));
 		onConnectionStatusChanged(player.isOnline());
 	}
 

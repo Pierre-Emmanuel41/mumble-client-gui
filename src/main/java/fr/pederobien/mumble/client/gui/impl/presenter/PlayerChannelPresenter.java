@@ -7,8 +7,10 @@ import fr.pederobien.mumble.client.gui.environment.Environments;
 import fr.pederobien.mumble.client.gui.environment.Variables;
 import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
+import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsPlayerPresenter;
 import fr.pederobien.mumble.client.interfaces.IChannel;
 import fr.pederobien.mumble.client.interfaces.IOtherPlayer;
+import fr.pederobien.mumble.client.interfaces.IPlayer;
 import fr.pederobien.mumble.client.interfaces.IResponse;
 import fr.pederobien.mumble.client.interfaces.observers.IObsCommonPlayer;
 import fr.pederobien.mumble.client.interfaces.observers.IObsPlayer;
@@ -21,9 +23,9 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
-public class PlayerChannelPresenter extends PresenterBase {
+public class PlayerChannelPresenter extends PresenterBase implements IObsPlayerPresenter {
 	private PlayerPresenter playerPresenter;
-	private IOtherPlayer player;
+	private IOtherPlayer otherPlayer;
 	private StringProperty playerNameProperty;
 	private BooleanProperty isPlayerMute, isPlayerDeafen;
 	private Image muteImage, deafenImage;
@@ -34,19 +36,23 @@ public class PlayerChannelPresenter extends PresenterBase {
 	private SimpleLanguageProperty kickPlayerTextProperty;
 	private BooleanProperty kickPlayerVisiblity;
 
-	public PlayerChannelPresenter(PlayerPresenter playerPresenter, IOtherPlayer player) {
+	public PlayerChannelPresenter(PlayerPresenter playerPresenter, IOtherPlayer otherPlayer) {
 		this.playerPresenter = playerPresenter;
-		this.player = player;
+		this.otherPlayer = otherPlayer;
 
-		// Observing this player in order to perform gui update when the player admin status changes.
-		playerPresenter.getPlayer().addObserver(new InternalPlayerObserver());
+		// In order to be notified when the player is defined.
+		IPlayer player = playerPresenter.getPlayer();
+		if (player == null)
+			playerPresenter.addObserver(this);
+		else
+			player.addObserver(new InternalPlayerObserver());
 
 		// Observing this other player in order to perform gui update when the player mute and deafen status changes.
-		player.addObserver(new InternalOtherPlayerObserver());
+		otherPlayer.addObserver(new InternalOtherPlayerObserver());
 
-		playerNameProperty = new SimpleStringProperty(player.getName());
-		isPlayerMute = new SimpleBooleanProperty(player.isMute());
-		isPlayerDeafen = new SimpleBooleanProperty(player.isDeafen());
+		playerNameProperty = new SimpleStringProperty(otherPlayer.getName());
+		isPlayerMute = new SimpleBooleanProperty(otherPlayer.isMute());
+		isPlayerDeafen = new SimpleBooleanProperty(otherPlayer.isDeafen());
 
 		try {
 			muteImage = Environments.loadImage(Variables.MICROPHONE_OFF.getFileName());
@@ -56,10 +62,18 @@ public class PlayerChannelPresenter extends PresenterBase {
 		}
 
 		muteOrUnmuteTextProperty = getPropertyHelper().languageProperty(EMessageCode.MUTE_TOOLTIP);
-		muteOrUnmuteVisibleProperty = new SimpleBooleanProperty(!playerPresenter.getPlayer().getName().equals(player.getName()));
+		muteOrUnmuteVisibleProperty = new SimpleBooleanProperty(player != null && player.isAdmin());
 
 		kickPlayerTextProperty = getPropertyHelper().languageProperty(EMessageCode.KICK_PLAYER, player.getName());
-		kickPlayerVisiblity = new SimpleBooleanProperty(!playerPresenter.getPlayer().getName().equals(player.getName()) && playerPresenter.getPlayer().isAdmin());
+		kickPlayerVisiblity = new SimpleBooleanProperty(player != null && player.isAdmin());
+	}
+
+	@Override
+	public void onPlayerDefined(IPlayer player) {
+		// Observing this player in order to perform gui update when the player admin status changes.
+		player.addObserver(new InternalPlayerObserver());
+		muteOrUnmuteVisibleProperty.set(!playerPresenter.getPlayer().getName().equals(player.getName()));
+		kickPlayerVisiblity.set(!playerPresenter.getPlayer().getName().equals(player.getName()) && playerPresenter.getPlayer().isAdmin());
 	}
 
 	/**
@@ -102,7 +116,7 @@ public class PlayerChannelPresenter extends PresenterBase {
 	}
 
 	public void onMuteOrUnmute() {
-		player.setMute(!player.isMute(), response -> onPlayerMuteOrUnmuteResponse(response));
+		otherPlayer.setMute(!otherPlayer.isMute(), response -> onPlayerMuteOrUnmuteResponse(response));
 	}
 
 	public StringProperty kickPlayerTextProperty() {
@@ -114,20 +128,20 @@ public class PlayerChannelPresenter extends PresenterBase {
 	}
 
 	public void onKickPlayer() {
-		player.kick(response -> onKickPlayerResponse(response));
+		otherPlayer.kick(response -> onKickPlayerResponse(response));
 	}
 
 	private void onPlayerMuteOrUnmuteResponse(IResponse<Boolean> response) {
 		if (response.hasFailed())
 			dispatch(() -> {
 				AlertPresenter alertPresenter = new AlertPresenter(AlertType.ERROR);
-				alertPresenter.setTitle(EMessageCode.CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE_TITLE, player.getName());
-				alertPresenter.setHeader(EMessageCode.CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE, player.getName());
+				alertPresenter.setTitle(EMessageCode.CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE_TITLE, otherPlayer.getName());
+				alertPresenter.setHeader(EMessageCode.CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE, otherPlayer.getName());
 				alertPresenter.setContent(ErrorCodeWrapper.getByErrorCode(response.getErrorCode()).getMessageCode());
 				alertPresenter.getAlert().showAndWait();
 			});
 		else
-			muteOrUnmuteTextProperty.setCode(player.isMute() ? EMessageCode.UNMUTE_TOOLTIP : EMessageCode.MUTE_TOOLTIP);
+			muteOrUnmuteTextProperty.setCode(otherPlayer.isMute() ? EMessageCode.UNMUTE_TOOLTIP : EMessageCode.MUTE_TOOLTIP);
 	}
 
 	private void onKickPlayerResponse(IResponse<Boolean> response) {
@@ -136,8 +150,8 @@ public class PlayerChannelPresenter extends PresenterBase {
 
 		dispatch(() -> {
 			AlertPresenter alertPresenter = new AlertPresenter(AlertType.ERROR);
-			alertPresenter.setTitle(EMessageCode.CANNOT_KICK_PLAYER_RESPONSE_TITLE, player.getName());
-			alertPresenter.setHeader(EMessageCode.CANNOT_KICK_PLAYER_RESPONSE, player.getName());
+			alertPresenter.setTitle(EMessageCode.CANNOT_KICK_PLAYER_RESPONSE_TITLE, otherPlayer.getName());
+			alertPresenter.setHeader(EMessageCode.CANNOT_KICK_PLAYER_RESPONSE, otherPlayer.getName());
 			alertPresenter.setContent(ErrorCodeWrapper.getByErrorCode(response.getErrorCode()).getMessageCode());
 			alertPresenter.getAlert().showAndWait();
 		});
@@ -162,7 +176,7 @@ public class PlayerChannelPresenter extends PresenterBase {
 
 		@Override
 		public void onAdminStatusChanged(boolean isAdmin) {
-			dispatch(() -> kickPlayerVisiblity.set(!playerPresenter.getPlayer().getName().equals(player.getName()) && playerPresenter.getPlayer().isAdmin()));
+			dispatch(() -> kickPlayerVisiblity.set(!playerPresenter.getPlayer().getName().equals(otherPlayer.getName()) && playerPresenter.getPlayer().isAdmin()));
 		}
 
 		@Override
