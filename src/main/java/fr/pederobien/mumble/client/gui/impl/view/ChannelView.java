@@ -4,8 +4,13 @@ import fr.pederobien.mumble.client.gui.impl.presenter.ChannelPresenter;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Insets;
+import javafx.geometry.Side;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -30,7 +35,48 @@ public class ChannelView extends ViewBase<ChannelPresenter, GridPane> {
 			channelName.setBackground(Background.EMPTY);
 		});
 
-		channelName.setOnMouseClicked(e -> getPresenter().onChannelClicked());
+		channelName.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> getPresenter().onChannelClicked(e));
+
+		// Context menu associated to the channel name in order to add remove or rename a channel.
+		ContextMenu contextMenu = new ContextMenu();
+
+		// Add channel ------------------------------------------------------------------------------------
+		Label addChannelLabel = new Label();
+		addChannelLabel.fontProperty().bind(getPresenter().fontProperty());
+		addChannelLabel.textProperty().bind(getPresenter().addChannelTextProperty());
+		addChannelLabel.setTextFill(Color.BLACK);
+
+		MenuItem addChannel = new MenuItem();
+		addChannel.setGraphic(addChannelLabel);
+		addChannel.visibleProperty().bind(getPresenter().addChannelVisibility());
+		addChannel.setOnAction(e -> getPresenter().onAddChannel());
+		contextMenu.getItems().add(addChannel);
+
+		// Remove channel ---------------------------------------------------------------------------------
+		Label removeChannelLabel = new Label();
+		removeChannelLabel.fontProperty().bind(getPresenter().fontProperty());
+		removeChannelLabel.textProperty().bind(getPresenter().removeChannelTextProperty());
+		removeChannelLabel.setTextFill(Color.BLACK);
+
+		MenuItem removeChannel = new MenuItem();
+		removeChannel.setGraphic(removeChannelLabel);
+		removeChannel.visibleProperty().bind(getPresenter().removeChannelVisibility());
+		removeChannel.setOnAction(e -> getPresenter().onRemoveChannel());
+		contextMenu.getItems().add(removeChannel);
+
+		// Rename channel ---------------------------------------------------------------------------------
+		Label renameChannelLabel = new Label();
+		renameChannelLabel.fontProperty().bind(getPresenter().fontProperty());
+		renameChannelLabel.textProperty().bind(getPresenter().renameChannelTextProperty());
+		renameChannelLabel.setTextFill(Color.BLACK);
+
+		MenuItem renameChannel = new MenuItem();
+		renameChannel.setGraphic(renameChannelLabel);
+		renameChannel.visibleProperty().bind(getPresenter().renameChannelVisibility());
+		renameChannel.setOnAction(e -> getPresenter().onRenameChannel());
+		contextMenu.getItems().add(renameChannel);
+
+		channelName.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> displayContextMenu(contextMenu, e, channelName));
 
 		getRoot().add(channelName, 0, 0);
 
@@ -46,5 +92,19 @@ public class ChannelView extends ViewBase<ChannelPresenter, GridPane> {
 
 		getRoot().add(playerListView, 0, 1);
 		GridPane.setMargin(playerListView, new Insets(0, 0, 0, 10));
+	}
+
+	private void displayContextMenu(ContextMenu contextMenu, MouseEvent event, Label channelName) {
+		if (event.getButton() != MouseButton.SECONDARY)
+			return;
+
+		boolean canDisplay = false;
+		for (MenuItem menuItem : contextMenu.getItems())
+			canDisplay |= menuItem.isVisible();
+
+		if (!canDisplay)
+			return;
+
+		contextMenu.show(channelName, Side.RIGHT, 0, 0);
 	}
 }

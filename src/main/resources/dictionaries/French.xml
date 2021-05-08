@@ -175,6 +175,18 @@
 			<value>Se déconnecter du serveur</value>
 		</message>
 		<message>
+			<code>ADD_CHANNEL</code>
+			<value>Ajouter un nouveau channel</value>
+		</message>
+		<message>
+			<code>REMOVE_CHANNEL</code>
+			<value>Supprimer</value>
+		</message>
+		<message>
+			<code>RENAME_CHANNEL</code>
+			<value>Renommer</value>
+		</message>
+		<message>
 			<code>CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE_TITLE</code>
 			<value>Impossible de rendre muet ou de ne plus rendre muet le joueur %s</value>
 		</message>

@@ -177,6 +177,18 @@
 			<value>Disconnect from server</value>
 		</message>
 		<message>
+			<code>ADD_CHANNEL</code>
+			<value>Add new channel</value>
+		</message>
+		<message>
+			<code>REMOVE_CHANNEL</code>
+			<value>Remove</value>
+		</message>
+		<message>
+			<code>RENAME_CHANNEL</code>
+			<value>Rename</value>
+		</message>
+		<message>
 			<code>CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE_TITLE</code>
 			<value>Fail to mute or unmute player %s</value>
 		</message>

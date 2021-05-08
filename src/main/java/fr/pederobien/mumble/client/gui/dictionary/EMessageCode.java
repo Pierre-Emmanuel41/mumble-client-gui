@@ -101,6 +101,18 @@ public enum EMessageCode implements IMessageCode {
 	// Code when player try to disconnect from a server.
 	DISCONNECT_FROM_SERVER,
 
+	// CHANNEL CONTEXT MENU CODE
+	// -----------------------------------------------------------------------------
+
+	// Code to add a channel to the server
+	ADD_CHANNEL,
+
+	// Code to remove a channel from the server.
+	REMOVE_CHANNEL,
+
+	// Code to rename a channel in the server.
+	RENAME_CHANNEL,
+
 	// PLAYER CONTEXT MENU CODE
 	// -----------------------------------------------------------------------------
 
