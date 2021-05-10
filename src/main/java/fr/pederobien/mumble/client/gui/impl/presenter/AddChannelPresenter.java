@@ -3,6 +3,7 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 import fr.pederobien.mumble.client.event.ChannelAddedEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
+import fr.pederobien.mumble.client.gui.impl.generic.OkCancelPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleTooltipProperty;
 import fr.pederobien.mumble.client.interfaces.IChannel;
@@ -23,7 +24,7 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 
-public class AddChannelPresenter extends PresenterBase {
+public class AddChannelPresenter extends OkCancelPresenter {
 	private IChannelList channelList;
 
 	private SimpleLanguageProperty titleTextProperty;
@@ -35,9 +36,7 @@ public class AddChannelPresenter extends PresenterBase {
 	private SimpleTooltipProperty channelNameTooltipProperty;
 
 	// Buttons ---------------------------------------------------
-	private SimpleLanguageProperty okTextProperty;
 	private BooleanProperty okDisableProperty;
-	private SimpleLanguageProperty cancelTextProperty;
 
 	public AddChannelPresenter(IChannelList channelList) {
 		this.channelList = channelList;
@@ -50,13 +49,25 @@ public class AddChannelPresenter extends PresenterBase {
 		channelNamePromptProperty = getPropertyHelper().languageProperty(EMessageCode.ADD_CHANNEL_NAME_PROMPT);
 		channelNameTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.ADD_CHANNEL_NAME_TOOLTIP);
 
-		okTextProperty = getPropertyHelper().languageProperty(EMessageCode.OK);
 		okDisableProperty = new SimpleBooleanProperty(true);
-		cancelTextProperty = getPropertyHelper().languageProperty(EMessageCode.CANCEL);
 	}
 
+	@Override
 	public StringProperty titleTextProperty() {
 		return titleTextProperty;
+	}
+
+	@Override
+	public boolean onOkButtonClicked() {
+		if (okDisableProperty.get())
+			return false;
+		channelList.addChannel(channelNameProperty.get(), response -> channelNameResponse(response));
+		return true;
+	}
+
+	@Override
+	public BooleanProperty okDisableProperty() {
+		return okDisableProperty;
 	}
 
 	public StringProperty channelNameProperty() {
@@ -79,18 +90,6 @@ public class AddChannelPresenter extends PresenterBase {
 		return channelNameTooltipProperty;
 	}
 
-	public StringProperty okTextProperty() {
-		return okTextProperty;
-	}
-
-	public BooleanProperty okDisableProperty() {
-		return okDisableProperty;
-	}
-
-	public StringProperty cancelTextProperty() {
-		return cancelTextProperty;
-	}
-
 	public void validateChannelName() {
 		String channelName = channelNameProperty.get();
 		boolean isChannelNameLengthOk = channelName.length() > 5;
@@ -110,13 +109,6 @@ public class AddChannelPresenter extends PresenterBase {
 			channelNameBorderProperty.set(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));
 			okDisableProperty.set(true);
 		}
-	}
-
-	public boolean ok() {
-		if (okDisableProperty.get())
-			return false;
-		channelList.addChannel(channelNameProperty.get(), response -> channelNameResponse(response));
-		return true;
 	}
 
 	private void channelNameResponse(IResponse<ChannelAddedEvent> response) {
