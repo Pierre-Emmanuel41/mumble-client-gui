@@ -104,7 +104,7 @@ public class ChannelListPresenter extends PresenterBase implements IObsChannelLi
 		return listView -> getPropertyHelper().cellView(item -> {
 			ChannelView view = channelViews.get(item);
 			if (view == null) {
-				ChannelPresenter presenter = new ChannelPresenter(playerPresenter, (IChannel) item);
+				ChannelPresenter presenter = new ChannelPresenter(playerPresenter, channelList, (IChannel) item);
 				presenter.addObserver(this);
 				view = new ChannelView(presenter);
 				channelViews.put((IChannel) item, view);

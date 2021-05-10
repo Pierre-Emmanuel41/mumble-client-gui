@@ -176,7 +176,27 @@
 		</message>
 		<message>
 			<code>ADD_CHANNEL</code>
-			<value>Ajouter un nouveau channel</value>
+			<value>Ajouter un channel</value>
+		</message>
+		<message>
+			<code>ADD_CHANNEL_TITLE</code>
+			<value>Ajout d'un nouveau channel sur le serveur</value>
+		</message>
+		<message>
+			<code>ADD_CHANNEL_NAME</code>
+			<value>Nom du channel : </value>
+		</message>
+		<message>
+			<code>ADD_CHANNEL_NAME_PROMPT</code>
+			<value>Nom du channel</value>
+		</message>
+		<message>
+			<code>ADD_CHANNEL_NAME_TOOLTIP</code>
+			<value>Le nom du channel doit être unique, doit contenir au moins cinq caractère et ne doit pas contenir d'espace.</value>
+		</message>
+		<message>
+			<code>ADD_CHANNEL_NAME_RESPONSE</code>
+			<value>Vous ne pouvez pas ajouter de channel pour la raison suivante :</value>
 		</message>
 		<message>
 			<code>REMOVE_CHANNEL</code>

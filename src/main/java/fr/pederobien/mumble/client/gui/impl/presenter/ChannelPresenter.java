@@ -2,10 +2,12 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
+import fr.pederobien.mumble.client.gui.impl.view.AddChannelView;
 import fr.pederobien.mumble.client.gui.impl.view.PlayerChannelView;
 import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsChannelPresenter;
 import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsPlayerPresenter;
 import fr.pederobien.mumble.client.interfaces.IChannel;
+import fr.pederobien.mumble.client.interfaces.IChannelList;
 import fr.pederobien.mumble.client.interfaces.IOtherPlayer;
 import fr.pederobien.mumble.client.interfaces.IPlayer;
 import fr.pederobien.mumble.client.interfaces.observers.IObsChannel;
@@ -27,6 +29,7 @@ import javafx.util.Callback;
 
 public class ChannelPresenter extends PresenterBase implements IObsChannel, IObservable<IObsChannelPresenter>, IObsPlayerPresenter {
 	private PlayerPresenter playerPresenter;
+	private IChannelList channelList;
 	private IChannel channel;
 	private Observable<IObsChannelPresenter> observers;
 
@@ -42,8 +45,9 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel, IObs
 	private SimpleLanguageProperty renameChannelTextProperty;
 	private BooleanProperty renameChannelVisibility;
 
-	public ChannelPresenter(PlayerPresenter playerPresenter, IChannel channel) {
+	public ChannelPresenter(PlayerPresenter playerPresenter, IChannelList channelList, IChannel channel) {
 		this.playerPresenter = playerPresenter;
+		this.channelList = channelList;
 		this.channel = channel;
 		this.channel.addObserver(this);
 
@@ -137,7 +141,7 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel, IObs
 	}
 
 	public void onAddChannel() {
-
+		new AddChannelView(getPrimaryStage(), new AddChannelPresenter(channelList));
 	}
 
 	public StringProperty removeChannelTextProperty() {

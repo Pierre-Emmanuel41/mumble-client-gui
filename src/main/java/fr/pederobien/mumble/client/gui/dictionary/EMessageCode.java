@@ -107,6 +107,21 @@ public enum EMessageCode implements IMessageCode {
 	// Code to add a channel to the server
 	ADD_CHANNEL,
 
+	// Code for the title of the window that add a channel
+	ADD_CHANNEL_TITLE,
+
+	// Code to get the channel name
+	ADD_CHANNEL_NAME,
+
+	// Code to get the channel name
+	ADD_CHANNEL_NAME_PROMPT,
+
+	// Code to get the channel name
+	ADD_CHANNEL_NAME_TOOLTIP,
+
+	// Code for the header of the alert when player try to add a channel that already exists.
+	ADD_CHANNEL_NAME_RESPONSE,
+
 	// Code to remove a channel from the server.
 	REMOVE_CHANNEL,
 

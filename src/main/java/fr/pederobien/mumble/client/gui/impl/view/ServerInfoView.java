@@ -24,12 +24,18 @@ public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> {
 
 		// Secondary stage in order to display this view
 		Stage stage = new Stage();
+		stage.titleProperty().bind(getPresenter().titleTextProperty());
 
 		getRoot().setPadding(new Insets(marginBetweenRootAndChildren));
 		getRoot().setAlignment(Pos.CENTER);
 		getRoot().addEventHandler(KeyEvent.KEY_RELEASED, e -> {
 			if (e.getCode() == KeyCode.ENTER)
 				getPresenter().ok(null);
+		});
+
+		getRoot().addEventHandler(KeyEvent.KEY_RELEASED, e -> {
+			if (e.getCode() == KeyCode.ESCAPE)
+				stage.close();
 		});
 
 		// Server Name
@@ -134,12 +140,6 @@ public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> {
 
 		// --------------------------------------------------------------------------------------------------
 
-		stage.addEventHandler(KeyEvent.KEY_RELEASED, e -> {
-			if (e.getCode() == KeyCode.ESCAPE)
-				stage.close();
-		});
-
-		stage.titleProperty().bind(getPresenter().titleTextProperty());
 		stage.setScene(new Scene(getRoot()));
 		stage.sizeToScene();
 		stage.setResizable(false);
