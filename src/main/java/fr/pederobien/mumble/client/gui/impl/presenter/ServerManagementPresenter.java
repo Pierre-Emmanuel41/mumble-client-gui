@@ -1,7 +1,6 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
-import fr.pederobien.mumble.client.gui.impl.generic.OkCancelStage;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.ServerChannelsView;
 import fr.pederobien.mumble.client.gui.impl.view.ServerInfoView;
@@ -117,22 +116,22 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 	}
 
 	public void onAdd() {
-		new OkCancelStage(getPrimaryStage(), new ServerInfoView(new ServerInfoPresenter(serverList, new Server()) {
+		new ServerInfoView(getPrimaryStage(), new ServerInfoPresenter(serverList, new Server()) {
 			@Override
 			protected void onOkButtonClicked(Server server, String name, String address, int port) {
 				performChangesOnServer(server, name, address, port);
 				serverList.add(server);
 			}
-		}));
+		});
 	}
 
 	public void onEdit() {
-		new OkCancelStage(getPrimaryStage(), new ServerInfoView(new ServerInfoPresenter(serverList, selectedServer) {
+		new ServerInfoView(getPrimaryStage(), new ServerInfoPresenter(serverList, selectedServer) {
 			@Override
 			protected void onOkButtonClicked(Server server, String name, String address, int port) {
 				performChangesOnServer(server, name, address, port);
 			}
-		}));
+		});
 	}
 
 	public void onDelete() {

@@ -1,11 +1,13 @@
 package fr.pederobien.mumble.client.gui.impl.view;
 
+import fr.pederobien.mumble.client.gui.impl.generic.OkCancelStage;
 import fr.pederobien.mumble.client.gui.impl.presenter.AddChannelPresenter;
 import fr.pederobien.mumble.client.gui.interfaces.IOkCancelView;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
+import javafx.stage.Stage;
 
 public class AddChannelView extends ViewBase<AddChannelPresenter, FlowPane> implements IOkCancelView {
 	private double marginBetweenRootAndChildren = 10.0;
@@ -14,7 +16,7 @@ public class AddChannelView extends ViewBase<AddChannelPresenter, FlowPane> impl
 	private Label channelNameLabel;
 	private TextField channelNameTextField;
 
-	public AddChannelView(AddChannelPresenter presenter) {
+	public AddChannelView(Stage initOwner, AddChannelPresenter presenter) {
 		super(presenter, new FlowPane());
 		getRoot().setPrefWidth(490);
 
@@ -33,6 +35,8 @@ public class AddChannelView extends ViewBase<AddChannelPresenter, FlowPane> impl
 
 		getRoot().getChildren().add(channelNameTextField);
 		FlowPane.setMargin(channelNameTextField, new Insets(0, 0, 0, marginBetweenLabelAndTextField));
+
+		new OkCancelStage(initOwner, this);
 	}
 
 	@Override

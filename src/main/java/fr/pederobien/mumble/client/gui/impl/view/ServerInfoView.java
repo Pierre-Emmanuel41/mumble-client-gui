@@ -1,5 +1,6 @@
 package fr.pederobien.mumble.client.gui.impl.view;
 
+import fr.pederobien.mumble.client.gui.impl.generic.OkCancelStage;
 import fr.pederobien.mumble.client.gui.impl.presenter.ServerInfoPresenter;
 import fr.pederobien.mumble.client.gui.interfaces.IOkCancelView;
 import javafx.geometry.Insets;
@@ -7,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 
 public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> implements IOkCancelView {
 	private double marginBetweenRootAndChildren = 10.0;
@@ -16,7 +18,7 @@ public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> impl
 	private Label serverNameLabel, serverIpAddressLabel, serverPortLabel;
 	private TextField serverNameTextField, serverIpAddressTextField, serverPortTextField;
 
-	public ServerInfoView(ServerInfoPresenter presenter) {
+	public ServerInfoView(Stage initOwner, ServerInfoPresenter presenter) {
 		super(presenter, new GridPane());
 
 		// Server Name
@@ -91,6 +93,8 @@ public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> impl
 
 		getRoot().add(serverPort, 0, 2);
 		GridPane.setMargin(serverPort, new Insets(10, 0, 0, 0));
+
+		new OkCancelStage(initOwner, this);
 	}
 
 	private void maxWidthLabel(Label... labels) {

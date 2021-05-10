@@ -1,7 +1,6 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
-import fr.pederobien.mumble.client.gui.impl.generic.OkCancelStage;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.AddChannelView;
 import fr.pederobien.mumble.client.gui.impl.view.PlayerChannelView;
@@ -142,7 +141,7 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel, IObs
 	}
 
 	public void onAddChannel() {
-		new OkCancelStage(getPrimaryStage(), new AddChannelView(new AddChannelPresenter(channelList)));
+		new AddChannelView(getPrimaryStage(), new AddChannelPresenter(channelList));
 	}
 
 	public StringProperty removeChannelTextProperty() {
