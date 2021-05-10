@@ -30,7 +30,7 @@ public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> {
 		getRoot().setAlignment(Pos.CENTER);
 		getRoot().addEventHandler(KeyEvent.KEY_RELEASED, e -> {
 			if (e.getCode() == KeyCode.ENTER)
-				getPresenter().ok(null);
+				getPresenter().ok();
 		});
 
 		getRoot().addEventHandler(KeyEvent.KEY_RELEASED, e -> {
@@ -121,7 +121,7 @@ public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> {
 		ok.fontProperty().bind(getPresenter().fontProperty());
 		ok.textProperty().bind(getPresenter().okTextProperty());
 		ok.setOnAction(e -> {
-			if (getPresenter().ok(e))
+			if (getPresenter().ok())
 				stage.close();
 		});
 		ok.disableProperty().bind(getPresenter().okDisableProperty());

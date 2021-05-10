@@ -28,7 +28,7 @@ public class AddChannelView extends ViewBase<AddChannelPresenter, GridPane> {
 		getRoot().setAlignment(Pos.CENTER);
 		getRoot().addEventHandler(KeyEvent.KEY_RELEASED, e -> {
 			if (e.getCode() == KeyCode.ENTER)
-				getPresenter().ok(null);
+				getPresenter().ok();
 		});
 
 		getRoot().addEventHandler(KeyEvent.KEY_RELEASED, e -> {
@@ -68,7 +68,7 @@ public class AddChannelView extends ViewBase<AddChannelPresenter, GridPane> {
 		ok.fontProperty().bind(getPresenter().fontProperty());
 		ok.textProperty().bind(getPresenter().okTextProperty());
 		ok.setOnAction(e -> {
-			if (getPresenter().ok(e))
+			if (getPresenter().ok())
 				stage.close();
 		});
 		ok.disableProperty().bind(getPresenter().okDisableProperty());

@@ -15,7 +15,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
@@ -213,7 +212,7 @@ public abstract class ServerInfoPresenter extends PresenterBase {
 		return cancelTextProperty;
 	}
 
-	public boolean ok(ActionEvent event) {
+	public boolean ok() {
 		if (okDisableProperty.get())
 			return false;
 		onOkButtonClicked(server, serverNameProperty().get(), serverIpAddressProperty().get(), Integer.parseInt(serverPortProperty().get()));

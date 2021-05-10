@@ -14,7 +14,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.event.ActionEvent;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Border;
@@ -113,7 +112,7 @@ public class AddChannelPresenter extends PresenterBase {
 		}
 	}
 
-	public boolean ok(ActionEvent event) {
+	public boolean ok() {
 		if (okDisableProperty.get())
 			return false;
 		channelList.addChannel(channelNameProperty.get(), response -> channelNameResponse(response));
