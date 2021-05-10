@@ -3,6 +3,7 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 import java.util.regex.Pattern;
 
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.generic.OkCancelPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleTooltipProperty;
 import fr.pederobien.mumble.client.gui.model.Server;
@@ -23,7 +24,7 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 
-public abstract class ServerInfoPresenter extends PresenterBase {
+public abstract class ServerInfoPresenter extends OkCancelPresenter {
 	private ServerList serverList;
 	private Server server;
 	private InternalObserver observer;
@@ -52,9 +53,7 @@ public abstract class ServerInfoPresenter extends PresenterBase {
 	private SimpleTooltipProperty serverPortTooltipProperty;
 
 	// Buttons ---------------------------------------------------
-	private SimpleLanguageProperty okTextProperty;
 	private BooleanProperty okDisableProperty;
-	private SimpleLanguageProperty cancelTextProperty;
 
 	public ServerInfoPresenter(ServerList serverList, Server server) {
 		this.serverList = serverList;
@@ -80,9 +79,7 @@ public abstract class ServerInfoPresenter extends PresenterBase {
 		serverPortPromptProperty = getPropertyHelper().languageProperty(EMessageCode.SERVER_PORT_NUMBER_PROMPT);
 		serverPortTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.SERVER_PORT_NUMBER_TOOLTIP);
 
-		okTextProperty = getPropertyHelper().languageProperty(EMessageCode.OK);
 		okDisableProperty = new SimpleBooleanProperty(true);
-		cancelTextProperty = getPropertyHelper().languageProperty(EMessageCode.CANCEL);
 
 		observer = new InternalObserver();
 		serverNameProperty.addListener(observer);
@@ -103,8 +100,17 @@ public abstract class ServerInfoPresenter extends PresenterBase {
 	 */
 	protected abstract void onOkButtonClicked(Server server, String name, String address, int port);
 
+	@Override
 	public StringProperty titleTextProperty() {
 		return titleTextProperty;
+	}
+
+	@Override
+	public boolean onOkButtonClicked() {
+		if (okDisableProperty.get())
+			return false;
+		onOkButtonClicked(server, serverNameProperty().get(), serverIpAddressProperty().get(), Integer.parseInt(serverPortProperty().get()));
+		return true;
 	}
 
 	// Server name
@@ -197,26 +203,11 @@ public abstract class ServerInfoPresenter extends PresenterBase {
 	// Buttons
 	// -------------------------------------------------------------------------------------------------------------------
 
-	public StringProperty okTextProperty() {
-		return okTextProperty;
-	}
-
 	/**
 	 * @return The property in order to enable/disable the "add server" functionality.
 	 */
 	public BooleanProperty okDisableProperty() {
 		return okDisableProperty;
-	}
-
-	public StringProperty cancelTextProperty() {
-		return cancelTextProperty;
-	}
-
-	public boolean ok() {
-		if (okDisableProperty.get())
-			return false;
-		onOkButtonClicked(server, serverNameProperty().get(), serverIpAddressProperty().get(), Integer.parseInt(serverPortProperty().get()));
-		return true;
 	}
 
 	/**
