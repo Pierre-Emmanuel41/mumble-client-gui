@@ -1,6 +1,6 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
-import fr.pederobien.mumble.client.event.ChannelAddedEvent;
+import fr.pederobien.mumble.client.event.ChannelRenamedEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
 import fr.pederobien.mumble.client.gui.impl.generic.OkCancelPresenter;
@@ -24,29 +24,29 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 
-public class AddChannelPresenter extends OkCancelPresenter {
+public class RenameChannelPresenter extends OkCancelPresenter {
 	private IChannelList channelList;
+	private IChannel channel;
 
 	private SimpleLanguageProperty titleTextProperty;
 
 	private StringProperty channelNameProperty;
 	private SimpleLanguageProperty channelNameTextProperty;
 	private ObjectProperty<Border> channelNameBorderProperty;
-	private SimpleLanguageProperty channelNamePromptProperty;
 	private SimpleTooltipProperty channelNameTooltipProperty;
 
 	// Buttons ---------------------------------------------------
 	private BooleanProperty okDisableProperty;
 
-	public AddChannelPresenter(IChannelList channelList) {
+	public RenameChannelPresenter(IChannelList channelList, IChannel channel) {
 		this.channelList = channelList;
+		this.channel = channel;
 
-		titleTextProperty = getPropertyHelper().languageProperty(EMessageCode.ADD_CHANNEL_TITLE);
+		titleTextProperty = getPropertyHelper().languageProperty(EMessageCode.RENAME_CHANNEL_TITLE, channel.getName());
 
-		channelNameProperty = new SimpleStringProperty();
-		channelNameTextProperty = getPropertyHelper().languageProperty(EMessageCode.ADD_CHANNEL_NAME);
+		channelNameProperty = new SimpleStringProperty(channel.getName());
+		channelNameTextProperty = getPropertyHelper().languageProperty(EMessageCode.RENAME_CHANNEL_NAME);
 		channelNameBorderProperty = new SimpleObjectProperty<Border>(null);
-		channelNamePromptProperty = getPropertyHelper().languageProperty(EMessageCode.ADD_CHANNEL_NAME_PROMPT);
 		channelNameTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.CHANNEL_NAME_TOOLTIP);
 
 		okDisableProperty = new SimpleBooleanProperty(true);
@@ -61,7 +61,7 @@ public class AddChannelPresenter extends OkCancelPresenter {
 	public boolean onOkButtonClicked() {
 		if (okDisableProperty.get())
 			return false;
-		channelList.addChannel(channelNameProperty.get(), response -> channelNameResponse(response));
+		channel.setName(channelNameProperty.get(), response -> channelNameResponse(response));
 		return true;
 	}
 
@@ -82,10 +82,6 @@ public class AddChannelPresenter extends OkCancelPresenter {
 		return channelNameBorderProperty;
 	}
 
-	public StringProperty channelNamePromptProperty() {
-		return channelNamePromptProperty;
-	}
-
 	public ObjectProperty<Tooltip> channelNameTooltipProperty() {
 		return channelNameTooltipProperty;
 	}
@@ -94,6 +90,7 @@ public class AddChannelPresenter extends OkCancelPresenter {
 		String channelName = channelNameProperty.get();
 		boolean isChannelNameLengthOk = channelName.length() > 5;
 		boolean isChannelNameWithoutSpaces = !channelName.contains(" ");
+		boolean isChannelNameChanged = !channel.getName().equals(channelNameProperty.get());
 		boolean isChannelNameUnique = true;
 
 		for (IChannel channel : channelList.getChannels())
@@ -102,7 +99,12 @@ public class AddChannelPresenter extends OkCancelPresenter {
 				break;
 			}
 
-		if (isChannelNameLengthOk && isChannelNameUnique && isChannelNameWithoutSpaces) {
+		if (!isChannelNameChanged) {
+			okDisableProperty.set(true);
+			return;
+		}
+
+		if (isChannelNameLengthOk && isChannelNameUnique && isChannelNameWithoutSpaces && isChannelNameChanged) {
 			channelNameBorderProperty.set(Border.EMPTY);
 			okDisableProperty.set(false);
 		} else {
@@ -111,14 +113,14 @@ public class AddChannelPresenter extends OkCancelPresenter {
 		}
 	}
 
-	private void channelNameResponse(IResponse<ChannelAddedEvent> response) {
+	private void channelNameResponse(IResponse<ChannelRenamedEvent> response) {
 		if (!response.hasFailed())
 			return;
 
 		dispatch(() -> {
 			AlertPresenter alertPresenter = new AlertPresenter(AlertType.ERROR);
-			alertPresenter.setTitle(EMessageCode.ADD_CHANNEL_TITLE);
-			alertPresenter.setHeader(EMessageCode.ADD_CHANNEL_NAME_RESPONSE);
+			alertPresenter.setTitle(EMessageCode.RENAME_CHANNEL_TITLE, channel.getName());
+			alertPresenter.setHeader(EMessageCode.RENAME_CHANNEL_NAME_RESPONSE, channel.getName(), channelNameProperty.get());
 			alertPresenter.setContent(ErrorCodeWrapper.getByErrorCode(response.getErrorCode()).getMessageCode());
 			alertPresenter.getAlert().show();
 		});

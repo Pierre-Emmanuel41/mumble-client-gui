@@ -191,7 +191,7 @@
 			<value>Nom du channel</value>
 		</message>
 		<message>
-			<code>ADD_CHANNEL_NAME_TOOLTIP</code>
+			<code>CHANNEL_NAME_TOOLTIP</code>
 			<value>Le nom du channel doit être unique, doit contenir au moins cinq caractère et ne doit pas contenir d'espace.</value>
 		</message>
 		<message>
@@ -205,6 +205,18 @@
 		<message>
 			<code>RENAME_CHANNEL</code>
 			<value>Renommer</value>
+		</message>
+		<message>
+			<code>RENAME_CHANNEL_TITLE</code>
+			<value>Renommage du channel %s</value>
+		</message>
+		<message>
+			<code>RENAME_CHANNEL_NAME</code>
+			<value>Nouveau nom du channel :</value>
+		</message>
+		<message>
+			<code>RENAME_CHANNEL_NAME_RESPONSE</code>
+			<value>Vous ne pouvez pas renommer le channel %s en %s pour la raison suivante :</value>
 		</message>
 		<message>
 			<code>CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE_TITLE</code>

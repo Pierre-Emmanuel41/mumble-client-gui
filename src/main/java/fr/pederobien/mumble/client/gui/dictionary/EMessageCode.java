@@ -117,7 +117,7 @@ public enum EMessageCode implements IMessageCode {
 	ADD_CHANNEL_NAME_PROMPT,
 
 	// Code to get the channel name
-	ADD_CHANNEL_NAME_TOOLTIP,
+	CHANNEL_NAME_TOOLTIP,
 
 	// Code for the header of the alert when player try to add a channel that already exists.
 	ADD_CHANNEL_NAME_RESPONSE,
@@ -127,6 +127,15 @@ public enum EMessageCode implements IMessageCode {
 
 	// Code to rename a channel in the server.
 	RENAME_CHANNEL,
+
+	// Code for the title of the window that rename a channel
+	RENAME_CHANNEL_TITLE,
+
+	// Code to get the channel name
+	RENAME_CHANNEL_NAME,
+
+	// Code for the header of the alert when player try to rename a channel and it fails.
+	RENAME_CHANNEL_NAME_RESPONSE,
 
 	// PLAYER CONTEXT MENU CODE
 	// -----------------------------------------------------------------------------
