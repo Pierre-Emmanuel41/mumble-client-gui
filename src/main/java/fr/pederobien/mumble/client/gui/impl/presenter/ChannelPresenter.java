@@ -1,6 +1,8 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
+import fr.pederobien.mumble.client.event.ChannelRemovedEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.AddChannelView;
 import fr.pederobien.mumble.client.gui.impl.view.PlayerChannelView;
@@ -11,6 +13,7 @@ import fr.pederobien.mumble.client.interfaces.IChannel;
 import fr.pederobien.mumble.client.interfaces.IChannelList;
 import fr.pederobien.mumble.client.interfaces.IOtherPlayer;
 import fr.pederobien.mumble.client.interfaces.IPlayer;
+import fr.pederobien.mumble.client.interfaces.IResponse;
 import fr.pederobien.mumble.client.interfaces.observers.IObsChannel;
 import fr.pederobien.mumble.client.interfaces.observers.IObsPlayer;
 import fr.pederobien.utils.IObservable;
@@ -21,6 +24,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseButton;
@@ -67,7 +72,7 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel, IObs
 		addChannelVisibility = new SimpleBooleanProperty(player != null && player.isAdmin());
 
 		removeChannelTextProperty = getPropertyHelper().languageProperty(EMessageCode.REMOVE_CHANNEL);
-		removeChannelVisibility = new SimpleBooleanProperty(player != null && player.isAdmin());
+		removeChannelVisibility = new SimpleBooleanProperty(player != null && player.isAdmin() && channelList.getChannels().size() > 1);
 
 		renameChannelTextProperty = getPropertyHelper().languageProperty(EMessageCode.RENAME_CHANNEL);
 		renameChannelVisibility = new SimpleBooleanProperty(player != null && player.isAdmin());
@@ -103,7 +108,7 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel, IObs
 		// Observing this player in order to perform gui update when the player admin status changes.
 		player.addObserver(new InternalObsPlayer());
 		addChannelVisibility.set(player.isAdmin());
-		removeChannelVisibility.set(player.isAdmin());
+		removeChannelVisibility.set(player.isAdmin() && channelList.getChannels().size() > 1);
 		renameChannelVisibility.set(player.isAdmin());
 	}
 
@@ -154,7 +159,15 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel, IObs
 	}
 
 	public void onRemoveChannel() {
-
+		AlertPresenter alertPresenter = new AlertPresenter(AlertType.CONFIRMATION);
+		alertPresenter.setTitle(EMessageCode.REMOVE_CHANNEL_TITLE, channel.getName());
+		alertPresenter.setHeader(EMessageCode.REMOVE_CHANNEL_CONFIRMATION, channel.getName());
+		alertPresenter.setContent(EMessageCode.REMOVE_CHANNEL_EXPLANATION);
+		alertPresenter.getAlert().showAndWait().ifPresent(buttonType -> {
+			if (buttonType != ButtonType.OK)
+				return;
+			channelList.removeChannel(channel.getName(), response -> channelRemoveResponse(response));
+		});
 	}
 
 	public StringProperty renameChannelTextProperty() {
@@ -167,6 +180,19 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel, IObs
 
 	public void onRenameChannel() {
 		new RenameChannelView(getPrimaryStage(), new RenameChannelPresenter(channelList, channel));
+	}
+
+	private void channelRemoveResponse(IResponse<ChannelRemovedEvent> response) {
+		if (!response.hasFailed())
+			return;
+
+		dispatch(() -> {
+			AlertPresenter alertPresenter = new AlertPresenter(AlertType.ERROR);
+			alertPresenter.setTitle(EMessageCode.REMOVE_CHANNEL_TITLE, channel.getName());
+			alertPresenter.setHeader(EMessageCode.REMOVE_CHANNEL_RESPONSE, channel.getName());
+			alertPresenter.setContent(ErrorCodeWrapper.getByErrorCode(response.getErrorCode()).getMessageCode());
+			alertPresenter.getAlert().show();
+		});
 	}
 
 	private class InternalObsPlayer implements IObsPlayer {

@@ -205,6 +205,22 @@
 			<value>Remove</value>
 		</message>
 		<message>
+			<code>REMOVE_CHANNEL_TITLE</code>
+			<value>Removing channel %s</value>
+		</message>
+		<message>
+			<code>REMOVE_CHANNEL_CONFIRMATION</code>
+			<value>Are you sure you wants to remove channel %s ?</value>
+		</message>
+		<message>
+			<code>REMOVE_CHANNEL_EXPLANATION</code>
+			<value>All players currently registered in this channel will be kicked.</value>
+		</message>
+		<message>
+			<code>REMOVE_CHANNEL_RESPONSE</code>
+			<value>You cannot remove the channel %s for the following reason :</value>
+		</message>
+		<message>
 			<code>RENAME_CHANNEL</code>
 			<value>Rename</value>
 		</message>

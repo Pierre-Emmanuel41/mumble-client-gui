@@ -125,6 +125,18 @@ public enum EMessageCode implements IMessageCode {
 	// Code to remove a channel from the server.
 	REMOVE_CHANNEL,
 
+	// Code for the title of the window that remove a channel
+	REMOVE_CHANNEL_TITLE,
+
+	// Code for the title of the window that remove a channel
+	REMOVE_CHANNEL_CONFIRMATION,
+
+	// Code for the title of the window that remove a channel
+	REMOVE_CHANNEL_EXPLANATION,
+
+	// Code for the header of the alert when player try to remove a channel and it fails.
+	REMOVE_CHANNEL_RESPONSE,
+
 	// Code to rename a channel in the server.
 	RENAME_CHANNEL,
 

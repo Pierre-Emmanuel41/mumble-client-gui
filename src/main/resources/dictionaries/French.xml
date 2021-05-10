@@ -203,6 +203,22 @@
 			<value>Supprimer</value>
 		</message>
 		<message>
+			<code>REMOVE_CHANNEL_TITLE</code>
+			<value>Suppression du channel %s</value>
+		</message>
+		<message>
+			<code>REMOVE_CHANNEL_CONFIRMATION</code>
+			<value>Etes-vous sûr de vouloir supprimer le channel %s ?</value>
+		</message>
+		<message>
+			<code>REMOVE_CHANNEL_EXPLANATION</code>
+			<value>Tous les joueurs actuellement dans ce channel seront kickés.</value>
+		</message>
+		<message>
+			<code>REMOVE_CHANNEL_RESPONSE</code>
+			<value>Vous ne pouvez pas supprimer le channel %s pour la raison suivante :</value>
+		</message>
+		<message>
 			<code>RENAME_CHANNEL</code>
 			<value>Renommer</value>
 		</message>
