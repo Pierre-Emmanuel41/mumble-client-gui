@@ -1,7 +1,5 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
-import java.util.function.Function;
-
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.properties.ListCellView;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
@@ -17,7 +15,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Parent;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseButton;
@@ -86,13 +83,6 @@ public class ServerListPresenter extends PresenterBase implements IObsServerList
 
 	public <T> Callback<ListView<T>, ListCell<T>> serverViewFactory(Color enteredColor) {
 		return listView -> getPropertyHelper().cellView(item -> new ServerView(ServerPresenter.getOrCreateServerPresenter((Server) item)).getRoot(), enteredColor);
-	}
-
-	/**
-	 * @return The creator of server view.
-	 */
-	public Function<Object, Parent> serverViewConstructor() {
-		return item -> new ServerView(ServerPresenter.getOrCreateServerPresenter((Server) item)).getRoot();
 	}
 
 	/**

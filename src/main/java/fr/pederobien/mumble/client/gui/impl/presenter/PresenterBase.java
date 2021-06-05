@@ -27,6 +27,9 @@ public abstract class PresenterBase {
 	public void onCloseRequest() {
 	}
 
+	/**
+	 * @return The font property used for each view.
+	 */
 	public ObjectProperty<Font> fontProperty() {
 		return fontProperty;
 	}

@@ -100,6 +100,16 @@ public class ChannelListPresenter extends PresenterBase implements IObsChannelLi
 		return channels;
 	}
 
+	/**
+	 * Get the factory that creates channel view.
+	 * 
+	 * @param <T>          The type of object (should be {@link IChannel}).
+	 * @param enteredColor The color when the mouse enters the cell.
+	 * 
+	 * @return The channel view factory in charge to create {@link ChannelView} and {@link ChannelPresenter}.
+	 * 
+	 * @throws ClassCastException If the type of object used as model to create its view is not IChannel.
+	 */
 	public <T> Callback<ListView<T>, ListCell<T>> channelViewFactory(Color enteredColor) {
 		return listView -> getPropertyHelper().cellView(item -> {
 			ChannelView view = channelViews.get(item);

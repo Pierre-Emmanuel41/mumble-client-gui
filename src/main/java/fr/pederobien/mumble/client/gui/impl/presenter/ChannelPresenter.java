@@ -42,6 +42,7 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel, IObs
 	private ObservableList<Object> players;
 	private StringProperty channelNameProperty;
 
+	// Context Menu ----------------------------------------------------------------------------------------------------------------
 	private SimpleLanguageProperty addChannelTextProperty;
 	private BooleanProperty addChannelVisibility;
 
@@ -126,38 +127,78 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel, IObs
 		return channelNameProperty;
 	}
 
+	/**
+	 * Get the factory that creates player view.
+	 * 
+	 * @param <T>          The type of object (should be {@link IOtherPlayer}).
+	 * @param enteredColor The color when the mouse enters the cell.
+	 * 
+	 * @return The player view factory in charge to create {@link PlayerChannelView} and {@link PlayerChannelPresenter}.
+	 * 
+	 * @throws ClassCastException If the type of object used as model to create its view is not IOtherPlayer.
+	 */
 	public <T> Callback<ListView<T>, ListCell<T>> playerViewFactory(Color enteredColor) {
 		return listView -> getPropertyHelper().cellView(item -> new PlayerChannelView(new PlayerChannelPresenter(playerPresenter, (IOtherPlayer) item)).getRoot(),
 				enteredColor);
 	}
 
-	public void onChannelClicked(MouseEvent e) {
-		if (e.getButton() != MouseButton.PRIMARY)
+	/**
+	 * Action to run when a channel has been selected by the player. If the button used by the user is not the primary button, then
+	 * nothing is done otherwise, it notify each observer by calling {@link IObsChannelPresenter#onChannelClicked(IChannel)}.
+	 * 
+	 * @param event The mouse event used to know if the {@link MouseButton} involved in the event is {@link MouseButton#PRIMARY}.
+	 */
+	public void onChannelClicked(MouseEvent event) {
+		if (event.getButton() != MouseButton.PRIMARY)
 			return;
 
 		observers.notifyObservers(obs -> obs.onChannelClicked(channel));
 	}
 
+	/**
+	 * @return The property that display "Add channel".
+	 */
 	public StringProperty addChannelTextProperty() {
 		return addChannelTextProperty;
 	}
 
+	/**
+	 * The user can add a channel is and only if he is an administrator in game.
+	 * 
+	 * @return The property for the visibility of the "add channel" component.
+	 */
 	public BooleanProperty addChannelVisibility() {
 		return addChannelVisibility;
 	}
 
+	/**
+	 * Action to run when the component "Add channel" has been clicked. It will display a new window ({@link AddChannelView}) in which
+	 * the user can write the name of the new channel.
+	 */
 	public void onAddChannel() {
 		new AddChannelView(getPrimaryStage(), new AddChannelPresenter(channelList));
 	}
 
+	/**
+	 * @return The property that display "Remove".
+	 */
 	public StringProperty removeChannelTextProperty() {
 		return removeChannelTextProperty;
 	}
 
+	/**
+	 * The user can remove a channel if he is an administrator in game and if there is more than one channel left.
+	 * 
+	 * @return The property for the visibility of the "Remove" component.
+	 */
 	public BooleanProperty removeChannelVisibility() {
 		return removeChannelVisibility;
 	}
 
+	/**
+	 * Action to run when the user click on the "Remove" component. It will display an alert box in order to let the user confirm the
+	 * deletion.
+	 */
 	public void onRemoveChannel() {
 		AlertPresenter alertPresenter = new AlertPresenter(AlertType.CONFIRMATION);
 		alertPresenter.setTitle(EMessageCode.REMOVE_CHANNEL_TITLE, channel.getName());
@@ -170,14 +211,24 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel, IObs
 		});
 	}
 
+	/**
+	 * @return The property that display "Rename channel".
+	 */
 	public StringProperty renameChannelTextProperty() {
 		return renameChannelTextProperty;
 	}
 
+	/**
+	 * @return The property for the visibility of the "Rename channel" component.
+	 */
 	public BooleanProperty renameChannelVisibility() {
 		return renameChannelVisibility;
 	}
 
+	/**
+	 * Action to run when the user click on the "Rename channel" component. It will display a new window ({@link RenameChannelView})
+	 * in which the user can write the new channel name.
+	 */
 	public void onRenameChannel() {
 		new RenameChannelView(getPrimaryStage(), new RenameChannelPresenter(channelList, channel));
 	}

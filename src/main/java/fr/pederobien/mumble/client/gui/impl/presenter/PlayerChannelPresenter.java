@@ -20,8 +20,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 
 public class PlayerChannelPresenter extends PresenterBase implements IObsPlayerPresenter {
 	private PlayerPresenter playerPresenter;
@@ -83,50 +81,80 @@ public class PlayerChannelPresenter extends PresenterBase implements IObsPlayerP
 		return playerNameProperty;
 	}
 
-	public void onPlayerNameClick(MouseEvent event) {
-		if (event.getButton() != MouseButton.SECONDARY)
-			return;
-
-	}
-
+	/**
+	 * @return The image when the player is mute.
+	 */
 	public Image muteImage() {
 		return muteImage;
 	}
 
+	/**
+	 * @return The property for the visibility of the {@link #muteImage()} component.
+	 */
 	public BooleanProperty isPlayerMute() {
 		return isPlayerMute;
 	}
 
+	/**
+	 * @return The image when the player is deafen.
+	 */
 	public Image deafenImage() {
 		return deafenImage;
 	}
 
+	/**
+	 * @return The property for the visibility of the {@link #deafenImage()} component.
+	 */
 	public BooleanProperty isPlayerDeafen() {
 		return isPlayerDeafen;
 	}
 
 	// ContextMenu properties -------------------------------------------------------------
 
+	/**
+	 * @return The property the display "Mute" if the player is not mute or "Unmute" if the player is mute.
+	 */
 	public StringProperty muteOrUnmuteTextProperty() {
 		return muteOrUnmuteTextProperty;
 	}
 
+	/**
+	 * The user can only mute the other player for this view.
+	 * 
+	 * @return The property for the visibility of the "MuteOrUnmute" component.
+	 */
 	public BooleanProperty muteOrUnmuteVisibleProperty() {
 		return muteOrUnmuteVisibleProperty;
 	}
 
+	/**
+	 * Action to run when the user click on the "MuteOrUnmute" component. It will send a request to the server. An alert can be
+	 * displayed if the request fails.
+	 */
 	public void onMuteOrUnmute() {
 		otherPlayer.setMute(!otherPlayer.isMute(), response -> onPlayerMuteOrUnmuteResponse(response));
 	}
 
+	/**
+	 * @return The property that display "Kick".
+	 */
 	public StringProperty kickPlayerTextProperty() {
 		return kickPlayerTextProperty;
 	}
 
+	/**
+	 * The user must be an administrator in game in order to kick another player.
+	 * 
+	 * @return The property for the visibility of the "Kick" component.
+	 */
 	public BooleanProperty kickPlayerVisibility() {
 		return kickPlayerVisiblity;
 	}
 
+	/**
+	 * Action to run when the user click on the "Kick" component. It will send a request to the server. An alert can be displayed if
+	 * the request fails.
+	 */
 	public void onKickPlayer() {
 		otherPlayer.kick(response -> onKickPlayerResponse(response));
 	}

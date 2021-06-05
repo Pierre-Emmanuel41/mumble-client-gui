@@ -97,6 +97,12 @@ public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> impl
 		new OkCancelStage(initOwner, this);
 	}
 
+	@Override
+	public void onPostShown() {
+		maxWidthLabel(serverNameLabel, serverIpAddressLabel, serverPortLabel);
+		maxWidthTextField(serverNameTextField, serverIpAddressTextField, serverPortTextField);
+	}
+
 	private void maxWidthLabel(Label... labels) {
 		double max = 0;
 		for (Label label : labels)
@@ -110,11 +116,5 @@ public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> impl
 	private void maxWidthTextField(TextField... textFields) {
 		for (TextField textField : textFields)
 			textField.setPrefWidth(getRoot().getWidth() - 2 * marginBetweenRootAndChildren - maxLabelWidth - marginBetweenLabelAndTextField);
-	}
-
-	@Override
-	public void onPostShown() {
-		maxWidthLabel(serverNameLabel, serverIpAddressLabel, serverPortLabel);
-		maxWidthTextField(serverNameTextField, serverIpAddressTextField, serverPortTextField);
 	}
 }

@@ -141,6 +141,12 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer, IObser
 		return playerStatusProperty;
 	}
 
+	/**
+	 * The height of the bounding box within which the mute/unmute and deafen/undeafen images are resized as necessary to fit. If set
+	 * to a value <= 0, then the intrinsic height of the image will be used as the {@code fitHeight}.
+	 *
+	 * @param fitHeight the fitHeight of deafen, undeafen, mute and unmute images.
+	 */
 	public void setFitHeight(double fitHeight) {
 		this.fitHeight = fitHeight;
 		updateMuteOrUnmute();
@@ -152,26 +158,50 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer, IObser
 		hangupGraphicProperty.set(hangupView);
 	}
 
+	/**
+	 * @return The object property that contains an image that represent the mute state of the player. If the player is not mute then
+	 *         the image is a mic, otherwise the image is a barred mic.
+	 */
 	public ObjectProperty<Node> muteOrUnmuteGraphicProperty() {
 		return muteOrUnmuteGraphicProperty;
 	}
 
+	/**
+	 * @return The object property that contains the tooltip of the component that mute or unmute a player. The text is automatically
+	 *         updated when the player is mute or unmute.
+	 */
 	public ObjectProperty<Tooltip> muteOrUnmuteTooltipProperty() {
 		return muteOrUnmuteTooltipProperty;
 	}
 
+	/**
+	 * Change the mute state of the player. If the player was previously mute then calling this method unmute it. If the player was
+	 * previously unmute then calling this method mute it.
+	 */
 	public void onMuteOrUnmute() {
 		player.setMute(!player.isMute());
 	}
 
+	/**
+	 * @return The object property that contains an image that represent the deafen state of the player. If the player is not deafen
+	 *         then the image is a headset, otherwise the image is a barred headset.
+	 */
 	public ObjectProperty<Node> deafenOrUndeafenGraphicProperty() {
 		return deafenOrUndeafenGraphicProperty;
 	}
 
+	/**
+	 * @return The object property that contains the tooltip of the component that deafen or undeafen a player. The text is
+	 *         automatically updated when the player is deafen or undeafen.
+	 */
 	public ObjectProperty<Tooltip> deafenOrUndeafenTooltipProperty() {
 		return deafenOrUndeafenTooltipProperty;
 	}
 
+	/**
+	 * Change the deafen state of the player. If the player was previously deafen then calling this method undeafen it. If the player
+	 * was previously undeafen then calling this method deafen it.
+	 */
 	public void onDeafenOrUndeafen() {
 		player.setDeafen(!player.isDeafen());
 	}
@@ -183,10 +213,16 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer, IObser
 		return playerConnectedProperty;
 	}
 
+	/**
+	 * @return The object property that contains an image that represent a barred phone in order to quit the channel.
+	 */
 	public ObjectProperty<Node> hangupGraphicProperty() {
 		return hangupGraphicProperty;
 	}
 
+	/**
+	 * @return The object property that contains the tooltip of the component that allow the player to leave a channel.
+	 */
 	public ObjectProperty<Tooltip> hangupTooltipProperty() {
 		return hangupTooltipProperty;
 	}
@@ -205,6 +241,9 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer, IObser
 		return playerCanDisconnectFromChannel;
 	}
 
+	/**
+	 * @return The text to display on the component that allow the player to leave the server.
+	 */
 	public StringProperty disconnectFromServerTextProperty() {
 		return disconnectFromServerTextProperty;
 	}
@@ -216,6 +255,9 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer, IObser
 		return player;
 	}
 
+	/**
+	 * Disconnect the player from the server. Calling this method send a request to the server and also update the user interface.
+	 */
 	public void disconnectFromServer() {
 		if (player.getChannel() != null)
 			disconnectFromChannel();

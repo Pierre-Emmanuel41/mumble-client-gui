@@ -71,6 +71,9 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 		return joinServerDisableProperty;
 	}
 
+	/**
+	 * @return The property that display "Add"
+	 */
 	public StringProperty addServerTextProperty() {
 		return addServerTextProperty;
 	}
@@ -82,6 +85,9 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 		return addServerDisableProperty;
 	}
 
+	/**
+	 * @return The property that display "Edit"
+	 */
 	public StringProperty editServerTextProperty() {
 		return editServerTextProperty;
 	}
@@ -93,6 +99,9 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 		return editServerDisableProperty;
 	}
 
+	/**
+	 * @return The property that display "Delete"
+	 */
 	public StringProperty deleteServerTextProperty() {
 		return deleteServerTextProperty;
 	}
@@ -104,6 +113,9 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 		return deleteServerDisableProperty;
 	}
 
+	/**
+	 * Send a request to the server in order to join the selected server and update the user interface.
+	 */
 	public void onJoin() {
 		if (!selectedServer.isReachable())
 			return;
@@ -115,6 +127,9 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 		});
 	}
 
+	/**
+	 * Creates a new window in which the user can add a new mumble server.
+	 */
 	public void onAdd() {
 		new ServerInfoView(getPrimaryStage(), new ServerInfoPresenter(serverList, new Server()) {
 			@Override
@@ -125,6 +140,9 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 		});
 	}
 
+	/**
+	 * Creates a new window in which the user can edit a mumble server.
+	 */
 	public void onEdit() {
 		new ServerInfoView(getPrimaryStage(), new ServerInfoPresenter(serverList, selectedServer) {
 			@Override
@@ -134,7 +152,11 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 		});
 	}
 
+	/**
+	 * Dispose the selected server and removes it from the server list.
+	 */
 	public void onDelete() {
+		selectedServer.dispose();
 		serverList.remove(selectedServer);
 	}
 

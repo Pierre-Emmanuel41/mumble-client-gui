@@ -70,22 +70,39 @@ public class RenameChannelPresenter extends OkCancelPresenter {
 		return okDisableProperty;
 	}
 
+	/**
+	 * @return The property that contains the new channel name.
+	 */
 	public StringProperty channelNameProperty() {
 		return channelNameProperty;
 	}
 
+	/**
+	 * @return The property that contains the text "New channel name:"
+	 */
 	public StringProperty channelNameTextProperty() {
 		return channelNameTextProperty;
 	}
 
+	/**
+	 * @return The border property that is update when user write the new channel name. If the channel name does not respect the
+	 *         constraints then the border becomes red. Otherwise the border is empty.
+	 */
 	public ObjectProperty<Border> channelNameBorderProperty() {
 		return channelNameBorderProperty;
 	}
 
+	/**
+	 * @return The property that contains the tooltip of the component on which the new channel name is written. This tooltip contains
+	 *         a description of the contraints associated to the channel name.>
+	 */
 	public ObjectProperty<Tooltip> channelNameTooltipProperty() {
 		return channelNameTooltipProperty;
 	}
 
+	/**
+	 * Apply validation rule on the new channel name. It update the enabled property of the ok button and the border property.
+	 */
 	public void validateChannelName() {
 		String channelName = channelNameProperty.get();
 		boolean isChannelNameLengthOk = channelName.length() > 5;

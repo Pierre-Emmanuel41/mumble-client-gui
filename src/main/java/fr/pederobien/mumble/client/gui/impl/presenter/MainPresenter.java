@@ -48,7 +48,7 @@ public class MainPresenter extends PresenterBase {
 	}
 
 	/**
-	 * @return The server management view. this view contains buttons to join, add, edit and delete a server.
+	 * @return The server management view. This view contains buttons to join, add, edit and delete a server.
 	 */
 	public ServerManagementView getServerManagementView() {
 		return serverManagementView;

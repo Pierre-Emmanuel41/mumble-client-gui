@@ -70,22 +70,39 @@ public class AddChannelPresenter extends OkCancelPresenter {
 		return okDisableProperty;
 	}
 
+	/**
+	 * @return The property to get the name of the channel to add.
+	 */
 	public StringProperty channelNameProperty() {
 		return channelNameProperty;
 	}
 
+	/**
+	 * @return The property to display "Channel name : ".
+	 */
 	public StringProperty channelNameTextProperty() {
 		return channelNameTextProperty;
 	}
 
+	/**
+	 * @return The border property when the channel name is defined by the user. The border becomes red when the channel name does not
+	 *         respect the constraints and disappears when the channel name respects constraints.
+	 */
 	public ObjectProperty<Border> channelNameBorderProperty() {
 		return channelNameBorderProperty;
 	}
 
+	/**
+	 * @return The property to display "Channel name" as prompt.
+	 */
 	public StringProperty channelNamePromptProperty() {
 		return channelNamePromptProperty;
 	}
 
+	/**
+	 * @return The tooltip property to display on the channel name. This tooltip explains the constraints the channel name must
+	 *         respect.
+	 */
 	public ObjectProperty<Tooltip> channelNameTooltipProperty() {
 		return channelNameTooltipProperty;
 	}

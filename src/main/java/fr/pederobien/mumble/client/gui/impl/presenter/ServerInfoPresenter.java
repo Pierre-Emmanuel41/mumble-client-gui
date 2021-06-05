@@ -116,6 +116,9 @@ public abstract class ServerInfoPresenter extends OkCancelPresenter {
 	// Server name
 	// -------------------------------------------------------------------------------------------------------------------
 
+	/**
+	 * @return The property that display the text "Name :"
+	 */
 	public StringProperty serverNameTextProperty() {
 		return serverNameTextProperty;
 	}
@@ -127,10 +130,17 @@ public abstract class ServerInfoPresenter extends OkCancelPresenter {
 		return serverNameBorderProperty;
 	}
 
+	/**
+	 * @return The property that display "Name" as prompt for a textfield.
+	 */
 	public StringProperty serverNamePromptProperty() {
 		return serverNamePromptProperty;
 	}
 
+	/**
+	 * @return The property that contains the tooltip of the component in which the server name is written. This tolltip contains a
+	 *         description of constraints for the server name.
+	 */
 	public ObjectProperty<Tooltip> serverNameTooltipProperty() {
 		return serverNameTooltipProperty;
 	}
@@ -145,6 +155,9 @@ public abstract class ServerInfoPresenter extends OkCancelPresenter {
 	// Server ip address
 	// -------------------------------------------------------------------------------------------------------------------
 
+	/**
+	 * @return The property that display the text "IP address :".
+	 */
 	public StringProperty serverIpAddressTextProperty() {
 		return serverIpAddressTextProperty;
 	}
@@ -156,10 +169,17 @@ public abstract class ServerInfoPresenter extends OkCancelPresenter {
 		return serverIpAddressBorderProperty;
 	}
 
+	/**
+	 * @return The property that display "IP address" as prompt for a textfield.
+	 */
 	public StringProperty serverIpAddressPromptProperty() {
 		return serverIpAddressPromptProperty;
 	}
 
+	/**
+	 * @return The property that contains the tolltip of the component in which the server IP address is written. This tooltip
+	 *         contains a description of constraints for the server IP address.
+	 */
 	public ObjectProperty<Tooltip> serverIpAddressTooltipProperty() {
 		return serverIpAddressTooltipProperty;
 	}
@@ -174,6 +194,9 @@ public abstract class ServerInfoPresenter extends OkCancelPresenter {
 	// Server port
 	// -------------------------------------------------------------------------------------------------------------------
 
+	/**
+	 * @return The property that display "Port number :"
+	 */
 	public StringProperty serverPortTextProperty() {
 		return serverPortTextProperty;
 	}
@@ -185,10 +208,17 @@ public abstract class ServerInfoPresenter extends OkCancelPresenter {
 		return serverPortBorderProperty;
 	}
 
+	/**
+	 * @return The property that display "Port number" as prompt for a textfield.
+	 */
 	public StringProperty serverPortPromptProperty() {
 		return serverPortPromptProperty;
 	}
 
+	/**
+	 * @return The property that contains the tooltip of the component in which the server port number is written. This tooltip
+	 *         contains a description of constraints for the server port number.
+	 */
 	public ObjectProperty<Tooltip> serverPortTooltipProperty() {
 		return serverPortTooltipProperty;
 	}
