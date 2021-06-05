@@ -7,6 +7,7 @@ import fr.pederobien.mumble.client.gui.impl.view.ServerInfoView;
 import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsServerListPresenter;
 import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.gui.model.ServerList;
+import fr.pederobien.mumble.client.interfaces.IResponse;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
@@ -120,11 +121,7 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 		if (!selectedServer.isReachable())
 			return;
 
-		getPrimaryStage().getScene().setRoot(new ServerChannelsView(new ServerChannelsPresenter(selectedServer)).getRoot());
-		serverList.getServers().forEach(server -> {
-			if (!server.equals(selectedServer))
-				server.close();
-		});
+		selectedServer.join(response -> joinServerResponse(response));
 	}
 
 	/**
@@ -164,5 +161,13 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 		server.setName(name);
 		server.setAddress(address);
 		server.setPort(port);
+	}
+
+	private void joinServerResponse(IResponse<Boolean> response) {
+		getPrimaryStage().getScene().setRoot(new ServerChannelsView(new ServerChannelsPresenter(selectedServer)).getRoot());
+		serverList.getServers().forEach(server -> {
+			if (!server.equals(selectedServer))
+				server.close();
+		});
 	}
 }

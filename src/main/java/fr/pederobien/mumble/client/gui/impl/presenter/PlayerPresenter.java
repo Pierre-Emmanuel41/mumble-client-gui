@@ -31,6 +31,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class PlayerPresenter extends PresenterBase implements IObsPlayer, IObservable<IObsPlayerPresenter> {
+	private Server server;
 	private IPlayer player;
 	private IAudioConnection audioConnection;
 	private Observable<IObsPlayerPresenter> observers;
@@ -52,6 +53,7 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer, IObser
 	private ObjectProperty<Node> hangupGraphicProperty;
 
 	public PlayerPresenter(Server server) {
+		this.server = server;
 		observers = new Observable<IObsPlayerPresenter>();
 		server.getPlayer(response -> playerResponse(response));
 		audioConnection = server.getAudioConnection();
@@ -261,6 +263,8 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer, IObser
 	public void disconnectFromServer() {
 		if (player.getChannel() != null)
 			disconnectFromChannel();
+
+		server.leave();
 		getPrimaryStage().getScene().setRoot(new MainView(new MainPresenter()).getRoot());
 	}
 

@@ -121,6 +121,22 @@ public class Server implements IObservable<IObsServer> {
 	}
 
 	/**
+	 * Send a request to this server in order to join it.
+	 * 
+	 * @param callback The callback to run when a response has been received.
+	 */
+	public void join(Consumer<IResponse<Boolean>> callback) {
+		connection.join(callback);
+	}
+
+	/**
+	 * Send a request to the server to leave it.
+	 */
+	public void leave() {
+		connection.leave();
+	}
+
+	/**
 	 * Get the player associated to this client.
 	 * 
 	 * @param response Callback when the response is received.
