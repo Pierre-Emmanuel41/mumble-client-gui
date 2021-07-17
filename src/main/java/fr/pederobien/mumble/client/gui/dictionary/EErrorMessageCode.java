@@ -39,7 +39,7 @@ public enum EErrorMessageCode implements IMessageCode {
 	// Code when player tries to mute/unmute another player that is not in same channel.
 	PLAYERS_IN_DIFFERENT_CHANNELS,
 
-	// Code when player tries to kick another player that is not in a channel.
+	// Code when player is not registered in a channel.
 	PLAYER_NOT_REGISTERED,
 
 	// Code when cannot be parsed.

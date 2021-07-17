@@ -67,7 +67,7 @@
 		</message>
 		<message>
 			<code>PLAYER_NOT_REGISTERED</code>
-			<value>Un joueur ne peut être kické d'un channel que si il est enregistré dans un channel</value>
+			<value>Le joueur n'est pas enregistré dans un channel.</value>
 		</message>
 		<message>
 			<code>UNKNOWN</code>
