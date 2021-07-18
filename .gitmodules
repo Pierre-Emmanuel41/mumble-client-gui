@@ -1,6 +1,8 @@
 [submodule "mumble-client"]
 	path = mumble-client
 	url = https://github.com/Pierre-Emmanuel41/mumble-client.git
+	update = rebase
+	branch = master
 [submodule "dictionary"]
 	path = dictionary
 	url = https://github.com/Pierre-Emmanuel41/dictionary.git
