@@ -237,6 +237,10 @@
 			<value>You cannot rename channel %s as %s for the following reason :</value>
 		</message>
 		<message>
+			<code>SOUND_MODIFIER</code>
+			<value>Sound modifier (%s)</value>
+		</message>
+		<message>
 			<code>CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE_TITLE</code>
 			<value>Fail to mute or unmute player %s</value>
 		</message>

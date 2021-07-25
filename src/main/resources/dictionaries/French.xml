@@ -235,6 +235,10 @@
 			<value>Vous ne pouvez pas renommer le channel %s en %s pour la raison suivante :</value>
 		</message>
 		<message>
+			<code>SOUND_MODIFIER</code>
+			<value>Modifier de son (%s)</value>
+		</message>
+		<message>
 			<code>CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE_TITLE</code>
 			<value>Impossible de rendre muet ou de ne plus rendre muet le joueur %s</value>
 		</message>

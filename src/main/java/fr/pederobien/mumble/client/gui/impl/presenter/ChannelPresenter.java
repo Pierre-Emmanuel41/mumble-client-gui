@@ -14,7 +14,9 @@ import fr.pederobien.mumble.client.interfaces.IChannelList;
 import fr.pederobien.mumble.client.interfaces.IOtherPlayer;
 import fr.pederobien.mumble.client.interfaces.IPlayer;
 import fr.pederobien.mumble.client.interfaces.IResponse;
+import fr.pederobien.mumble.client.interfaces.ISoundModifier;
 import fr.pederobien.mumble.client.interfaces.observers.IObsChannel;
+import fr.pederobien.mumble.client.interfaces.observers.IObsChannelList;
 import fr.pederobien.mumble.client.interfaces.observers.IObsPlayer;
 import fr.pederobien.utils.IObservable;
 import fr.pederobien.utils.Observable;
@@ -33,7 +35,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
-public class ChannelPresenter extends PresenterBase implements IObsChannel, IObservable<IObsChannelPresenter>, IObsPlayerPresenter {
+public class ChannelPresenter extends PresenterBase implements IObsChannel, IObservable<IObsChannelPresenter>, IObsPlayerPresenter, IObsChannelList {
 	private PlayerPresenter playerPresenter;
 	private IChannelList channelList;
 	private IChannel channel;
@@ -52,10 +54,15 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel, IObs
 	private SimpleLanguageProperty renameChannelTextProperty;
 	private BooleanProperty renameChannelVisibility;
 
+	private SimpleLanguageProperty soundModifierTextProperty;
+	private BooleanProperty soundModifierVisibility;
+
 	public ChannelPresenter(PlayerPresenter playerPresenter, IChannelList channelList, IChannel channel) {
 		this.playerPresenter = playerPresenter;
 		this.channelList = channelList;
 		this.channel = channel;
+
+		this.channelList.addObserver(this);
 		this.channel.addObserver(this);
 
 		// In order to be notified when the player is defined.
@@ -77,6 +84,28 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel, IObs
 
 		renameChannelTextProperty = getPropertyHelper().languageProperty(EMessageCode.RENAME_CHANNEL);
 		renameChannelVisibility = new SimpleBooleanProperty(player != null && player.isAdmin());
+
+		soundModifierTextProperty = getPropertyHelper().languageProperty(EMessageCode.SOUND_MODIFIER, channel.getSoundModifier().getName());
+		soundModifierVisibility = new SimpleBooleanProperty(player != null && player.isAdmin());
+	}
+
+	@Override
+	public void onChannelAdded(IChannel channel) {
+		removeChannelVisibility.set(channelList.getChannels().size() > 1);
+	}
+
+	@Override
+	public void onChannelRemoved(IChannel channel) {
+		removeChannelVisibility.set(channelList.getChannels().size() > 1);
+	}
+
+	@Override
+	public void onPlayerDefined(IPlayer player) {
+		// Observing this player in order to perform gui update when the player admin status changes.
+		player.addObserver(new InternalObsPlayer());
+		addChannelVisibility.set(player.isAdmin());
+		removeChannelVisibility.set(player.isAdmin() && channelList.getChannels().size() > 1);
+		renameChannelVisibility.set(player.isAdmin());
 	}
 
 	@Override
@@ -91,7 +120,7 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel, IObs
 
 	@Override
 	public void onChannelRename(IChannel channel, String oldName, String newName) {
-		dispatch(() -> channelNameProperty.setValue(newName));
+		dispatch(() -> channelNameProperty.set(newName));
 	}
 
 	@Override
@@ -105,12 +134,7 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel, IObs
 	}
 
 	@Override
-	public void onPlayerDefined(IPlayer player) {
-		// Observing this player in order to perform gui update when the player admin status changes.
-		player.addObserver(new InternalObsPlayer());
-		addChannelVisibility.set(player.isAdmin());
-		removeChannelVisibility.set(player.isAdmin() && channelList.getChannels().size() > 1);
-		renameChannelVisibility.set(player.isAdmin());
+	public void onSoundModifierChanged(IChannel channel, ISoundModifier soundModifier) {
 	}
 
 	/**
@@ -233,6 +257,24 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel, IObs
 		new RenameChannelView(getPrimaryStage(), new RenameChannelPresenter(channelList, channel));
 	}
 
+	/**
+	 * @return The property that display "Sound modifier (channel modifier name)".
+	 */
+	public StringProperty soundModifierTextProperty() {
+		return soundModifierTextProperty;
+	}
+
+	/**
+	 * @return The property for the visibility of the "Sound modifier" component.
+	 */
+	public BooleanProperty soundModifierVisibility() {
+		return soundModifierVisibility;
+	}
+
+	public void onSetSoundModifier() {
+
+	}
+
 	private void channelRemoveResponse(IResponse<ChannelRemovedEvent> response) {
 		if (!response.hasFailed())
 			return;
@@ -266,7 +308,7 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel, IObs
 		@Override
 		public void onAdminStatusChanged(boolean isAdmin) {
 			addChannelVisibility.set(isAdmin);
-			removeChannelVisibility.set(isAdmin);
+			removeChannelVisibility.set(isAdmin && channelList.getChannels().size() > 1);
 			renameChannelVisibility.set(isAdmin);
 		}
 

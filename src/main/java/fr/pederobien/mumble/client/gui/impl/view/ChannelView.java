@@ -76,6 +76,18 @@ public class ChannelView extends ViewBase<ChannelPresenter, GridPane> {
 		renameChannel.setOnAction(e -> getPresenter().onRenameChannel());
 		contextMenu.getItems().add(renameChannel);
 
+		// Sound modifier ---------------------------------------------------------------------------------
+		Label soundModifierLabel = new Label();
+		soundModifierLabel.fontProperty().bind(getPresenter().fontProperty());
+		soundModifierLabel.textProperty().bind(getPresenter().soundModifierTextProperty());
+		soundModifierLabel.setTextFill(Color.BLACK);
+
+		MenuItem soundModifier = new MenuItem();
+		soundModifier.setGraphic(soundModifierLabel);
+		soundModifier.visibleProperty().bind(getPresenter().soundModifierVisibility());
+		soundModifier.setOnAction(e -> getPresenter().onSetSoundModifier());
+		contextMenu.getItems().add(soundModifier);
+
 		channelName.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> displayContextMenu(contextMenu, e, channelName));
 
 		getRoot().add(channelName, 0, 0);

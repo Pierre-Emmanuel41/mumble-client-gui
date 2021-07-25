@@ -61,7 +61,7 @@ public class AddChannelPresenter extends OkCancelPresenter {
 	public boolean onOkButtonClicked() {
 		if (okDisableProperty.get())
 			return false;
-		channelList.addChannel(channelNameProperty.get(), response -> channelNameResponse(response));
+		channelList.addChannel(channelNameProperty.get(), null, response -> channelNameResponse(response));
 		return true;
 	}
 

@@ -149,6 +149,9 @@ public enum EMessageCode implements IMessageCode {
 	// Code for the header of the alert when player try to rename a channel and it fails.
 	RENAME_CHANNEL_NAME_RESPONSE,
 
+	// Code to set the channel sound modifier
+	SOUND_MODIFIER,
+
 	// PLAYER CONTEXT MENU CODE
 	// -----------------------------------------------------------------------------
 

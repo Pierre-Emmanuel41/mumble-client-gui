@@ -164,10 +164,12 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 	}
 
 	private void joinServerResponse(IResponse<Boolean> response) {
-		getPrimaryStage().getScene().setRoot(new ServerChannelsView(new ServerChannelsPresenter(selectedServer)).getRoot());
-		serverList.getServers().forEach(server -> {
-			if (!server.equals(selectedServer))
-				server.close();
+		dispatch(() -> {
+			getPrimaryStage().getScene().setRoot(new ServerChannelsView(new ServerChannelsPresenter(selectedServer)).getRoot());
+			serverList.getServers().forEach(server -> {
+				if (!server.equals(selectedServer))
+					server.close();
+			});
 		});
 	}
 }
