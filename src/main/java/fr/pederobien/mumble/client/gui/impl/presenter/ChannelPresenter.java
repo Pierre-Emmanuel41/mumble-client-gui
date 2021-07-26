@@ -19,6 +19,7 @@ import fr.pederobien.mumble.client.interfaces.ISoundModifier;
 import fr.pederobien.mumble.client.interfaces.observers.IObsChannel;
 import fr.pederobien.mumble.client.interfaces.observers.IObsChannelList;
 import fr.pederobien.mumble.client.interfaces.observers.IObsPlayer;
+import fr.pederobien.mumble.client.interfaces.observers.IObsSoundModifier;
 import fr.pederobien.utils.IObservable;
 import fr.pederobien.utils.Observable;
 import javafx.beans.property.BooleanProperty;
@@ -36,7 +37,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
-public class ChannelPresenter extends PresenterBase implements IObsChannel, IObservable<IObsChannelPresenter>, IObsPlayerPresenter, IObsChannelList {
+public class ChannelPresenter extends PresenterBase implements IObsChannel, IObservable<IObsChannelPresenter>, IObsPlayerPresenter, IObsChannelList, IObsSoundModifier {
 	private PlayerPresenter playerPresenter;
 	private IChannelList channelList;
 	private IChannel channel;
@@ -91,6 +92,11 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel, IObs
 	}
 
 	@Override
+	public void onNameChanged(ISoundModifier soundModifier, String oldName, String newName) {
+		dispatch(() -> soundModifierTextProperty.setCode(EMessageCode.SOUND_MODIFIER, newName));
+	}
+
+	@Override
 	public void onChannelAdded(IChannel channel) {
 		removeChannelVisibility.set(channelList.getChannels().size() > 1);
 	}
@@ -137,6 +143,7 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel, IObs
 
 	@Override
 	public void onSoundModifierChanged(IChannel channel, ISoundModifier soundModifier) {
+		dispatch(() -> soundModifierTextProperty.setCode(EMessageCode.SOUND_MODIFIER, soundModifier.getName()));
 	}
 
 	/**
