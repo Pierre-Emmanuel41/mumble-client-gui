@@ -152,6 +152,15 @@ public enum EMessageCode implements IMessageCode {
 	// Code to set the channel sound modifier
 	SOUND_MODIFIER,
 
+	// Code for the title of the window that change the sound modifier of a channel
+	SOUND_MODIFIER_TITLE,
+
+	// Code to get the sound modifier name
+	SOUND_MODIFIER_NAME,
+
+	// Code for the header of the alert when player try to change the sound modifier of a channel and it fails.
+	SOUND_MODIFIER_NAME_RESPONSE,
+
 	// PLAYER CONTEXT MENU CODE
 	// -----------------------------------------------------------------------------
 

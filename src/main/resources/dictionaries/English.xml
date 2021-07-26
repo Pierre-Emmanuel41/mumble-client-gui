@@ -241,6 +241,18 @@
 			<value>Sound modifier (%s)</value>
 		</message>
 		<message>
+			<code>SOUND_MODIFIER_TITLE</code>
+			<value>Sound modifier for channel %s</value>
+		</message>
+		<message>
+			<code>SOUND_MODIFIER_NAME</code>
+			<value>New sound modifier :</value>
+		</message>
+		<message>
+			<code>SOUND_MODIFIER_NAME_RESPONSE</code>
+			<value>You cannot set the sound modifier %s for channel %s for the following reason :</value>
+		</message>
+		<message>
 			<code>CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE_TITLE</code>
 			<value>Fail to mute or unmute player %s</value>
 		</message>

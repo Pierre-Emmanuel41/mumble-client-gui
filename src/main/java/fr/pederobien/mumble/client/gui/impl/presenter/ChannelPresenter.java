@@ -7,6 +7,7 @@ import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.AddChannelView;
 import fr.pederobien.mumble.client.gui.impl.view.PlayerChannelView;
 import fr.pederobien.mumble.client.gui.impl.view.RenameChannelView;
+import fr.pederobien.mumble.client.gui.impl.view.SoundModifierView;
 import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsChannelPresenter;
 import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsPlayerPresenter;
 import fr.pederobien.mumble.client.interfaces.IChannel;
@@ -106,6 +107,7 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel, IObs
 		addChannelVisibility.set(player.isAdmin());
 		removeChannelVisibility.set(player.isAdmin() && channelList.getChannels().size() > 1);
 		renameChannelVisibility.set(player.isAdmin());
+		soundModifierVisibility.set(player.isAdmin());
 	}
 
 	@Override
@@ -272,7 +274,7 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel, IObs
 	}
 
 	public void onSetSoundModifier() {
-
+		new SoundModifierView(getPrimaryStage(), new SoundModifierPresenter(channel));
 	}
 
 	private void channelRemoveResponse(IResponse<ChannelRemovedEvent> response) {

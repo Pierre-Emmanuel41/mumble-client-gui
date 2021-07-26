@@ -236,7 +236,19 @@
 		</message>
 		<message>
 			<code>SOUND_MODIFIER</code>
-			<value>Modifier de son (%s)</value>
+			<value>Modifieur de son (%s)</value>
+		</message>
+		<message>
+			<code>SOUND_MODIFIER_TITLE</code>
+			<value>Modifieur de son pour le channel %s</value>
+		</message>
+		<message>
+			<code>SOUND_MODIFIER_NAME</code>
+			<value>Nouveau modifieur de son :</value>
+		</message>
+		<message>
+			<code>SOUND_MODIFIER_NAME_RESPONSE</code>
+			<value>Vous ne pouvez pas définir le modifieur de son %s pour le channel %s pour la raison suivantes :</value>
 		</message>
 		<message>
 			<code>CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE_TITLE</code>
