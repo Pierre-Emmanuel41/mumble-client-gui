@@ -6,8 +6,8 @@ import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.ServerView;
 import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsServerList;
 import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsServerListPresenter;
-import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.gui.model.ServerList;
+import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 import fr.pederobien.utils.IObservable;
 import fr.pederobien.utils.Observable;
 import javafx.beans.property.BooleanProperty;
@@ -26,7 +26,7 @@ public class ServerListPresenter extends PresenterBase implements IObsServerList
 	private ObservableList<Object> servers;
 	private BooleanProperty emptyServersListVisibilityProperty;
 	private SimpleLanguageProperty emptyServerTextProperty;
-	private Server selectedServer;
+	private IMumbleServer selectedServer;
 	private Observable<IObsServerListPresenter> observers;
 
 	public ServerListPresenter(ServerList serverList) {
@@ -39,13 +39,13 @@ public class ServerListPresenter extends PresenterBase implements IObsServerList
 	}
 
 	@Override
-	public void onServerAdded(Server server) {
+	public void onServerAdded(IMumbleServer server) {
 		servers.add(server);
 		emptyServersListVisibilityProperty.setValue(servers.isEmpty());
 	}
 
 	@Override
-	public void onServerRemoved(Server server) {
+	public void onServerRemoved(IMumbleServer server) {
 		servers.remove(server);
 		emptyServersListVisibilityProperty.setValue(servers.isEmpty());
 	}
@@ -82,7 +82,7 @@ public class ServerListPresenter extends PresenterBase implements IObsServerList
 	}
 
 	public <T> Callback<ListView<T>, ListCell<T>> serverViewFactory(Color enteredColor) {
-		return listView -> getPropertyHelper().cellView(item -> new ServerView(ServerPresenter.getOrCreateServerPresenter((Server) item)).getRoot(), enteredColor);
+		return listView -> getPropertyHelper().cellView(item -> new ServerView(ServerPresenter.getOrCreateServerPresenter((IMumbleServer) item)).getRoot(), enteredColor);
 	}
 
 	/**
@@ -92,14 +92,14 @@ public class ServerListPresenter extends PresenterBase implements IObsServerList
 	 * @param newServer The new selected server.
 	 */
 	public void onServerSelectedChanged(Object oldServer, Object newServer) {
-		this.selectedServer = (Server) newServer;
-		observers.notifyObservers(obs -> obs.onSelectedServerChanged((Server) oldServer, (Server) newServer));
+		this.selectedServer = (IMumbleServer) newServer;
+		observers.notifyObservers(obs -> obs.onSelectedServerChanged((IMumbleServer) oldServer, (IMumbleServer) newServer));
 	}
 
 	/**
 	 * @return The server currently selected in the list.
 	 */
-	public Server getSelectedServer() {
+	public IMumbleServer getSelectedServer() {
 		return selectedServer;
 	}
 

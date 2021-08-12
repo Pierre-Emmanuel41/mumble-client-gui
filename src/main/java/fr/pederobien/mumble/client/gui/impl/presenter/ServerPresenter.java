@@ -6,8 +6,8 @@ import java.util.Map;
 import fr.pederobien.dictionary.interfaces.IMessageCode;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
-import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsServer;
-import fr.pederobien.mumble.client.gui.model.Server;
+import fr.pederobien.mumble.client.interfaces.IMumbleServer;
+import fr.pederobien.mumble.client.interfaces.observers.IObsMumbleServer;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -15,15 +15,15 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-public class ServerPresenter extends PresenterBase implements IObsServer {
-	private static final Map<Server, ServerPresenter> PRESENTERS = new HashMap<Server, ServerPresenter>();
-	private Server server;
+public class ServerPresenter extends PresenterBase implements IObsMumbleServer {
+	private static final Map<IMumbleServer, ServerPresenter> PRESENTERS = new HashMap<IMumbleServer, ServerPresenter>();
+	private IMumbleServer server;
 	private StringProperty serverNameProperty, serverIpAddressProperty;
 	private SimpleLanguageProperty serverReachableStatusProperty;
 	private ObjectProperty<Paint> textFillProperty;
 	private boolean isReachable;
 
-	public static ServerPresenter getOrCreateServerPresenter(Server server) {
+	public static ServerPresenter getOrCreateServerPresenter(IMumbleServer server) {
 		ServerPresenter presenter = PRESENTERS.get(server);
 		if (presenter != null)
 			return presenter;
@@ -33,7 +33,7 @@ public class ServerPresenter extends PresenterBase implements IObsServer {
 		return presenter;
 	}
 
-	private ServerPresenter(Server server) {
+	private ServerPresenter(IMumbleServer server) {
 		this.server = server;
 
 		isReachable = server.isReachable();
@@ -46,22 +46,22 @@ public class ServerPresenter extends PresenterBase implements IObsServer {
 	}
 
 	@Override
-	public void onNameChanged(Server server, String oldName, String newName) {
+	public void onNameChanged(IMumbleServer server, String oldName, String newName) {
 		serverNameProperty.setValue(newName);
 	}
 
 	@Override
-	public void onIpAddressChanged(Server server, String oldAddress, String newAddress) {
+	public void onIpAddressChanged(IMumbleServer server, String oldAddress, String newAddress) {
 		serverIpAddressProperty.setValue(newAddress + ":" + server.getPort());
 	}
 
 	@Override
-	public void onPortChanged(Server server, int oldPort, int newPort) {
+	public void onPortChanged(IMumbleServer server, int oldPort, int newPort) {
 		serverIpAddressProperty.setValue(server.getAddress() + ":" + newPort);
 	}
 
 	@Override
-	public void onReachableStatusChanged(Server server, boolean isReachable) {
+	public void onReachableStatusChanged(IMumbleServer server, boolean isReachable) {
 		this.isReachable = isReachable;
 		dispatch(() -> {
 			serverReachableStatusProperty.setCode(getServerStateCode());

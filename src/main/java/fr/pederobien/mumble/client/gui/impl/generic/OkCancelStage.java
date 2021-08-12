@@ -56,7 +56,10 @@ public class OkCancelStage extends ViewBase<OkCancelPresenter, GridPane> {
 		Button cancel = new Button();
 		cancel.fontProperty().bind(getPresenter().fontProperty());
 		cancel.textProperty().bind(getPresenter().cancelTextProperty());
-		cancel.setOnAction(e -> stage.close());
+		cancel.setOnAction(e -> {
+			if (getPresenter().onCancelButtonClicked())
+				stage.close();
+		});
 		buttons.getChildren().add(cancel);
 		FlowPane.setMargin(cancel, new Insets(0, 0, 0, 10));
 

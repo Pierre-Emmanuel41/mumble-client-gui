@@ -11,9 +11,9 @@ import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleTooltipProperty;
 import fr.pederobien.mumble.client.gui.impl.view.MainView;
 import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsPlayerPresenter;
-import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.interfaces.IAudioConnection;
 import fr.pederobien.mumble.client.interfaces.IChannel;
+import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 import fr.pederobien.mumble.client.interfaces.IPlayer;
 import fr.pederobien.mumble.client.interfaces.IResponse;
 import fr.pederobien.mumble.client.interfaces.observers.IObsPlayer;
@@ -31,7 +31,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class PlayerPresenter extends PresenterBase implements IObsPlayer, IObservable<IObsPlayerPresenter> {
-	private Server server;
+	private IMumbleServer server;
 	private IPlayer player;
 	private IAudioConnection audioConnection;
 	private Observable<IObsPlayerPresenter> observers;
@@ -52,7 +52,7 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer, IObser
 	private ObjectProperty<Node> deafenOrUndeafenGraphicProperty;
 	private ObjectProperty<Node> hangupGraphicProperty;
 
-	public PlayerPresenter(Server server) {
+	public PlayerPresenter(IMumbleServer server) {
 		this.server = server;
 		observers = new Observable<IObsPlayerPresenter>();
 		server.getPlayer(response -> playerResponse(response));
@@ -261,10 +261,8 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer, IObser
 	 * Disconnect the player from the server. Calling this method send a request to the server and also update the user interface.
 	 */
 	public void disconnectFromServer() {
-		if (player.getChannel() != null)
-			disconnectFromChannel();
-
 		server.leave();
+		player.removeObserver(this);
 		getPrimaryStage().getScene().setRoot(new MainView(new MainPresenter()).getRoot());
 	}
 

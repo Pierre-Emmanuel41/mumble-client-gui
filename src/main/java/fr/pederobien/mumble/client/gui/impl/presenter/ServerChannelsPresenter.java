@@ -2,13 +2,13 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import fr.pederobien.mumble.client.gui.impl.view.ChannelListView;
 import fr.pederobien.mumble.client.gui.impl.view.PlayerView;
-import fr.pederobien.mumble.client.gui.model.Server;
+import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 
 public class ServerChannelsPresenter extends PresenterBase {
 	private PlayerView playerView;
 	private ChannelListView channelListView;
 
-	public ServerChannelsPresenter(Server server) {
+	public ServerChannelsPresenter(IMumbleServer server) {
 		PlayerPresenter playerPresenter = new PlayerPresenter(server);
 		playerView = new PlayerView(playerPresenter);
 		channelListView = new ChannelListView(new ChannelListPresenter(playerPresenter, server));

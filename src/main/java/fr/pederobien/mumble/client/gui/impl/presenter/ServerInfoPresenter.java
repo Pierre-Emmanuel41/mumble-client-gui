@@ -6,8 +6,8 @@ import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.generic.OkCancelPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleTooltipProperty;
-import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.gui.model.ServerList;
+import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -26,7 +26,7 @@ import javafx.scene.paint.Color;
 
 public abstract class ServerInfoPresenter extends OkCancelPresenter {
 	private ServerList serverList;
-	private Server server;
+	private IMumbleServer server;
 	private InternalObserver observer;
 
 	private SimpleLanguageProperty titleTextProperty;
@@ -55,25 +55,25 @@ public abstract class ServerInfoPresenter extends OkCancelPresenter {
 	// Buttons ---------------------------------------------------
 	private BooleanProperty okDisableProperty;
 
-	public ServerInfoPresenter(ServerList serverList, Server server) {
+	public ServerInfoPresenter(ServerList serverList, IMumbleServer server) {
 		this.serverList = serverList;
 		this.server = server;
 
 		titleTextProperty = getPropertyHelper().languageProperty(EMessageCode.ADD_NEW_SERVER_TITLE);
 
-		serverNameProperty = new SimpleStringProperty(server.getName().equals(Server.DEFAULT_NAME) ? null : server.getName());
+		serverNameProperty = new SimpleStringProperty(server.getName().equals(IMumbleServer.DEFAULT_NAME) ? null : server.getName());
 		serverNameTextProperty = getPropertyHelper().languageProperty(EMessageCode.SERVER_NAME);
 		serverNameBorderProperty = new SimpleObjectProperty<Border>(null);
 		serverNamePromptProperty = getPropertyHelper().languageProperty(EMessageCode.SERVER_NAME_PROMPT);
 		serverNameTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.SERVER_NAME_TOOLTIP);
 
-		serverIpAddressProperty = new SimpleStringProperty(server.getAddress().equals(Server.DEFAULT_ADDRESS) ? null : server.getAddress());
+		serverIpAddressProperty = new SimpleStringProperty(server.getAddress().equals(IMumbleServer.DEFAULT_ADDRESS) ? null : server.getAddress());
 		serverIpAddressTextProperty = getPropertyHelper().languageProperty(EMessageCode.SERVER_IP_ADDRESS);
 		serverIpAddressBorderProperty = new SimpleObjectProperty<Border>(null);
 		serverIpAddressPromptProperty = getPropertyHelper().languageProperty(EMessageCode.SERVER_IP_ADDRESS_PROMPT);
 		serverIpAddressTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.SERVER_IP_ADDRESS_TOOLTIP);
 
-		serverPortProperty = new SimpleStringProperty(server.getPort() == Server.DEFAULT_PORT ? null : "" + server.getPort());
+		serverPortProperty = new SimpleStringProperty(server.getPort() == IMumbleServer.DEFAULT_PORT ? null : "" + server.getPort());
 		serverPortTextProperty = getPropertyHelper().languageProperty(EMessageCode.SERVER_PORT_NUMBER);
 		serverPortBorderProperty = new SimpleObjectProperty<Border>(null);
 		serverPortPromptProperty = getPropertyHelper().languageProperty(EMessageCode.SERVER_PORT_NUMBER_PROMPT);
@@ -98,7 +98,7 @@ public abstract class ServerInfoPresenter extends OkCancelPresenter {
 	 * @param address The server ip address.
 	 * @param port    The server port number.
 	 */
-	protected abstract void onOkButtonClicked(Server server, String name, String address, int port);
+	protected abstract void onOkButtonClicked(IMumbleServer server, String name, String address, int port);
 
 	@Override
 	public StringProperty titleTextProperty() {

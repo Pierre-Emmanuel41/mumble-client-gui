@@ -5,8 +5,8 @@ import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.ServerChannelsView;
 import fr.pederobien.mumble.client.gui.impl.view.ServerInfoView;
 import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsServerListPresenter;
-import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.gui.model.ServerList;
+import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 import fr.pederobien.mumble.client.interfaces.IResponse;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -30,7 +30,7 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 	private BooleanProperty deleteServerDisableProperty;
 
 	private ServerList serverList;
-	private Server selectedServer;
+	private IMumbleServer selectedServer;
 
 	public ServerManagementPresenter(ServerList serverList) {
 		this.serverList = serverList;
@@ -49,7 +49,7 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 	}
 
 	@Override
-	public void onSelectedServerChanged(Server oldServer, Server newServer) {
+	public void onSelectedServerChanged(IMumbleServer oldServer, IMumbleServer newServer) {
 		selectedServer = newServer;
 		joinServerDisableProperty.setValue(selectedServer == null || !selectedServer.isReachable());
 		editServerDisableProperty.setValue(selectedServer == null);
@@ -57,7 +57,7 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 	}
 
 	@Override
-	public void onDoubleClickOnServer(Server server) {
+	public void onDoubleClickOnServer(IMumbleServer server) {
 		onJoin();
 	}
 
@@ -128,9 +128,9 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 	 * Creates a new window in which the user can add a new mumble server.
 	 */
 	public void onAdd() {
-		new ServerInfoView(getPrimaryStage(), new ServerInfoPresenter(serverList, new Server()) {
+		new ServerInfoView(getPrimaryStage(), new ServerInfoPresenter(serverList, ServerList.createNewDefaultServer()) {
 			@Override
-			protected void onOkButtonClicked(Server server, String name, String address, int port) {
+			protected void onOkButtonClicked(IMumbleServer server, String name, String address, int port) {
 				performChangesOnServer(server, name, address, port);
 				serverList.add(server);
 			}
@@ -141,10 +141,20 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 	 * Creates a new window in which the user can edit a mumble server.
 	 */
 	public void onEdit() {
+		selectedServer.close();
 		new ServerInfoView(getPrimaryStage(), new ServerInfoPresenter(serverList, selectedServer) {
 			@Override
-			protected void onOkButtonClicked(Server server, String name, String address, int port) {
+			protected void onOkButtonClicked(IMumbleServer server, String name, String address, int port) {
 				performChangesOnServer(server, name, address, port);
+				// Server is closed but parameter are the same
+				if (!server.isReachable())
+					server.open();
+			}
+
+			@Override
+			public boolean onCancelButtonClicked() {
+				selectedServer.open();
+				return super.onCancelButtonClicked();
 			}
 		});
 	}
@@ -157,7 +167,7 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 		serverList.remove(selectedServer);
 	}
 
-	private void performChangesOnServer(Server server, String name, String address, int port) {
+	private void performChangesOnServer(IMumbleServer server, String name, String address, int port) {
 		server.setName(name);
 		server.setAddress(address);
 		server.setPort(port);

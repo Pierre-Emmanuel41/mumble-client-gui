@@ -1,6 +1,6 @@
 package fr.pederobien.mumble.client.gui.interfaces.observers.model;
 
-import fr.pederobien.mumble.client.gui.model.Server;
+import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 
 public interface IObsServerList {
 
@@ -9,12 +9,12 @@ public interface IObsServerList {
 	 * 
 	 * @param server The added server.
 	 */
-	void onServerAdded(Server server);
+	void onServerAdded(IMumbleServer server);
 
 	/**
 	 * Notify this observer the given server has been removed from the list.
 	 * 
 	 * @param server The removed server.
 	 */
-	void onServerRemoved(Server server);
+	void onServerRemoved(IMumbleServer server);
 }

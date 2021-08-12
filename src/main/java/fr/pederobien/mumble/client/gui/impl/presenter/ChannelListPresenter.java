@@ -8,13 +8,13 @@ import fr.pederobien.mumble.client.event.PlayerRemovedFromChannelEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
 import fr.pederobien.mumble.client.gui.impl.view.ChannelView;
-import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsServer;
 import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsChannelPresenter;
-import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.interfaces.IChannel;
 import fr.pederobien.mumble.client.interfaces.IChannelList;
+import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 import fr.pederobien.mumble.client.interfaces.IResponse;
 import fr.pederobien.mumble.client.interfaces.observers.IObsChannelList;
+import fr.pederobien.mumble.client.interfaces.observers.IObsMumbleServer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert.AlertType;
@@ -23,22 +23,22 @@ import javafx.scene.control.ListView;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
-public class ChannelListPresenter extends PresenterBase implements IObsChannelList, IObsServer, IObsChannelPresenter {
+public class ChannelListPresenter extends PresenterBase implements IObsChannelList, IObsMumbleServer, IObsChannelPresenter {
 	private PlayerPresenter playerPresenter;
-	private Server server;
+	private IMumbleServer server;
 	private IChannel selectedChannel;
 	private IChannelList channelList;
 	private ObservableList<Object> channels;
 	private Map<IChannel, ChannelView> channelViews;
 
-	public ChannelListPresenter(PlayerPresenter playerPresenter, Server server) {
+	public ChannelListPresenter(PlayerPresenter playerPresenter, IMumbleServer server) {
 		this.playerPresenter = playerPresenter;
 		this.server = server;
 		channels = FXCollections.observableArrayList();
 		channelViews = new HashMap<IChannel, ChannelView>();
 
 		server.addObserver(this);
-		server.getChannels(response -> manageResponse(response));
+		server.getChannels(response -> manageChannelsResponse(response));
 	}
 
 	@Override
@@ -52,25 +52,26 @@ public class ChannelListPresenter extends PresenterBase implements IObsChannelLi
 	}
 
 	@Override
-	public void onNameChanged(Server server, String oldName, String newName) {
+	public void onNameChanged(IMumbleServer server, String oldName, String newName) {
 
 	}
 
 	@Override
-	public void onIpAddressChanged(Server server, String oldAddress, String newAddress) {
+	public void onIpAddressChanged(IMumbleServer server, String oldAddress, String newAddress) {
 
 	}
 
 	@Override
-	public void onPortChanged(Server server, int oldPort, int newPort) {
+	public void onPortChanged(IMumbleServer server, int oldPort, int newPort) {
 
 	}
 
 	@Override
-	public void onReachableStatusChanged(Server server, boolean isReachable) {
-		if (isReachable)
-			server.getChannels(response -> dispatch(() -> manageResponse(response)));
-		else {
+	public void onReachableStatusChanged(IMumbleServer server, boolean isReachable) {
+		if (isReachable) {
+			server.join(response -> manageJoinResponse(response));
+			server.getChannels(response -> manageChannelsResponse(response));
+		} else {
 			dispatch(() -> {
 				channels.clear();
 				if (channelList != null)
@@ -123,15 +124,20 @@ public class ChannelListPresenter extends PresenterBase implements IObsChannelLi
 		}, enteredColor);
 	}
 
-	private void manageResponse(IResponse<IChannelList> response) {
+	private void manageChannelsResponse(IResponse<IChannelList> response) {
 		if (response.hasFailed()) {
-			server.getChannels(r -> dispatch(() -> manageResponse(r)));
+			server.getChannels(r -> manageChannelsResponse(r));
 			return;
 		}
 
 		channelList = response.get();
 		channelList.addObserver(this);
-		channels.addAll(channelList.getChannels());
+		dispatch(() -> channels.addAll(channelList.getChannels()));
+	}
+
+	private void manageJoinResponse(IResponse<Boolean> response) {
+		if (response.hasFailed())
+			System.out.println(response.getErrorCode().getMessage());
 	}
 
 	private void removePlayer(IResponse<PlayerRemovedFromChannelEvent> response) {

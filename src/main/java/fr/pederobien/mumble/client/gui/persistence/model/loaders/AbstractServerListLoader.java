@@ -3,7 +3,6 @@ package fr.pederobien.mumble.client.gui.persistence.model.loaders;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.gui.model.ServerList;
 import fr.pederobien.mumble.client.gui.persistence.model.ServersXmlTag;
 import fr.pederobien.persistence.impl.xml.AbstractXmlPersistenceLoader;
@@ -34,6 +33,6 @@ public abstract class AbstractServerListLoader extends AbstractXmlPersistenceLoa
 	}
 
 	private void register(String name, String address, int port) {
-		get().add(new Server(name, address, port));
+		get().add(ServerList.createNewServer(name, address, port));
 	}
 }

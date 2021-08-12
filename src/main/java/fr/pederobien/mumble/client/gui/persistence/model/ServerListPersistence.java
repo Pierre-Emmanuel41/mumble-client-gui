@@ -6,9 +6,9 @@ import java.nio.file.Paths;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import fr.pederobien.mumble.client.gui.model.Server;
 import fr.pederobien.mumble.client.gui.model.ServerList;
 import fr.pederobien.mumble.client.gui.persistence.model.loaders.ServerListLoaderV10;
+import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 import fr.pederobien.persistence.impl.xml.AbstractXmlPersistence;
 
 public class ServerListPersistence extends AbstractXmlPersistence<ServerList> {
@@ -43,7 +43,7 @@ public class ServerListPersistence extends AbstractXmlPersistence<ServerList> {
 		root.appendChild(version);
 
 		Element servers = createElement(doc, ServersXmlTag.SERVERS);
-		for (Server s : get().getServers()) {
+		for (IMumbleServer s : get().getServers()) {
 			Element server = createElement(doc, ServersXmlTag.SERVER);
 			setAttribute(server, ServersXmlTag.NAME, s.getName());
 			setAttribute(server, ServersXmlTag.SERVER_ADDRESS, s.getAddress());
