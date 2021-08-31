@@ -1,6 +1,9 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
+import fr.pederobien.mumble.client.event.ChannelNameChangePostEvent;
 import fr.pederobien.mumble.client.event.ChannelRemovedEvent;
+import fr.pederobien.mumble.client.event.PlayerAddToChannelPostEvent;
+import fr.pederobien.mumble.client.event.PlayerRemoveFromChannelPostEvent;
 import fr.pederobien.mumble.client.event.SoundModifierNameChangePostEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
@@ -16,8 +19,6 @@ import fr.pederobien.mumble.client.interfaces.IChannelList;
 import fr.pederobien.mumble.client.interfaces.IOtherPlayer;
 import fr.pederobien.mumble.client.interfaces.IPlayer;
 import fr.pederobien.mumble.client.interfaces.IResponse;
-import fr.pederobien.mumble.client.interfaces.ISoundModifier;
-import fr.pederobien.mumble.client.interfaces.observers.IObsChannel;
 import fr.pederobien.mumble.client.interfaces.observers.IObsChannelList;
 import fr.pederobien.mumble.client.interfaces.observers.IObsPlayer;
 import fr.pederobien.utils.IObservable;
@@ -41,7 +42,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
-public class ChannelPresenter extends PresenterBase implements IEventListener, IObsChannel, IObservable<IObsChannelPresenter>, IObsPlayerPresenter, IObsChannelList {
+public class ChannelPresenter extends PresenterBase implements IEventListener, IObservable<IObsChannelPresenter>, IObsPlayerPresenter, IObsChannelList {
 	private PlayerPresenter playerPresenter;
 	private IChannelList channelList;
 	private IChannel channel;
@@ -71,7 +72,6 @@ public class ChannelPresenter extends PresenterBase implements IEventListener, I
 		EventManager.registerListener(this);
 
 		this.channelList.addObserver(this);
-		this.channel.addObserver(this);
 
 		// In order to be notified when the player is defined.
 		IPlayer player = playerPresenter.getPlayer();
@@ -81,7 +81,7 @@ public class ChannelPresenter extends PresenterBase implements IEventListener, I
 			player.addObserver(new InternalObsPlayer());
 
 		observers = new Observable<IObsChannelPresenter>();
-		players = FXCollections.observableArrayList(channel.getPlayers());
+		players = FXCollections.observableArrayList(channel.getPlayers().values());
 		channelNameProperty = new SimpleStringProperty(channel.getName());
 
 		addChannelTextProperty = getPropertyHelper().languageProperty(EMessageCode.ADD_CHANNEL);
@@ -125,26 +125,6 @@ public class ChannelPresenter extends PresenterBase implements IEventListener, I
 	@Override
 	public void removeObserver(IObsChannelPresenter obs) {
 		observers.removeObserver(obs);
-	}
-
-	@Override
-	public void onChannelRename(IChannel channel, String oldName, String newName) {
-		dispatch(() -> channelNameProperty.set(newName));
-	}
-
-	@Override
-	public void onPlayerAdded(IChannel channel, IOtherPlayer player) {
-		dispatch(() -> players.add(player));
-	}
-
-	@Override
-	public void onPlayerRemoved(IChannel channel, IOtherPlayer player) {
-		dispatch(() -> players.remove(player));
-	}
-
-	@Override
-	public void onSoundModifierChanged(IChannel channel, ISoundModifier soundModifier) {
-		dispatch(() -> soundModifierTextProperty.setCode(EMessageCode.SOUND_MODIFIER, soundModifier.getName()));
 	}
 
 	/**
@@ -291,6 +271,30 @@ public class ChannelPresenter extends PresenterBase implements IEventListener, I
 			return;
 
 		dispatch(() -> soundModifierTextProperty.setCode(EMessageCode.SOUND_MODIFIER, event.getSoundModifier().getName()));
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	private void onChannelRename(ChannelNameChangePostEvent event) {
+		if (!event.getChannel().equals(channel))
+			return;
+
+		dispatch(() -> channelNameProperty.set(event.getChannel().getName()));
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	private void onPlayerAdded(PlayerAddToChannelPostEvent event) {
+		if (!event.getChannel().equals(channel))
+			return;
+
+		dispatch(() -> players.add(event.getPlayer()));
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	private void onPlayerRemoved(PlayerRemoveFromChannelPostEvent event) {
+		if (!event.getChannel().equals(channel))
+			return;
+
+		dispatch(() -> players.remove(event.getPlayer()));
 	}
 
 	private void channelRemoveResponse(IResponse<ChannelRemovedEvent> response) {
