@@ -1,6 +1,7 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import fr.pederobien.mumble.client.event.ChannelRemovedEvent;
+import fr.pederobien.mumble.client.event.SoundModifierNameChangePostEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
@@ -19,9 +20,12 @@ import fr.pederobien.mumble.client.interfaces.ISoundModifier;
 import fr.pederobien.mumble.client.interfaces.observers.IObsChannel;
 import fr.pederobien.mumble.client.interfaces.observers.IObsChannelList;
 import fr.pederobien.mumble.client.interfaces.observers.IObsPlayer;
-import fr.pederobien.mumble.client.interfaces.observers.IObsSoundModifier;
 import fr.pederobien.utils.IObservable;
 import fr.pederobien.utils.Observable;
+import fr.pederobien.utils.event.EventHandler;
+import fr.pederobien.utils.event.EventManager;
+import fr.pederobien.utils.event.EventPriority;
+import fr.pederobien.utils.event.IEventListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -37,7 +41,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
-public class ChannelPresenter extends PresenterBase implements IObsChannel, IObservable<IObsChannelPresenter>, IObsPlayerPresenter, IObsChannelList, IObsSoundModifier {
+public class ChannelPresenter extends PresenterBase implements IEventListener, IObsChannel, IObservable<IObsChannelPresenter>, IObsPlayerPresenter, IObsChannelList {
 	private PlayerPresenter playerPresenter;
 	private IChannelList channelList;
 	private IChannel channel;
@@ -64,6 +68,8 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel, IObs
 		this.channelList = channelList;
 		this.channel = channel;
 
+		EventManager.registerListener(this);
+
 		this.channelList.addObserver(this);
 		this.channel.addObserver(this);
 
@@ -89,11 +95,6 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel, IObs
 
 		soundModifierTextProperty = getPropertyHelper().languageProperty(EMessageCode.SOUND_MODIFIER, channel.getSoundModifier().getName());
 		soundModifierVisibility = new SimpleBooleanProperty(player != null && player.isAdmin());
-	}
-
-	@Override
-	public void onNameChanged(ISoundModifier soundModifier, String oldName, String newName) {
-		dispatch(() -> soundModifierTextProperty.setCode(EMessageCode.SOUND_MODIFIER, newName));
 	}
 
 	@Override
@@ -282,6 +283,14 @@ public class ChannelPresenter extends PresenterBase implements IObsChannel, IObs
 
 	public void onSetSoundModifier() {
 		new SoundModifierView(getPrimaryStage(), new SoundModifierPresenter(channel));
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	private void onSoundModifierNameChange(SoundModifierNameChangePostEvent event) {
+		if (!event.getSoundModifier().equals(channel.getSoundModifier()))
+			return;
+
+		dispatch(() -> soundModifierTextProperty.setCode(EMessageCode.SOUND_MODIFIER, event.getSoundModifier().getName()));
 	}
 
 	private void channelRemoveResponse(IResponse<ChannelRemovedEvent> response) {
