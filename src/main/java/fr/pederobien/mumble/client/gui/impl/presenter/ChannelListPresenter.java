@@ -42,7 +42,7 @@ public class ChannelListPresenter extends PresenterBase implements IEventListene
 
 		EventManager.registerListener(this);
 
-		server.getChannels(response -> manageChannelsResponse(response));
+		channelList = server.getChannels(response -> manageChannelsResponse(response));
 	}
 
 	@Override

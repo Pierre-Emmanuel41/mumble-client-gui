@@ -4,10 +4,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fr.pederobien.dictionary.interfaces.IMessageCode;
+import fr.pederobien.mumble.client.event.ServerIpAddressChangePostEvent;
+import fr.pederobien.mumble.client.event.ServerNameChangePostEvent;
+import fr.pederobien.mumble.client.event.ServerPortNumberChangePostEvent;
+import fr.pederobien.mumble.client.event.ServerReachableChangeEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.interfaces.IMumbleServer;
-import fr.pederobien.mumble.client.interfaces.observers.IObsMumbleServer;
+import fr.pederobien.utils.event.EventHandler;
+import fr.pederobien.utils.event.EventManager;
+import fr.pederobien.utils.event.EventPriority;
+import fr.pederobien.utils.event.IEventListener;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -15,13 +22,12 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-public class ServerPresenter extends PresenterBase implements IObsMumbleServer {
+public class ServerPresenter extends PresenterBase implements IEventListener {
 	private static final Map<IMumbleServer, ServerPresenter> PRESENTERS = new HashMap<IMumbleServer, ServerPresenter>();
 	private IMumbleServer server;
 	private StringProperty serverNameProperty, serverIpAddressProperty;
 	private SimpleLanguageProperty serverReachableStatusProperty;
 	private ObjectProperty<Paint> textFillProperty;
-	private boolean isReachable;
 
 	public static ServerPresenter getOrCreateServerPresenter(IMumbleServer server) {
 		ServerPresenter presenter = PRESENTERS.get(server);
@@ -36,37 +42,12 @@ public class ServerPresenter extends PresenterBase implements IObsMumbleServer {
 	private ServerPresenter(IMumbleServer server) {
 		this.server = server;
 
-		isReachable = server.isReachable();
-		server.addObserver(this);
+		EventManager.registerListener(this);
 
 		serverNameProperty = new SimpleStringProperty(server.getName());
 		serverIpAddressProperty = new SimpleStringProperty(server.getAddress() + ":" + server.getPort());
 		serverReachableStatusProperty = getPropertyHelper().languageProperty(getServerStateCode());
 		textFillProperty = new SimpleObjectProperty<Paint>(getServerReachableStatusColor());
-	}
-
-	@Override
-	public void onNameChanged(IMumbleServer server, String oldName, String newName) {
-		serverNameProperty.setValue(newName);
-	}
-
-	@Override
-	public void onIpAddressChanged(IMumbleServer server, String oldAddress, String newAddress) {
-		serverIpAddressProperty.setValue(newAddress + ":" + server.getPort());
-	}
-
-	@Override
-	public void onPortChanged(IMumbleServer server, int oldPort, int newPort) {
-		serverIpAddressProperty.setValue(server.getAddress() + ":" + newPort);
-	}
-
-	@Override
-	public void onReachableStatusChanged(IMumbleServer server, boolean isReachable) {
-		this.isReachable = isReachable;
-		dispatch(() -> {
-			serverReachableStatusProperty.setCode(getServerStateCode());
-			textFillProperty.setValue(getServerReachableStatusColor());
-		});
 	}
 
 	@Override
@@ -102,17 +83,52 @@ public class ServerPresenter extends PresenterBase implements IObsMumbleServer {
 		return textFillProperty;
 	}
 
+	@EventHandler(priority = EventPriority.NORMAL)
+	private void onNameChanged(ServerNameChangePostEvent event) {
+		if (!event.getServer().equals(server))
+			return;
+
+		serverNameProperty.setValue(event.getServer().getName());
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	private void onIpAddressChanged(ServerIpAddressChangePostEvent event) {
+		if (!event.getServer().equals(server))
+			return;
+
+		serverIpAddressProperty.setValue(event.getServer().getAddress() + ":" + server.getPort());
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	private void onPortChanged(ServerPortNumberChangePostEvent event) {
+		if (!event.getServer().equals(server))
+			return;
+
+		serverIpAddressProperty.setValue(server.getAddress() + ":" + event.getServer().getPort());
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	private void onReachableStatusChanged(ServerReachableChangeEvent event) {
+		if (!event.getServer().equals(server))
+			return;
+
+		dispatch(() -> {
+			serverReachableStatusProperty.setCode(getServerStateCode());
+			textFillProperty.setValue(getServerReachableStatusColor());
+		});
+	}
+
 	/**
 	 * @return The code associated to the message to be displayed when the server is reachable or not.
 	 */
 	private IMessageCode getServerStateCode() {
-		return isReachable ? EMessageCode.REACHABLE_SERVER : EMessageCode.UNREACHABLE_SERVER;
+		return server.isReachable() ? EMessageCode.REACHABLE_SERVER : EMessageCode.UNREACHABLE_SERVER;
 	}
 
 	/**
 	 * @return The color in which the server status is displayed.
 	 */
 	private Paint getServerReachableStatusColor() {
-		return isReachable ? Color.GREEN : Color.RED;
+		return server.isReachable() ? Color.GREEN : Color.RED;
 	}
 }
