@@ -1,6 +1,8 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
+import fr.pederobien.mumble.client.event.ChannelAddPostEvent;
 import fr.pederobien.mumble.client.event.ChannelNameChangePostEvent;
+import fr.pederobien.mumble.client.event.ChannelRemovePostEvent;
 import fr.pederobien.mumble.client.event.ChannelRemovedEvent;
 import fr.pederobien.mumble.client.event.PlayerAddToChannelPostEvent;
 import fr.pederobien.mumble.client.event.PlayerRemoveFromChannelPostEvent;
@@ -19,7 +21,6 @@ import fr.pederobien.mumble.client.interfaces.IChannelList;
 import fr.pederobien.mumble.client.interfaces.IOtherPlayer;
 import fr.pederobien.mumble.client.interfaces.IPlayer;
 import fr.pederobien.mumble.client.interfaces.IResponse;
-import fr.pederobien.mumble.client.interfaces.observers.IObsChannelList;
 import fr.pederobien.mumble.client.interfaces.observers.IObsPlayer;
 import fr.pederobien.utils.IObservable;
 import fr.pederobien.utils.Observable;
@@ -42,7 +43,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
-public class ChannelPresenter extends PresenterBase implements IEventListener, IObservable<IObsChannelPresenter>, IObsPlayerPresenter, IObsChannelList {
+public class ChannelPresenter extends PresenterBase implements IEventListener, IObservable<IObsChannelPresenter>, IObsPlayerPresenter {
 	private PlayerPresenter playerPresenter;
 	private IChannelList channelList;
 	private IChannel channel;
@@ -71,8 +72,6 @@ public class ChannelPresenter extends PresenterBase implements IEventListener, I
 
 		EventManager.registerListener(this);
 
-		this.channelList.addObserver(this);
-
 		// In order to be notified when the player is defined.
 		IPlayer player = playerPresenter.getPlayer();
 		if (player == null)
@@ -95,16 +94,6 @@ public class ChannelPresenter extends PresenterBase implements IEventListener, I
 
 		soundModifierTextProperty = getPropertyHelper().languageProperty(EMessageCode.SOUND_MODIFIER, channel.getSoundModifier().getName());
 		soundModifierVisibility = new SimpleBooleanProperty(player != null && player.isAdmin());
-	}
-
-	@Override
-	public void onChannelAdded(IChannel channel) {
-		removeChannelVisibility.set(channelList.getChannels().size() > 1);
-	}
-
-	@Override
-	public void onChannelRemoved(IChannel channel) {
-		removeChannelVisibility.set(channelList.getChannels().size() > 1);
 	}
 
 	@Override
@@ -295,6 +284,16 @@ public class ChannelPresenter extends PresenterBase implements IEventListener, I
 			return;
 
 		dispatch(() -> players.remove(event.getPlayer()));
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onChannelAdded(ChannelAddPostEvent event) {
+		removeChannelVisibility.set(channelList.getChannels().size() > 1);
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onChannelRemoved(ChannelRemovePostEvent event) {
+		removeChannelVisibility.set(channelList.getChannels().size() > 1);
 	}
 
 	private void channelRemoveResponse(IResponse<ChannelRemovedEvent> response) {

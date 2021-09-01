@@ -3,6 +3,8 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 import java.util.HashMap;
 import java.util.Map;
 
+import fr.pederobien.mumble.client.event.ChannelAddPostEvent;
+import fr.pederobien.mumble.client.event.ChannelRemovePostEvent;
 import fr.pederobien.mumble.client.event.PlayerAddedToChannelEvent;
 import fr.pederobien.mumble.client.event.PlayerRemovedFromChannelEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
@@ -13,8 +15,11 @@ import fr.pederobien.mumble.client.interfaces.IChannel;
 import fr.pederobien.mumble.client.interfaces.IChannelList;
 import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 import fr.pederobien.mumble.client.interfaces.IResponse;
-import fr.pederobien.mumble.client.interfaces.observers.IObsChannelList;
 import fr.pederobien.mumble.client.interfaces.observers.IObsMumbleServer;
+import fr.pederobien.utils.event.EventHandler;
+import fr.pederobien.utils.event.EventManager;
+import fr.pederobien.utils.event.EventPriority;
+import fr.pederobien.utils.event.IEventListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert.AlertType;
@@ -23,7 +28,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
-public class ChannelListPresenter extends PresenterBase implements IObsChannelList, IObsMumbleServer, IObsChannelPresenter {
+public class ChannelListPresenter extends PresenterBase implements IEventListener, IObsMumbleServer, IObsChannelPresenter {
 	private PlayerPresenter playerPresenter;
 	private IMumbleServer server;
 	private IChannel selectedChannel;
@@ -37,18 +42,10 @@ public class ChannelListPresenter extends PresenterBase implements IObsChannelLi
 		channels = FXCollections.observableArrayList();
 		channelViews = new HashMap<IChannel, ChannelView>();
 
+		EventManager.registerListener(this);
+
 		server.addObserver(this);
 		server.getChannels(response -> manageChannelsResponse(response));
-	}
-
-	@Override
-	public void onChannelAdded(IChannel channel) {
-		dispatch(() -> channels.add(channel));
-	}
-
-	@Override
-	public void onChannelRemoved(IChannel channel) {
-		dispatch(() -> channels.remove(channel));
 	}
 
 	@Override
@@ -72,11 +69,7 @@ public class ChannelListPresenter extends PresenterBase implements IObsChannelLi
 			server.join(response -> manageJoinResponse(response));
 			server.getChannels(response -> manageChannelsResponse(response));
 		} else {
-			dispatch(() -> {
-				channels.clear();
-				if (channelList != null)
-					channelList.removeObserver(this);
-			});
+			dispatch(() -> channels.clear());
 		}
 	}
 
@@ -113,6 +106,7 @@ public class ChannelListPresenter extends PresenterBase implements IObsChannelLi
 	 */
 	public <T> Callback<ListView<T>, ListCell<T>> channelViewFactory(Color enteredColor) {
 		return listView -> getPropertyHelper().cellView(item -> {
+			// System.out.println("Item : " + ((IChannel) item).getName());
 			ChannelView view = channelViews.get(item);
 			if (view == null) {
 				ChannelPresenter presenter = new ChannelPresenter(playerPresenter, channelList, (IChannel) item);
@@ -124,15 +118,19 @@ public class ChannelListPresenter extends PresenterBase implements IObsChannelLi
 		}, enteredColor);
 	}
 
-	private void manageChannelsResponse(IResponse<IChannelList> response) {
-		if (response.hasFailed()) {
-			server.getChannels(r -> manageChannelsResponse(r));
-			return;
-		}
+	@EventHandler(priority = EventPriority.NORMAL)
+	private void onChannelAdded(ChannelAddPostEvent event) {
+		dispatch(() -> channels.add(event.getChannel()));
+	}
 
-		channelList = response.get();
-		channelList.addObserver(this);
-		dispatch(() -> channels.addAll(channelList.getChannels()));
+	@EventHandler(priority = EventPriority.NORMAL)
+	private void onChannelRemoved(ChannelRemovePostEvent event) {
+		dispatch(() -> channels.remove(event.getChannel()));
+	}
+
+	private void manageChannelsResponse(IResponse<IChannelList> response) {
+		if (response.hasFailed())
+			System.out.println(response.getErrorCode().getMessage());
 	}
 
 	private void manageJoinResponse(IResponse<Boolean> response) {

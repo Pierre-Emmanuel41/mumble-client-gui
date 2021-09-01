@@ -110,11 +110,8 @@ public class RenameChannelPresenter extends OkCancelPresenter {
 		boolean isChannelNameChanged = !channel.getName().equals(channelNameProperty.get());
 		boolean isChannelNameUnique = true;
 
-		for (IChannel channel : channelList.getChannels())
-			if (channel.getName().equals(channelName)) {
-				isChannelNameUnique = false;
-				break;
-			}
+		if (channelList.getChannels().get(channelName) != null)
+			isChannelNameUnique = false;
 
 		if (!isChannelNameChanged) {
 			okDisableProperty.set(true);

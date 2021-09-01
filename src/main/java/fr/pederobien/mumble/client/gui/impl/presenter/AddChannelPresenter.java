@@ -6,7 +6,6 @@ import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
 import fr.pederobien.mumble.client.gui.impl.generic.OkCancelPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleTooltipProperty;
-import fr.pederobien.mumble.client.interfaces.IChannel;
 import fr.pederobien.mumble.client.interfaces.IChannelList;
 import fr.pederobien.mumble.client.interfaces.IResponse;
 import javafx.beans.property.BooleanProperty;
@@ -113,11 +112,8 @@ public class AddChannelPresenter extends OkCancelPresenter {
 		boolean isChannelNameWithoutSpaces = !channelName.contains(" ");
 		boolean isChannelNameUnique = true;
 
-		for (IChannel channel : channelList.getChannels())
-			if (channel.getName().equals(channelName)) {
-				isChannelNameUnique = false;
-				break;
-			}
+		if (channelList.getChannels().get(channelName) != null)
+			isChannelNameUnique = false;
 
 		if (isChannelNameLengthOk && isChannelNameUnique && isChannelNameWithoutSpaces) {
 			channelNameBorderProperty.set(Border.EMPTY);
