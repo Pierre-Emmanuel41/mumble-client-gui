@@ -5,6 +5,7 @@ import fr.pederobien.mumble.client.event.ChannelNameChangePostEvent;
 import fr.pederobien.mumble.client.event.ChannelRemovePostEvent;
 import fr.pederobien.mumble.client.event.ChannelRemovedEvent;
 import fr.pederobien.mumble.client.event.PlayerAddToChannelPostEvent;
+import fr.pederobien.mumble.client.event.PlayerAdminStatusChangeEvent;
 import fr.pederobien.mumble.client.event.PlayerRemoveFromChannelPostEvent;
 import fr.pederobien.mumble.client.event.SoundModifierNameChangePostEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
@@ -21,7 +22,6 @@ import fr.pederobien.mumble.client.interfaces.IChannelList;
 import fr.pederobien.mumble.client.interfaces.IOtherPlayer;
 import fr.pederobien.mumble.client.interfaces.IPlayer;
 import fr.pederobien.mumble.client.interfaces.IResponse;
-import fr.pederobien.mumble.client.interfaces.observers.IObsPlayer;
 import fr.pederobien.utils.IObservable;
 import fr.pederobien.utils.Observable;
 import fr.pederobien.utils.event.EventHandler;
@@ -72,12 +72,7 @@ public class ChannelPresenter extends PresenterBase implements IEventListener, I
 
 		EventManager.registerListener(this);
 
-		// In order to be notified when the player is defined.
 		IPlayer player = playerPresenter.getPlayer();
-		if (player == null)
-			playerPresenter.addObserver(this);
-		else
-			player.addObserver(new InternalObsPlayer());
 
 		observers = new Observable<IObsChannelPresenter>();
 		players = FXCollections.observableArrayList(channel.getPlayers().values());
@@ -98,8 +93,6 @@ public class ChannelPresenter extends PresenterBase implements IEventListener, I
 
 	@Override
 	public void onPlayerDefined(IPlayer player) {
-		// Observing this player in order to perform gui update when the player admin status changes.
-		player.addObserver(new InternalObsPlayer());
 		addChannelVisibility.set(player.isAdmin());
 		removeChannelVisibility.set(player.isAdmin() && channelList.getChannels().size() > 1);
 		renameChannelVisibility.set(player.isAdmin());
@@ -287,7 +280,7 @@ public class ChannelPresenter extends PresenterBase implements IEventListener, I
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void onChannelAdded(ChannelAddPostEvent event) {
+	private void onChannelAdded(ChannelAddPostEvent event) {
 		if (!event.getChannelList().equals(channelList))
 			return;
 
@@ -295,11 +288,19 @@ public class ChannelPresenter extends PresenterBase implements IEventListener, I
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void onChannelRemoved(ChannelRemovePostEvent event) {
+	private void onChannelRemoved(ChannelRemovePostEvent event) {
 		if (!event.getChannelList().equals(channelList))
 			return;
 
 		removeChannelVisibility.set(channelList.getChannels().size() > 1);
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	private void onAdminStatusChanged(PlayerAdminStatusChangeEvent event) {
+		addChannelVisibility.set(event.isAdmin());
+		removeChannelVisibility.set(event.isAdmin() && channelList.getChannels().size() > 1);
+		renameChannelVisibility.set(event.isAdmin());
+		soundModifierVisibility.set(event.isAdmin());
 	}
 
 	private void channelRemoveResponse(IResponse<ChannelRemovedEvent> response) {
@@ -313,35 +314,5 @@ public class ChannelPresenter extends PresenterBase implements IEventListener, I
 			alertPresenter.setContent(ErrorCodeWrapper.getByErrorCode(response.getErrorCode()).getMessageCode());
 			alertPresenter.getAlert().show();
 		});
-	}
-
-	private class InternalObsPlayer implements IObsPlayer {
-
-		@Override
-		public void onMuteChanged(boolean isMute) {
-
-		}
-
-		@Override
-		public void onDeafenChanged(boolean isDeafen) {
-
-		}
-
-		@Override
-		public void onConnectionStatusChanged(boolean isOnline) {
-
-		}
-
-		@Override
-		public void onAdminStatusChanged(boolean isAdmin) {
-			addChannelVisibility.set(isAdmin);
-			removeChannelVisibility.set(isAdmin && channelList.getChannels().size() > 1);
-			renameChannelVisibility.set(isAdmin);
-		}
-
-		@Override
-		public void onChannelChanged(IChannel channel) {
-
-		}
 	}
 }

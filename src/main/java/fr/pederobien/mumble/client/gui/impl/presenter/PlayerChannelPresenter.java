@@ -2,18 +2,22 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import java.io.IOException;
 
+import fr.pederobien.mumble.client.event.OtherPlayerDeafenPostEvent;
+import fr.pederobien.mumble.client.event.OtherPlayerMutePostEvent;
+import fr.pederobien.mumble.client.event.PlayerAdminStatusChangeEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.environment.Environments;
 import fr.pederobien.mumble.client.gui.environment.Variables;
 import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsPlayerPresenter;
-import fr.pederobien.mumble.client.interfaces.IChannel;
 import fr.pederobien.mumble.client.interfaces.IOtherPlayer;
 import fr.pederobien.mumble.client.interfaces.IPlayer;
 import fr.pederobien.mumble.client.interfaces.IResponse;
-import fr.pederobien.mumble.client.interfaces.observers.IObsCommonPlayer;
-import fr.pederobien.mumble.client.interfaces.observers.IObsPlayer;
+import fr.pederobien.utils.event.EventHandler;
+import fr.pederobien.utils.event.EventManager;
+import fr.pederobien.utils.event.EventPriority;
+import fr.pederobien.utils.event.IEventListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -21,7 +25,7 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 
-public class PlayerChannelPresenter extends PresenterBase implements IObsPlayerPresenter {
+public class PlayerChannelPresenter extends PresenterBase implements IEventListener, IObsPlayerPresenter {
 	private PlayerPresenter playerPresenter;
 	private IOtherPlayer otherPlayer;
 	private StringProperty playerNameProperty;
@@ -38,16 +42,6 @@ public class PlayerChannelPresenter extends PresenterBase implements IObsPlayerP
 		this.playerPresenter = playerPresenter;
 		this.otherPlayer = otherPlayer;
 
-		// In order to be notified when the player is defined.
-		IPlayer player = playerPresenter.getPlayer();
-		if (player == null)
-			playerPresenter.addObserver(this);
-		else
-			player.addObserver(new InternalPlayerObserver());
-
-		// Observing this other player in order to perform gui update when the player mute and deafen status changes.
-		otherPlayer.addObserver(new InternalOtherPlayerObserver());
-
 		playerNameProperty = new SimpleStringProperty(otherPlayer.getName());
 		isPlayerMute = new SimpleBooleanProperty(otherPlayer.isMute());
 		isPlayerDeafen = new SimpleBooleanProperty(otherPlayer.isDeafen());
@@ -59,17 +53,17 @@ public class PlayerChannelPresenter extends PresenterBase implements IObsPlayerP
 			e.printStackTrace();
 		}
 
-		muteOrUnmuteTextProperty = getPropertyHelper().languageProperty(EMessageCode.MUTE_TOOLTIP);
-		muteOrUnmuteVisibleProperty = new SimpleBooleanProperty(player != null && player.isAdmin());
+		EventManager.registerListener(this);
 
-		kickPlayerTextProperty = getPropertyHelper().languageProperty(EMessageCode.KICK_PLAYER, player.getName());
-		kickPlayerVisiblity = new SimpleBooleanProperty(player != null && player.isAdmin());
+		muteOrUnmuteTextProperty = getPropertyHelper().languageProperty(EMessageCode.MUTE_TOOLTIP);
+		muteOrUnmuteVisibleProperty = new SimpleBooleanProperty(playerPresenter.getPlayer() != null && playerPresenter.getPlayer().isAdmin());
+
+		kickPlayerTextProperty = getPropertyHelper().languageProperty(EMessageCode.KICK_PLAYER, playerPresenter.getPlayer().getName());
+		kickPlayerVisiblity = new SimpleBooleanProperty(playerPresenter.getPlayer() != null && playerPresenter.getPlayer().isAdmin());
 	}
 
 	@Override
 	public void onPlayerDefined(IPlayer player) {
-		// Observing this player in order to perform gui update when the player admin status changes.
-		player.addObserver(new InternalPlayerObserver());
 		muteOrUnmuteVisibleProperty.set(!playerPresenter.getPlayer().getName().equals(player.getName()));
 		kickPlayerVisiblity.set(!playerPresenter.getPlayer().getName().equals(player.getName()) && playerPresenter.getPlayer().isAdmin());
 	}
@@ -172,6 +166,30 @@ public class PlayerChannelPresenter extends PresenterBase implements IObsPlayerP
 			muteOrUnmuteTextProperty.setCode(otherPlayer.isMute() ? EMessageCode.UNMUTE_TOOLTIP : EMessageCode.MUTE_TOOLTIP);
 	}
 
+	@EventHandler(priority = EventPriority.NORMAL)
+	private void onAdminStatusChanged(PlayerAdminStatusChangeEvent event) {
+		if (!event.getPlayer().equals(playerPresenter.getPlayer()))
+			return;
+
+		dispatch(() -> kickPlayerVisiblity.set(!playerPresenter.getPlayer().getName().equals(otherPlayer.getName()) && playerPresenter.getPlayer().isAdmin()));
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	private void onMuteChanged(OtherPlayerMutePostEvent event) {
+		if (!event.getPlayer().equals(otherPlayer))
+			return;
+
+		dispatch(() -> isPlayerMute.set(event.isMute()));
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	private void onDeafenChanged(OtherPlayerDeafenPostEvent event) {
+		if (!event.getPlayer().equals(otherPlayer))
+			return;
+
+		dispatch(() -> isPlayerDeafen.set(event.isDeafen()));
+	}
+
 	private void onKickPlayerResponse(IResponse<Boolean> response) {
 		if (!response.hasFailed())
 			return;
@@ -183,46 +201,5 @@ public class PlayerChannelPresenter extends PresenterBase implements IObsPlayerP
 			alertPresenter.setContent(ErrorCodeWrapper.getByErrorCode(response.getErrorCode()).getMessageCode());
 			alertPresenter.getAlert().showAndWait();
 		});
-	}
-
-	private class InternalPlayerObserver implements IObsPlayer {
-
-		@Override
-		public void onMuteChanged(boolean isMute) {
-
-		}
-
-		@Override
-		public void onDeafenChanged(boolean isDeafen) {
-
-		}
-
-		@Override
-		public void onConnectionStatusChanged(boolean isOnline) {
-
-		}
-
-		@Override
-		public void onAdminStatusChanged(boolean isAdmin) {
-			dispatch(() -> kickPlayerVisiblity.set(!playerPresenter.getPlayer().getName().equals(otherPlayer.getName()) && playerPresenter.getPlayer().isAdmin()));
-		}
-
-		@Override
-		public void onChannelChanged(IChannel channel) {
-
-		}
-	}
-
-	private class InternalOtherPlayerObserver implements IObsCommonPlayer {
-
-		@Override
-		public void onMuteChanged(boolean isMute) {
-			dispatch(() -> isPlayerMute.set(isMute));
-		}
-
-		@Override
-		public void onDeafenChanged(boolean isDeafen) {
-			dispatch(() -> isPlayerDeafen.set(isDeafen));
-		}
 	}
 }

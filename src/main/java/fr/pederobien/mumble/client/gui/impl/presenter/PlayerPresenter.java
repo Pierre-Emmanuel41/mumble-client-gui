@@ -3,6 +3,10 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 import java.io.IOException;
 
 import fr.pederobien.dictionary.interfaces.IMessageCode;
+import fr.pederobien.mumble.client.event.PlayerChannelChangePostEvent;
+import fr.pederobien.mumble.client.event.PlayerDeafenChangePostEvent;
+import fr.pederobien.mumble.client.event.PlayerMuteChangePostEvent;
+import fr.pederobien.mumble.client.event.PlayerOnlineStatusChangeEvent;
 import fr.pederobien.mumble.client.event.PlayerRemovedFromChannelEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.environment.Environments;
@@ -12,13 +16,15 @@ import fr.pederobien.mumble.client.gui.impl.properties.SimpleTooltipProperty;
 import fr.pederobien.mumble.client.gui.impl.view.MainView;
 import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsPlayerPresenter;
 import fr.pederobien.mumble.client.interfaces.IAudioConnection;
-import fr.pederobien.mumble.client.interfaces.IChannel;
 import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 import fr.pederobien.mumble.client.interfaces.IPlayer;
 import fr.pederobien.mumble.client.interfaces.IResponse;
-import fr.pederobien.mumble.client.interfaces.observers.IObsPlayer;
 import fr.pederobien.utils.IObservable;
 import fr.pederobien.utils.Observable;
+import fr.pederobien.utils.event.EventHandler;
+import fr.pederobien.utils.event.EventManager;
+import fr.pederobien.utils.event.EventPriority;
+import fr.pederobien.utils.event.IEventListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -30,7 +36,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class PlayerPresenter extends PresenterBase implements IObsPlayer, IObservable<IObsPlayerPresenter> {
+public class PlayerPresenter extends PresenterBase implements IEventListener, IObservable<IObsPlayerPresenter> {
 	private IMumbleServer server;
 	private IPlayer player;
 	private IAudioConnection audioConnection;
@@ -90,43 +96,6 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer, IObser
 	@Override
 	public void removeObserver(IObsPlayerPresenter obs) {
 		observers.removeObserver(obs);
-	}
-
-	@Override
-	public void onConnectionStatusChanged(boolean isOnline) {
-		dispatch(() -> {
-			playerNameProperty.setValue(player.getName());
-			playerStatusProperty.setCode(getPlayerStatusCode());
-			playerConnectedProperty.setValue(isOnline);
-		});
-	}
-
-	@Override
-	public void onAdminStatusChanged(boolean isAdmin) {
-
-	}
-
-	@Override
-	public void onChannelChanged(IChannel channel) {
-		if (channel == null)
-			audioConnection.disconnect();
-		else {
-			player.setMute(false);
-			player.setDeafen(false);
-			audioConnection.connect();
-		}
-
-		playerCanDisconnectFromChannel.setValue(channel != null);
-	}
-
-	@Override
-	public void onMuteChanged(boolean isMute) {
-		updateMuteOrUnmute();
-	}
-
-	@Override
-	public void onDeafenChanged(boolean isDeafen) {
-		updateDeafenOrUndeafen();
 	}
 
 	/**
@@ -262,15 +231,55 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer, IObser
 	 */
 	public void disconnectFromServer() {
 		server.leave();
-		player.removeObserver(this);
+		EventManager.unregisterListener(this);
 		getPrimaryStage().getScene().setRoot(new MainView(new MainPresenter()).getRoot());
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	private void onPlayerOnlineStatusChange(PlayerOnlineStatusChangeEvent event) {
+		if (!event.getPlayer().equals(player))
+			return;
+
+		updatePlayerProperties(event.isOnline());
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	private void onChannelChanged(PlayerChannelChangePostEvent event) {
+		if (!event.getPlayer().equals(player))
+			return;
+
+		if (event.getPlayer().getChannel() == null)
+			audioConnection.disconnect();
+		else {
+			player.setMute(false);
+			player.setDeafen(false);
+			audioConnection.connect();
+		}
+
+		playerCanDisconnectFromChannel.setValue(event.getPlayer().getChannel() != null);
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	private void onMuteChanged(PlayerMuteChangePostEvent event) {
+		if (!event.getPlayer().equals(player))
+			return;
+
+		updateMuteOrUnmute();
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	private void onDeafenChanged(PlayerDeafenChangePostEvent event) {
+		if (!event.getPlayer().equals(player))
+			return;
+
+		updateDeafenOrUndeafen();
 	}
 
 	private void playerResponse(IResponse<IPlayer> response) {
 		this.player = response.get();
-		player.addObserver(this);
+		EventManager.registerListener(this);
 		observers.notifyObservers(obs -> obs.onPlayerDefined(player));
-		onConnectionStatusChanged(player.isOnline());
+		updatePlayerProperties(player.isOnline());
 	}
 
 	private IMessageCode getPlayerStatusCode() {
@@ -301,6 +310,14 @@ public class PlayerPresenter extends PresenterBase implements IObsPlayer, IObser
 		dispatch(() -> {
 			deafenOrUndeafenGraphicProperty.set(imageView);
 			deafenOrUndeafenTooltipProperty.setMessageCode(isDeafen ? EMessageCode.UNDEAFEN_TOOLTIP : EMessageCode.DEAFEN_TOOLTIP);
+		});
+	}
+
+	private void updatePlayerProperties(boolean isOnline) {
+		dispatch(() -> {
+			playerNameProperty.setValue(player.getName());
+			playerStatusProperty.setCode(getPlayerStatusCode());
+			playerConnectedProperty.setValue(isOnline);
 		});
 	}
 }
