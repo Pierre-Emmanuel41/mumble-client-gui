@@ -7,6 +7,7 @@ import fr.pederobien.mumble.client.event.ChannelAddPostEvent;
 import fr.pederobien.mumble.client.event.ChannelRemovePostEvent;
 import fr.pederobien.mumble.client.event.PlayerAddedToChannelEvent;
 import fr.pederobien.mumble.client.event.PlayerRemovedFromChannelEvent;
+import fr.pederobien.mumble.client.event.ServerReachableChangeEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
 import fr.pederobien.mumble.client.gui.impl.view.ChannelView;
@@ -15,7 +16,6 @@ import fr.pederobien.mumble.client.interfaces.IChannel;
 import fr.pederobien.mumble.client.interfaces.IChannelList;
 import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 import fr.pederobien.mumble.client.interfaces.IResponse;
-import fr.pederobien.mumble.client.interfaces.observers.IObsMumbleServer;
 import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
 import fr.pederobien.utils.event.EventPriority;
@@ -28,9 +28,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
-public class ChannelListPresenter extends PresenterBase implements IEventListener, IObsMumbleServer, IObsChannelPresenter {
+public class ChannelListPresenter extends PresenterBase implements IEventListener, IObsChannelPresenter {
 	private PlayerPresenter playerPresenter;
-	private IMumbleServer server;
 	private IChannel selectedChannel;
 	private IChannelList channelList;
 	private ObservableList<Object> channels;
@@ -38,39 +37,12 @@ public class ChannelListPresenter extends PresenterBase implements IEventListene
 
 	public ChannelListPresenter(PlayerPresenter playerPresenter, IMumbleServer server) {
 		this.playerPresenter = playerPresenter;
-		this.server = server;
 		channels = FXCollections.observableArrayList();
 		channelViews = new HashMap<IChannel, ChannelView>();
 
 		EventManager.registerListener(this);
 
-		server.addObserver(this);
 		server.getChannels(response -> manageChannelsResponse(response));
-	}
-
-	@Override
-	public void onNameChanged(IMumbleServer server, String oldName, String newName) {
-
-	}
-
-	@Override
-	public void onIpAddressChanged(IMumbleServer server, String oldAddress, String newAddress) {
-
-	}
-
-	@Override
-	public void onPortChanged(IMumbleServer server, int oldPort, int newPort) {
-
-	}
-
-	@Override
-	public void onReachableStatusChanged(IMumbleServer server, boolean isReachable) {
-		if (isReachable) {
-			server.join(response -> manageJoinResponse(response));
-			server.getChannels(response -> manageChannelsResponse(response));
-		} else {
-			dispatch(() -> channels.clear());
-		}
 	}
 
 	@Override
@@ -120,12 +92,28 @@ public class ChannelListPresenter extends PresenterBase implements IEventListene
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	private void onChannelAdded(ChannelAddPostEvent event) {
+		if (!event.getChannelList().equals(channelList))
+			return;
+
 		dispatch(() -> channels.add(event.getChannel()));
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	private void onChannelRemoved(ChannelRemovePostEvent event) {
+		if (!event.getChannelList().equals(channelList))
+			return;
+
 		dispatch(() -> channels.remove(event.getChannel()));
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	private void onReachableStatusChanged(ServerReachableChangeEvent event) {
+		if (event.isReachable()) {
+			event.getServer().join(response -> manageJoinResponse(response));
+			event.getServer().getChannels(response -> manageChannelsResponse(response));
+		} else {
+			dispatch(() -> channels.clear());
+		}
 	}
 
 	private void manageChannelsResponse(IResponse<IChannelList> response) {

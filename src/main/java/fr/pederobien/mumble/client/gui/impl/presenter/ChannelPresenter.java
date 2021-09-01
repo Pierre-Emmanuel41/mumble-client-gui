@@ -288,11 +288,17 @@ public class ChannelPresenter extends PresenterBase implements IEventListener, I
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onChannelAdded(ChannelAddPostEvent event) {
+		if (!event.getChannelList().equals(channelList))
+			return;
+
 		removeChannelVisibility.set(channelList.getChannels().size() > 1);
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onChannelRemoved(ChannelRemovePostEvent event) {
+		if (!event.getChannelList().equals(channelList))
+			return;
+
 		removeChannelVisibility.set(channelList.getChannels().size() > 1);
 	}
 
