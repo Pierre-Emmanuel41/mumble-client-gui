@@ -14,13 +14,10 @@ import fr.pederobien.mumble.client.gui.environment.Variables;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleTooltipProperty;
 import fr.pederobien.mumble.client.gui.impl.view.MainView;
-import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsPlayerPresenter;
 import fr.pederobien.mumble.client.interfaces.IAudioConnection;
 import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 import fr.pederobien.mumble.client.interfaces.IPlayer;
 import fr.pederobien.mumble.client.interfaces.IResponse;
-import fr.pederobien.utils.IObservable;
-import fr.pederobien.utils.Observable;
 import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
 import fr.pederobien.utils.event.EventPriority;
@@ -36,11 +33,10 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class PlayerPresenter extends PresenterBase implements IEventListener, IObservable<IObsPlayerPresenter> {
+public class PlayerPresenter extends PresenterBase implements IEventListener {
 	private IMumbleServer server;
 	private IPlayer player;
 	private IAudioConnection audioConnection;
-	private Observable<IObsPlayerPresenter> observers;
 
 	private StringProperty playerNameProperty;
 	private SimpleLanguageProperty playerStatusProperty;
@@ -60,8 +56,10 @@ public class PlayerPresenter extends PresenterBase implements IEventListener, IO
 
 	public PlayerPresenter(IMumbleServer server) {
 		this.server = server;
-		observers = new Observable<IObsPlayerPresenter>();
-		server.getPlayer(response -> playerResponse(response));
+
+		EventManager.registerListener(this);
+
+		player = server.getPlayer();
 		audioConnection = server.getAudioConnection();
 
 		playerNameProperty = new SimpleStringProperty("");
@@ -86,16 +84,8 @@ public class PlayerPresenter extends PresenterBase implements IEventListener, IO
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
 
-	@Override
-	public void addObserver(IObsPlayerPresenter obs) {
-		observers.addObserver(obs);
-	}
-
-	@Override
-	public void removeObserver(IObsPlayerPresenter obs) {
-		observers.removeObserver(obs);
+		updatePlayerProperties(player.isOnline());
 	}
 
 	/**
@@ -273,13 +263,6 @@ public class PlayerPresenter extends PresenterBase implements IEventListener, IO
 			return;
 
 		updateDeafenOrUndeafen();
-	}
-
-	private void playerResponse(IResponse<IPlayer> response) {
-		this.player = response.get();
-		EventManager.registerListener(this);
-		observers.notifyObservers(obs -> obs.onPlayerDefined(player));
-		updatePlayerProperties(player.isOnline());
 	}
 
 	private IMessageCode getPlayerStatusCode() {

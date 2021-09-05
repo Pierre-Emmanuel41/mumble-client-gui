@@ -9,9 +9,8 @@ public class ServerChannelsPresenter extends PresenterBase {
 	private ChannelListView channelListView;
 
 	public ServerChannelsPresenter(IMumbleServer server) {
-		PlayerPresenter playerPresenter = new PlayerPresenter(server);
-		playerView = new PlayerView(playerPresenter);
-		channelListView = new ChannelListView(new ChannelListPresenter(playerPresenter, server));
+		playerView = new PlayerView(new PlayerPresenter(server));
+		channelListView = new ChannelListView(new ChannelListPresenter(server));
 	}
 
 	/**

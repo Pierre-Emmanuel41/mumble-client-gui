@@ -10,7 +10,7 @@ import fr.pederobien.mumble.client.gui.environment.Environments;
 import fr.pederobien.mumble.client.gui.environment.Variables;
 import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
-import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsPlayerPresenter;
+import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 import fr.pederobien.mumble.client.interfaces.IOtherPlayer;
 import fr.pederobien.mumble.client.interfaces.IPlayer;
 import fr.pederobien.mumble.client.interfaces.IResponse;
@@ -25,8 +25,8 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 
-public class PlayerChannelPresenter extends PresenterBase implements IEventListener, IObsPlayerPresenter {
-	private PlayerPresenter playerPresenter;
+public class PlayerChannelPresenter extends PresenterBase implements IEventListener {
+	private IPlayer player;
 	private IOtherPlayer otherPlayer;
 	private StringProperty playerNameProperty;
 	private BooleanProperty isPlayerMute, isPlayerDeafen;
@@ -38,8 +38,8 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 	private SimpleLanguageProperty kickPlayerTextProperty;
 	private BooleanProperty kickPlayerVisiblity;
 
-	public PlayerChannelPresenter(PlayerPresenter playerPresenter, IOtherPlayer otherPlayer) {
-		this.playerPresenter = playerPresenter;
+	public PlayerChannelPresenter(IMumbleServer mumbleServer, IOtherPlayer otherPlayer) {
+		this.player = mumbleServer.getPlayer();
 		this.otherPlayer = otherPlayer;
 
 		playerNameProperty = new SimpleStringProperty(otherPlayer.getName());
@@ -56,16 +56,10 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 		EventManager.registerListener(this);
 
 		muteOrUnmuteTextProperty = getPropertyHelper().languageProperty(EMessageCode.MUTE_TOOLTIP);
-		muteOrUnmuteVisibleProperty = new SimpleBooleanProperty(playerPresenter.getPlayer() != null && playerPresenter.getPlayer().isAdmin());
+		muteOrUnmuteVisibleProperty = new SimpleBooleanProperty(player.isAdmin());
 
-		kickPlayerTextProperty = getPropertyHelper().languageProperty(EMessageCode.KICK_PLAYER, playerPresenter.getPlayer().getName());
-		kickPlayerVisiblity = new SimpleBooleanProperty(playerPresenter.getPlayer() != null && playerPresenter.getPlayer().isAdmin());
-	}
-
-	@Override
-	public void onPlayerDefined(IPlayer player) {
-		muteOrUnmuteVisibleProperty.set(!playerPresenter.getPlayer().getName().equals(player.getName()));
-		kickPlayerVisiblity.set(!playerPresenter.getPlayer().getName().equals(player.getName()) && playerPresenter.getPlayer().isAdmin());
+		kickPlayerTextProperty = getPropertyHelper().languageProperty(EMessageCode.KICK_PLAYER, mumbleServer.getPlayer().getName());
+		kickPlayerVisiblity = new SimpleBooleanProperty(player.isAdmin());
 	}
 
 	/**
@@ -168,10 +162,10 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	private void onAdminStatusChanged(PlayerAdminStatusChangeEvent event) {
-		if (!event.getPlayer().equals(playerPresenter.getPlayer()))
+		if (!event.getPlayer().equals(player))
 			return;
 
-		dispatch(() -> kickPlayerVisiblity.set(!playerPresenter.getPlayer().getName().equals(otherPlayer.getName()) && playerPresenter.getPlayer().isAdmin()));
+		dispatch(() -> kickPlayerVisiblity.set(!player.getName().equals(otherPlayer.getName()) && player.isAdmin()));
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)

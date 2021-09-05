@@ -16,11 +16,10 @@ import fr.pederobien.mumble.client.gui.impl.view.PlayerChannelView;
 import fr.pederobien.mumble.client.gui.impl.view.RenameChannelView;
 import fr.pederobien.mumble.client.gui.impl.view.SoundModifierView;
 import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsChannelPresenter;
-import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsPlayerPresenter;
 import fr.pederobien.mumble.client.interfaces.IChannel;
 import fr.pederobien.mumble.client.interfaces.IChannelList;
+import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 import fr.pederobien.mumble.client.interfaces.IOtherPlayer;
-import fr.pederobien.mumble.client.interfaces.IPlayer;
 import fr.pederobien.mumble.client.interfaces.IResponse;
 import fr.pederobien.utils.IObservable;
 import fr.pederobien.utils.Observable;
@@ -43,8 +42,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
-public class ChannelPresenter extends PresenterBase implements IEventListener, IObservable<IObsChannelPresenter>, IObsPlayerPresenter {
-	private PlayerPresenter playerPresenter;
+public class ChannelPresenter extends PresenterBase implements IEventListener, IObservable<IObsChannelPresenter> {
+	private IMumbleServer mumbleServer;
 	private IChannelList channelList;
 	private IChannel channel;
 	private Observable<IObsChannelPresenter> observers;
@@ -65,38 +64,28 @@ public class ChannelPresenter extends PresenterBase implements IEventListener, I
 	private SimpleLanguageProperty soundModifierTextProperty;
 	private BooleanProperty soundModifierVisibility;
 
-	public ChannelPresenter(PlayerPresenter playerPresenter, IChannelList channelList, IChannel channel) {
-		this.playerPresenter = playerPresenter;
-		this.channelList = channelList;
+	public ChannelPresenter(IMumbleServer mumbleServer, IChannel channel) {
+		this.mumbleServer = mumbleServer;
+		this.channelList = mumbleServer.getChannelList();
 		this.channel = channel;
 
 		EventManager.registerListener(this);
-
-		IPlayer player = playerPresenter.getPlayer();
 
 		observers = new Observable<IObsChannelPresenter>();
 		players = FXCollections.observableArrayList(channel.getPlayers().values());
 		channelNameProperty = new SimpleStringProperty(channel.getName());
 
 		addChannelTextProperty = getPropertyHelper().languageProperty(EMessageCode.ADD_CHANNEL);
-		addChannelVisibility = new SimpleBooleanProperty(player != null && player.isAdmin());
+		addChannelVisibility = new SimpleBooleanProperty(mumbleServer.getPlayer().isAdmin());
 
 		removeChannelTextProperty = getPropertyHelper().languageProperty(EMessageCode.REMOVE_CHANNEL);
-		removeChannelVisibility = new SimpleBooleanProperty(player != null && player.isAdmin() && channelList.getChannels().size() > 1);
+		removeChannelVisibility = new SimpleBooleanProperty(mumbleServer.getPlayer().isAdmin() && channelList.getChannels().size() > 1);
 
 		renameChannelTextProperty = getPropertyHelper().languageProperty(EMessageCode.RENAME_CHANNEL);
-		renameChannelVisibility = new SimpleBooleanProperty(player != null && player.isAdmin());
+		renameChannelVisibility = new SimpleBooleanProperty(mumbleServer.getPlayer().isAdmin());
 
 		soundModifierTextProperty = getPropertyHelper().languageProperty(EMessageCode.SOUND_MODIFIER, channel.getSoundModifier().getName());
-		soundModifierVisibility = new SimpleBooleanProperty(player != null && player.isAdmin());
-	}
-
-	@Override
-	public void onPlayerDefined(IPlayer player) {
-		addChannelVisibility.set(player.isAdmin());
-		removeChannelVisibility.set(player.isAdmin() && channelList.getChannels().size() > 1);
-		renameChannelVisibility.set(player.isAdmin());
-		soundModifierVisibility.set(player.isAdmin());
+		soundModifierVisibility = new SimpleBooleanProperty(mumbleServer.getPlayer().isAdmin());
 	}
 
 	@Override
@@ -134,7 +123,7 @@ public class ChannelPresenter extends PresenterBase implements IEventListener, I
 	 * @throws ClassCastException If the type of object used as model to create its view is not IOtherPlayer.
 	 */
 	public <T> Callback<ListView<T>, ListCell<T>> playerViewFactory(Color enteredColor) {
-		return listView -> getPropertyHelper().cellView(item -> new PlayerChannelView(new PlayerChannelPresenter(playerPresenter, (IOtherPlayer) item)).getRoot(),
+		return listView -> getPropertyHelper().cellView(item -> new PlayerChannelView(new PlayerChannelPresenter(mumbleServer, (IOtherPlayer) item)).getRoot(),
 				enteredColor);
 	}
 

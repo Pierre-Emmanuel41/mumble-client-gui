@@ -29,20 +29,21 @@ import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
 public class ChannelListPresenter extends PresenterBase implements IEventListener, IObsChannelPresenter {
-	private PlayerPresenter playerPresenter;
+	private IMumbleServer mumbleServer;
 	private IChannel selectedChannel;
 	private IChannelList channelList;
 	private ObservableList<Object> channels;
 	private Map<IChannel, ChannelView> channelViews;
 
-	public ChannelListPresenter(PlayerPresenter playerPresenter, IMumbleServer server) {
-		this.playerPresenter = playerPresenter;
+	public ChannelListPresenter(IMumbleServer mumbleServer) {
+		this.mumbleServer = mumbleServer;
 		channels = FXCollections.observableArrayList();
 		channelViews = new HashMap<IChannel, ChannelView>();
+		channelList = mumbleServer.getChannelList();
+		channels.addAll(channelList.getChannels().values());
 
 		EventManager.registerListener(this);
 
-		channelList = server.getChannels(response -> manageChannelsResponse(response));
 	}
 
 	@Override
@@ -78,10 +79,9 @@ public class ChannelListPresenter extends PresenterBase implements IEventListene
 	 */
 	public <T> Callback<ListView<T>, ListCell<T>> channelViewFactory(Color enteredColor) {
 		return listView -> getPropertyHelper().cellView(item -> {
-			// System.out.println("Item : " + ((IChannel) item).getName());
 			ChannelView view = channelViews.get(item);
 			if (view == null) {
-				ChannelPresenter presenter = new ChannelPresenter(playerPresenter, channelList, (IChannel) item);
+				ChannelPresenter presenter = new ChannelPresenter(mumbleServer, (IChannel) item);
 				presenter.addObserver(this);
 				view = new ChannelView(presenter);
 				channelViews.put((IChannel) item, view);
@@ -110,15 +110,10 @@ public class ChannelListPresenter extends PresenterBase implements IEventListene
 	private void onReachableStatusChanged(ServerReachableChangeEvent event) {
 		if (event.isReachable()) {
 			event.getServer().join(response -> manageJoinResponse(response));
-			event.getServer().getChannels(response -> manageChannelsResponse(response));
+			channelList = event.getServer().getChannelList();
 		} else {
 			dispatch(() -> channels.clear());
 		}
-	}
-
-	private void manageChannelsResponse(IResponse<IChannelList> response) {
-		if (response.hasFailed())
-			System.out.println(response.getErrorCode().getMessage());
 	}
 
 	private void manageJoinResponse(IResponse<Boolean> response) {
