@@ -11,6 +11,7 @@ import fr.pederobien.mumble.client.interfaces.IResponse;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.control.Alert.AlertType;
 
 public class ServerManagementPresenter extends PresenterBase implements IObsServerListPresenter {
 	// Join server -----------------------------------------------------
@@ -174,6 +175,11 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 	}
 
 	private void joinServerResponse(IResponse response) {
+		handleRequestFailed(response, AlertType.ERROR, EMessageCode.SERVER_JOIN_FAILED_TITLE, EMessageCode.SERVER_JOIN_FAILED_HEADER);
+
+		if (response.hasFailed())
+			return;
+
 		dispatch(() -> {
 			getPrimaryStage().getScene().setRoot(new ServerChannelsView(new ServerChannelsPresenter(selectedServer)).getRoot());
 			serverList.getServers().forEach(server -> {

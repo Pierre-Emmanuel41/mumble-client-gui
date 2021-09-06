@@ -28,6 +28,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Node;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -191,7 +192,7 @@ public class PlayerPresenter extends PresenterBase implements IEventListener {
 	 * Disconnect the player from its channel.
 	 */
 	public void disconnectFromChannel() {
-		player.getChannel().removePlayer(response -> removePlayerResponse(response));
+		player.getChannel().removePlayer(response -> removePlayer(response));
 	}
 
 	/**
@@ -268,9 +269,8 @@ public class PlayerPresenter extends PresenterBase implements IEventListener {
 		return player.isOnline() ? EMessageCode.PLAYER_ONLINE : EMessageCode.PLAYER_OFFLINE;
 	}
 
-	private void removePlayerResponse(IResponse response) {
-		if (response.hasFailed())
-			System.out.println(response.getErrorCode().getMessage());
+	private void removePlayer(IResponse response) {
+		handleRequestFailed(response, AlertType.ERROR, EMessageCode.HANG_UP_FAILED_TITLE, EMessageCode.HANG_UP_FAILED_HEADER);
 	}
 
 	private void updateMuteOrUnmute() {

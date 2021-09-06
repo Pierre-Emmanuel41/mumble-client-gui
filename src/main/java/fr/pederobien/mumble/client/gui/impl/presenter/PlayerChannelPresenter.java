@@ -151,9 +151,9 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 		if (response.hasFailed())
 			dispatch(() -> {
 				AlertPresenter alertPresenter = new AlertPresenter(AlertType.ERROR);
-				alertPresenter.setTitle(EMessageCode.CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE_TITLE, otherPlayer.getName());
-				alertPresenter.setHeader(EMessageCode.CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE, otherPlayer.getName());
-				alertPresenter.setContent(ErrorCodeWrapper.getByErrorCode(response.getErrorCode()).getMessageCode());
+				alertPresenter.title(EMessageCode.CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE_TITLE, otherPlayer.getName());
+				alertPresenter.header(EMessageCode.CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE, otherPlayer.getName());
+				alertPresenter.content(ErrorCodeWrapper.getByErrorCode(response.getErrorCode()).getMessageCode());
 				alertPresenter.getAlert().showAndWait();
 			});
 		else
@@ -185,15 +185,7 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 	}
 
 	private void onKickPlayerResponse(IResponse response) {
-		if (!response.hasFailed())
-			return;
-
-		dispatch(() -> {
-			AlertPresenter alertPresenter = new AlertPresenter(AlertType.ERROR);
-			alertPresenter.setTitle(EMessageCode.CANNOT_KICK_PLAYER_RESPONSE_TITLE, otherPlayer.getName());
-			alertPresenter.setHeader(EMessageCode.CANNOT_KICK_PLAYER_RESPONSE, otherPlayer.getName());
-			alertPresenter.setContent(ErrorCodeWrapper.getByErrorCode(response.getErrorCode()).getMessageCode());
-			alertPresenter.getAlert().showAndWait();
-		});
+		handleRequestFailed(response, AlertType.ERROR, p -> p.title(EMessageCode.CANNOT_KICK_PLAYER_RESPONSE_TITLE, otherPlayer.getName())
+				.header(EMessageCode.CANNOT_KICK_PLAYER_RESPONSE, otherPlayer.getName()));
 	}
 }

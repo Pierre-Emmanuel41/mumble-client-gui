@@ -7,7 +7,6 @@ import fr.pederobien.mumble.client.event.ChannelAddPostEvent;
 import fr.pederobien.mumble.client.event.ChannelRemovePostEvent;
 import fr.pederobien.mumble.client.event.ServerReachableChangeEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
-import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
 import fr.pederobien.mumble.client.gui.impl.view.ChannelView;
 import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsChannelPresenter;
 import fr.pederobien.mumble.client.interfaces.IChannel;
@@ -115,23 +114,15 @@ public class ChannelListPresenter extends PresenterBase implements IEventListene
 	}
 
 	private void manageJoinResponse(IResponse response) {
-		if (response.hasFailed())
-			System.out.println(response.getErrorCode().getMessage());
+		handleRequestFailed(response, AlertType.ERROR, EMessageCode.SERVER_JOIN_FAILED_TITLE, EMessageCode.SERVER_JOIN_FAILED_HEADER);
 	}
 
 	private void removePlayer(IResponse response) {
-		if (response.hasFailed())
-			System.out.println(response.getErrorCode().getMessage());
+		handleRequestFailed(response, AlertType.ERROR, EMessageCode.HANG_UP_FAILED_TITLE, EMessageCode.HANG_UP_FAILED_HEADER);
 	}
 
 	private void addPlayer(IResponse response) {
-		if (response.hasFailed())
-			dispatch(() -> {
-				AlertPresenter alertPresenter = new AlertPresenter(AlertType.INFORMATION);
-				alertPresenter.setTitle(EMessageCode.PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL_TITLE);
-				alertPresenter.setHeader(EMessageCode.PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL);
-				alertPresenter.setContent(ErrorCodeWrapper.getByErrorCode(response.getErrorCode()).getMessageCode());
-				alertPresenter.getAlert().showAndWait();
-			});
+		handleRequestFailed(response, AlertType.INFORMATION, EMessageCode.PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL_TITLE,
+				EMessageCode.PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL);
 	}
 }

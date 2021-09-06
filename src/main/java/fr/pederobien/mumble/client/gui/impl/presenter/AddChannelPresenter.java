@@ -1,7 +1,6 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
-import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
 import fr.pederobien.mumble.client.gui.impl.generic.OkCancelPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleTooltipProperty;
@@ -124,15 +123,6 @@ public class AddChannelPresenter extends OkCancelPresenter {
 	}
 
 	private void channelNameResponse(IResponse response) {
-		if (!response.hasFailed())
-			return;
-
-		dispatch(() -> {
-			AlertPresenter alertPresenter = new AlertPresenter(AlertType.ERROR);
-			alertPresenter.setTitle(EMessageCode.ADD_CHANNEL_TITLE);
-			alertPresenter.setHeader(EMessageCode.ADD_CHANNEL_NAME_RESPONSE);
-			alertPresenter.setContent(ErrorCodeWrapper.getByErrorCode(response.getErrorCode()).getMessageCode());
-			alertPresenter.getAlert().show();
-		});
+		handleRequestFailed(response, AlertType.ERROR, EMessageCode.ADD_CHANNEL_TITLE, EMessageCode.ADD_CHANNEL_NAME_RESPONSE);
 	}
 }

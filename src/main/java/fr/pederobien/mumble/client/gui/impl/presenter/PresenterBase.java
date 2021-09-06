@@ -2,11 +2,16 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
+import fr.pederobien.dictionary.interfaces.IMessageCode;
 import fr.pederobien.mumble.client.gui.Main;
+import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
 import fr.pederobien.mumble.client.gui.impl.properties.PropertyHelper;
+import fr.pederobien.mumble.client.interfaces.IResponse;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
@@ -76,5 +81,45 @@ public abstract class PresenterBase {
 	 */
 	protected void dispatch(Runnable runnable) {
 		Platform.runLater(runnable);
+	}
+
+	/**
+	 * Display an alert box if and only if the request failed.
+	 * 
+	 * @param response  The response returned by the server.
+	 * @param alertType The type of alert.
+	 * @param title     The message code associated to the title of the alert box.
+	 * @param header    The message code associated to the header of the alert box.
+	 */
+	protected void handleRequestFailed(IResponse response, AlertType alertType, IMessageCode title, IMessageCode header) {
+		if (!response.hasFailed())
+			return;
+
+		dispatch(() -> {
+			AlertPresenter alertPresenter = new AlertPresenter(alertType);
+			alertPresenter.title(title);
+			alertPresenter.header(header);
+			alertPresenter.content(ErrorCodeWrapper.getByErrorCode(response.getErrorCode()).getMessageCode());
+			alertPresenter.getAlert().show();
+		});
+	}
+
+	/**
+	 * Display an alert box if and only if the request failed.
+	 * 
+	 * @param response  The response returned by the server.
+	 * @param alertType The type of alert.
+	 * @param consumer  The consumer that set the title and the header message code of the alert box.
+	 */
+	protected void handleRequestFailed(IResponse response, AlertType alertType, Consumer<AlertPresenter> consumer) {
+		if (!response.hasFailed())
+			return;
+
+		dispatch(() -> {
+			AlertPresenter alertPresenter = new AlertPresenter(alertType);
+			consumer.accept(alertPresenter);
+			alertPresenter.content(ErrorCodeWrapper.getByErrorCode(response.getErrorCode()).getMessageCode());
+			alertPresenter.getAlert().show();
+		});
 	}
 }

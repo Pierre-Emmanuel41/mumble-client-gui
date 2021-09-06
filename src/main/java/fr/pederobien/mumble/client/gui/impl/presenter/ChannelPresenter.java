@@ -8,7 +8,6 @@ import fr.pederobien.mumble.client.event.PlayerAdminStatusChangeEvent;
 import fr.pederobien.mumble.client.event.PlayerRemoveFromChannelPostEvent;
 import fr.pederobien.mumble.client.event.SoundModifierNameChangePostEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
-import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.AddChannelView;
 import fr.pederobien.mumble.client.gui.impl.view.PlayerChannelView;
@@ -185,10 +184,8 @@ public class ChannelPresenter extends PresenterBase implements IEventListener, I
 	 */
 	public void onRemoveChannel() {
 		AlertPresenter alertPresenter = new AlertPresenter(AlertType.CONFIRMATION);
-		alertPresenter.setTitle(EMessageCode.REMOVE_CHANNEL_TITLE, channel.getName());
-		alertPresenter.setHeader(EMessageCode.REMOVE_CHANNEL_CONFIRMATION, channel.getName());
-		alertPresenter.setContent(EMessageCode.REMOVE_CHANNEL_EXPLANATION);
-		alertPresenter.getAlert().showAndWait().ifPresent(buttonType -> {
+		alertPresenter.title(EMessageCode.REMOVE_CHANNEL_TITLE, channel.getName()).header(EMessageCode.REMOVE_CHANNEL_CONFIRMATION, channel.getName());
+		alertPresenter.content(EMessageCode.REMOVE_CHANNEL_EXPLANATION).getAlert().showAndWait().ifPresent(buttonType -> {
 			if (buttonType != ButtonType.OK)
 				return;
 			channelList.removeChannel(channel.getName(), response -> channelRemoveResponse(response));
@@ -292,15 +289,7 @@ public class ChannelPresenter extends PresenterBase implements IEventListener, I
 	}
 
 	private void channelRemoveResponse(IResponse response) {
-		if (!response.hasFailed())
-			return;
-
-		dispatch(() -> {
-			AlertPresenter alertPresenter = new AlertPresenter(AlertType.ERROR);
-			alertPresenter.setTitle(EMessageCode.REMOVE_CHANNEL_TITLE, channel.getName());
-			alertPresenter.setHeader(EMessageCode.REMOVE_CHANNEL_RESPONSE, channel.getName());
-			alertPresenter.setContent(ErrorCodeWrapper.getByErrorCode(response.getErrorCode()).getMessageCode());
-			alertPresenter.getAlert().show();
-		});
+		handleRequestFailed(response, AlertType.ERROR,
+				p -> p.title(EMessageCode.REMOVE_CHANNEL_TITLE, channel.getName()).header(EMessageCode.REMOVE_CHANNEL_RESPONSE, channel.getName()));
 	}
 }
