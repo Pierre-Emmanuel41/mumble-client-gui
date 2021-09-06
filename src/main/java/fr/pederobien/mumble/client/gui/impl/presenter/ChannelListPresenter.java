@@ -5,8 +5,6 @@ import java.util.Map;
 
 import fr.pederobien.mumble.client.event.ChannelAddPostEvent;
 import fr.pederobien.mumble.client.event.ChannelRemovePostEvent;
-import fr.pederobien.mumble.client.event.PlayerAddedToChannelEvent;
-import fr.pederobien.mumble.client.event.PlayerRemovedFromChannelEvent;
 import fr.pederobien.mumble.client.event.ServerReachableChangeEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
@@ -116,17 +114,17 @@ public class ChannelListPresenter extends PresenterBase implements IEventListene
 		}
 	}
 
-	private void manageJoinResponse(IResponse<Boolean> response) {
+	private void manageJoinResponse(IResponse response) {
 		if (response.hasFailed())
 			System.out.println(response.getErrorCode().getMessage());
 	}
 
-	private void removePlayer(IResponse<PlayerRemovedFromChannelEvent> response) {
+	private void removePlayer(IResponse response) {
 		if (response.hasFailed())
 			System.out.println(response.getErrorCode().getMessage());
 	}
 
-	private void addPlayer(IResponse<PlayerAddedToChannelEvent> response) {
+	private void addPlayer(IResponse response) {
 		if (response.hasFailed())
 			dispatch(() -> {
 				AlertPresenter alertPresenter = new AlertPresenter(AlertType.INFORMATION);

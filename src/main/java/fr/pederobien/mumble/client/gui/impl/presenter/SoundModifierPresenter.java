@@ -84,7 +84,7 @@ public class SoundModifierPresenter extends OkCancelPresenter {
 		okDisableProperty.set(currentSoundModifierName.equals(newValue));
 	}
 
-	private void soundModifierResponse(IResponse<String> response) {
+	private void soundModifierResponse(IResponse response) {
 		if (!response.hasFailed())
 			return;
 

@@ -1,6 +1,5 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
-import fr.pederobien.mumble.client.event.ChannelAddedEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
 import fr.pederobien.mumble.client.gui.impl.generic.OkCancelPresenter;
@@ -124,7 +123,7 @@ public class AddChannelPresenter extends OkCancelPresenter {
 		}
 	}
 
-	private void channelNameResponse(IResponse<ChannelAddedEvent> response) {
+	private void channelNameResponse(IResponse response) {
 		if (!response.hasFailed())
 			return;
 

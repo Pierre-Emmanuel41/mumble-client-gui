@@ -173,7 +173,7 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 		server.setPort(port);
 	}
 
-	private void joinServerResponse(IResponse<Boolean> response) {
+	private void joinServerResponse(IResponse response) {
 		dispatch(() -> {
 			getPrimaryStage().getScene().setRoot(new ServerChannelsView(new ServerChannelsPresenter(selectedServer)).getRoot());
 			serverList.getServers().forEach(server -> {

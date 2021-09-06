@@ -147,7 +147,7 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 		otherPlayer.kick(response -> onKickPlayerResponse(response));
 	}
 
-	private void onPlayerMuteOrUnmuteResponse(IResponse<Boolean> response) {
+	private void onPlayerMuteOrUnmuteResponse(IResponse response) {
 		if (response.hasFailed())
 			dispatch(() -> {
 				AlertPresenter alertPresenter = new AlertPresenter(AlertType.ERROR);
@@ -184,7 +184,7 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 		dispatch(() -> isPlayerDeafen.set(event.isDeafen()));
 	}
 
-	private void onKickPlayerResponse(IResponse<Boolean> response) {
+	private void onKickPlayerResponse(IResponse response) {
 		if (!response.hasFailed())
 			return;
 

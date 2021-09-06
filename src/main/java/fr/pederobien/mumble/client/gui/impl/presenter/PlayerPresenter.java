@@ -7,7 +7,6 @@ import fr.pederobien.mumble.client.event.PlayerChannelChangePostEvent;
 import fr.pederobien.mumble.client.event.PlayerDeafenChangePostEvent;
 import fr.pederobien.mumble.client.event.PlayerMuteChangePostEvent;
 import fr.pederobien.mumble.client.event.PlayerOnlineStatusChangeEvent;
-import fr.pederobien.mumble.client.event.PlayerRemovedFromChannelEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.environment.Environments;
 import fr.pederobien.mumble.client.gui.environment.Variables;
@@ -269,7 +268,7 @@ public class PlayerPresenter extends PresenterBase implements IEventListener {
 		return player.isOnline() ? EMessageCode.PLAYER_ONLINE : EMessageCode.PLAYER_OFFLINE;
 	}
 
-	private void removePlayerResponse(IResponse<PlayerRemovedFromChannelEvent> response) {
+	private void removePlayerResponse(IResponse response) {
 		if (response.hasFailed())
 			System.out.println(response.getErrorCode().getMessage());
 	}

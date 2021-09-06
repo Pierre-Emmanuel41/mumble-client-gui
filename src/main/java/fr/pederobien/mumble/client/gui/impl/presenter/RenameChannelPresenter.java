@@ -1,6 +1,5 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
-import fr.pederobien.mumble.client.event.ChannelRenamedEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
 import fr.pederobien.mumble.client.gui.impl.generic.OkCancelPresenter;
@@ -127,7 +126,7 @@ public class RenameChannelPresenter extends OkCancelPresenter {
 		}
 	}
 
-	private void channelNameResponse(IResponse<ChannelRenamedEvent> response) {
+	private void channelNameResponse(IResponse response) {
 		if (!response.hasFailed())
 			return;
 

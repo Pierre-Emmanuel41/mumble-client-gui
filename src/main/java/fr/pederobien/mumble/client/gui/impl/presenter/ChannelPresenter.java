@@ -3,7 +3,6 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 import fr.pederobien.mumble.client.event.ChannelAddPostEvent;
 import fr.pederobien.mumble.client.event.ChannelNameChangePostEvent;
 import fr.pederobien.mumble.client.event.ChannelRemovePostEvent;
-import fr.pederobien.mumble.client.event.ChannelRemovedEvent;
 import fr.pederobien.mumble.client.event.PlayerAddToChannelPostEvent;
 import fr.pederobien.mumble.client.event.PlayerAdminStatusChangeEvent;
 import fr.pederobien.mumble.client.event.PlayerRemoveFromChannelPostEvent;
@@ -292,7 +291,7 @@ public class ChannelPresenter extends PresenterBase implements IEventListener, I
 		soundModifierVisibility.set(event.isAdmin());
 	}
 
-	private void channelRemoveResponse(IResponse<ChannelRemovedEvent> response) {
+	private void channelRemoveResponse(IResponse response) {
 		if (!response.hasFailed())
 			return;
 
