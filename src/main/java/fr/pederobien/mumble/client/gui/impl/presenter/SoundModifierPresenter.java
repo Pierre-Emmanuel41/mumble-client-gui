@@ -1,7 +1,6 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
-import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
 import fr.pederobien.mumble.client.gui.impl.generic.OkCancelPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.interfaces.IChannel;
@@ -85,15 +84,7 @@ public class SoundModifierPresenter extends OkCancelPresenter {
 	}
 
 	private void soundModifierResponse(IResponse response) {
-		if (!response.hasFailed())
-			return;
-
-		dispatch(() -> {
-			AlertPresenter alertPresenter = new AlertPresenter(AlertType.ERROR);
-			alertPresenter.setTitle(EMessageCode.SOUND_MODIFIER_TITLE, channel.getName());
-			alertPresenter.setHeader(EMessageCode.SOUND_MODIFIER_NAME_RESPONSE, newSoundModifierName, channel.getName());
-			alertPresenter.setContent(ErrorCodeWrapper.getByErrorCode(response.getErrorCode()).getMessageCode());
-			alertPresenter.getAlert().show();
-		});
+		handleRequestFailed(response, AlertType.ERROR, p -> p.title(EMessageCode.SOUND_MODIFIER_TITLE, channel.getName())
+				.header(EMessageCode.SOUND_MODIFIER_NAME_RESPONSE, newSoundModifierName, channel.getName()));
 	}
 }

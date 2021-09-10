@@ -74,6 +74,12 @@ public enum EMessageCode implements IMessageCode {
 	// Code for the server port number tooltip (text field)
 	SERVER_PORT_NUMBER_TOOLTIP,
 
+	// Code for the title of the alert when joining a server fails
+	SERVER_JOIN_FAILED_TITLE,
+
+	// Code for the header of the alert when joining a server fails
+	SERVER_JOIN_FAILED_HEADER,
+
 	// PLAYER CONNECTION TO A CHANNEL CODE
 	// -----------------------------------------------------------------------------
 
@@ -97,6 +103,12 @@ public enum EMessageCode implements IMessageCode {
 
 	// Code for the hang up button tooltip.
 	HANG_UP_TOOLTIP,
+
+	// Code for the title of the alert box when removing a player from a channel fails.
+	HANG_UP_FAILED_TITLE,
+
+	// Code for the header of the alert box when removing a player from a channel fails.
+	HANG_UP_FAILED_HEADER,
 
 	// Code when player try to disconnect from a server.
 	DISCONNECT_FROM_SERVER,

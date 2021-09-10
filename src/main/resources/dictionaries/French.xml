@@ -143,6 +143,14 @@
 			<value>Le numéro de port du serveur doit être un entier dans l'intervalle [0, 65535]</value>
 		</message>
 		<message>
+			<code>SERVER_JOIN_FAILED_TITLE</code>
+			<value>Impossible de rejoindre le serveur selectionné</value>
+		</message>
+		<message>
+			<code>SERVER_JOIN_FAILED_HEADER</code>
+			<value>Impossible de rejoindre le serveur selectionné pour la raison suivante :</value>
+		</message>
+		<message>
 			<code>PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL_TITLE</code>
 			<value>Impossible de se connecter au channel</value>
 		</message>
@@ -169,6 +177,14 @@
 		<message>
 			<code>HANG_UP_TOOLTIP</code>
 			<value>Raccrocher</value>
+		</message>
+		<message>
+			<code>HANG_UP_FAILED_TITLE</code>
+			<value>Impossible de raccrocher</value>
+		</message>
+		<message>
+			<code>HANG_UP_FAILED_HEADER</code>
+			<value>Impossible de raccrocher pour la raison suivante :</value>
 		</message>
 		<message>
 			<code>DISCONNECT_FROM_SERVER</code>

@@ -145,6 +145,14 @@
 			<value>The server port number should be an integer in range [0, 65535]</value>
 		</message>
 		<message>
+			<code>SERVER_JOIN_FAILED_TITLE</code>
+			<value>Cannot join the selected server</value>
+		</message>
+		<message>
+			<code>SERVER_JOIN_FAILED_HEADER</code>
+			<value>Cannot join the selected server for the following reason :</value>
+		</message>
+		<message>
 			<code>PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL_TITLE</code>
 			<value>Cannot connect to channel</value>
 		</message>
@@ -167,6 +175,14 @@
 		<message>
 			<code>HANG_UP_TOOLTIP</code>
 			<value>Hang up</value>
+		</message>
+		<message>
+			<code>HANG_UP_FAILED_TITLE</code>
+			<value>Cannot hang up</value>
+		</message>
+		<message>
+			<code>HANG_UP_FAILED_HEADER</code>
+			<value>Cannot hang up for the following reason :</value>
 		</message>
 		<message>
 			<code>PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL</code>

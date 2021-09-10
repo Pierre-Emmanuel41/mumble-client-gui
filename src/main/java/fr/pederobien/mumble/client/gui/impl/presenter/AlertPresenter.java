@@ -16,9 +16,12 @@ public class AlertPresenter extends PresenterBase {
 	 * 
 	 * @param title The message code associated to the title.
 	 * @param args  The argument used to format the title.
+	 * 
+	 * @return This presenter.
 	 */
-	public void setTitle(IMessageCode title, Object... args) {
+	public AlertPresenter title(IMessageCode title, Object... args) {
 		alert.titleProperty().bind(getPropertyHelper().languageProperty(title, args));
+		return this;
 	}
 
 	/**
@@ -26,9 +29,12 @@ public class AlertPresenter extends PresenterBase {
 	 * 
 	 * @param header The message code associated to the header.
 	 * @param args   The argument used to format the header.
+	 * 
+	 * @return This presenter.
 	 */
-	public void setHeader(IMessageCode header, Object... args) {
+	public AlertPresenter header(IMessageCode header, Object... args) {
 		alert.headerTextProperty().bind(getPropertyHelper().languageProperty(header, args));
+		return this;
 	}
 
 	/**
@@ -36,9 +42,12 @@ public class AlertPresenter extends PresenterBase {
 	 * 
 	 * @param content The message code associated to the content.
 	 * @param args    The argument used to format the content.
+	 * 
+	 * @return This presenter.
 	 */
-	public void setContent(IMessageCode content, Object... args) {
+	public AlertPresenter content(IMessageCode content, Object... args) {
 		alert.contentTextProperty().bind(getPropertyHelper().languageProperty(content, args));
+		return this;
 	}
 
 	/**
