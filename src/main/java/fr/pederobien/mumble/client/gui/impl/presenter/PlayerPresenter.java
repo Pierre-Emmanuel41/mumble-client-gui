@@ -13,7 +13,6 @@ import fr.pederobien.mumble.client.gui.environment.Variables;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleTooltipProperty;
 import fr.pederobien.mumble.client.gui.impl.view.MainView;
-import fr.pederobien.mumble.client.interfaces.IAudioConnection;
 import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 import fr.pederobien.mumble.client.interfaces.IPlayer;
 import fr.pederobien.mumble.client.interfaces.IResponse;
@@ -36,7 +35,6 @@ import javafx.scene.image.ImageView;
 public class PlayerPresenter extends PresenterBase implements IEventListener {
 	private IMumbleServer server;
 	private IPlayer player;
-	private IAudioConnection audioConnection;
 
 	private StringProperty playerNameProperty;
 	private SimpleLanguageProperty playerStatusProperty;
@@ -60,7 +58,6 @@ public class PlayerPresenter extends PresenterBase implements IEventListener {
 		EventManager.registerListener(this);
 
 		player = server.getPlayer();
-		audioConnection = server.getAudioConnection();
 
 		playerNameProperty = new SimpleStringProperty("");
 		playerStatusProperty = getPropertyHelper().languageProperty(EMessageCode.PLAYER_OFFLINE);
@@ -237,14 +234,6 @@ public class PlayerPresenter extends PresenterBase implements IEventListener {
 	private void onChannelChanged(PlayerChannelChangePostEvent event) {
 		if (!event.getPlayer().equals(player))
 			return;
-
-		if (event.getPlayer().getChannel() == null)
-			audioConnection.disconnect();
-		else {
-			player.setMute(false);
-			player.setDeafen(false);
-			audioConnection.connect();
-		}
 
 		playerCanDisconnectFromChannel.setValue(event.getPlayer().getChannel() != null);
 	}
