@@ -6,6 +6,7 @@ import fr.pederobien.mumble.client.event.ChannelRemovePostEvent;
 import fr.pederobien.mumble.client.event.PlayerAddToChannelPostEvent;
 import fr.pederobien.mumble.client.event.PlayerAdminStatusChangeEvent;
 import fr.pederobien.mumble.client.event.PlayerRemoveFromChannelPostEvent;
+import fr.pederobien.mumble.client.event.ServerLeavePostEvent;
 import fr.pederobien.mumble.client.event.SoundModifierNameChangePostEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
@@ -23,7 +24,6 @@ import fr.pederobien.utils.IObservable;
 import fr.pederobien.utils.Observable;
 import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
-import fr.pederobien.utils.event.EventPriority;
 import fr.pederobien.utils.event.IEventListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -232,7 +232,7 @@ public class ChannelPresenter extends PresenterBase implements IEventListener, I
 		new SoundModifierView(getPrimaryStage(), new SoundModifierPresenter(channel));
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler
 	private void onSoundModifierNameChange(SoundModifierNameChangePostEvent event) {
 		if (!event.getSoundModifier().equals(channel.getSoundModifier()))
 			return;
@@ -240,7 +240,7 @@ public class ChannelPresenter extends PresenterBase implements IEventListener, I
 		dispatch(() -> soundModifierTextProperty.setCode(EMessageCode.SOUND_MODIFIER, event.getSoundModifier().getName()));
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler
 	private void onChannelRename(ChannelNameChangePostEvent event) {
 		if (!event.getChannel().equals(channel))
 			return;
@@ -248,7 +248,7 @@ public class ChannelPresenter extends PresenterBase implements IEventListener, I
 		dispatch(() -> channelNameProperty.set(event.getChannel().getName()));
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler
 	private void onPlayerAdded(PlayerAddToChannelPostEvent event) {
 		if (!event.getChannel().equals(channel))
 			return;
@@ -256,7 +256,7 @@ public class ChannelPresenter extends PresenterBase implements IEventListener, I
 		dispatch(() -> players.add(event.getPlayer()));
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler
 	private void onPlayerRemoved(PlayerRemoveFromChannelPostEvent event) {
 		if (!event.getChannel().equals(channel))
 			return;
@@ -264,7 +264,7 @@ public class ChannelPresenter extends PresenterBase implements IEventListener, I
 		dispatch(() -> players.remove(event.getPlayer()));
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler
 	private void onChannelAdded(ChannelAddPostEvent event) {
 		if (!event.getChannelList().equals(channelList))
 			return;
@@ -272,7 +272,7 @@ public class ChannelPresenter extends PresenterBase implements IEventListener, I
 		removeChannelVisibility.set(channelList.getChannels().size() > 1);
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler
 	private void onChannelRemoved(ChannelRemovePostEvent event) {
 		if (!event.getChannelList().equals(channelList))
 			return;
@@ -280,12 +280,20 @@ public class ChannelPresenter extends PresenterBase implements IEventListener, I
 		removeChannelVisibility.set(channelList.getChannels().size() > 1);
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler
 	private void onAdminStatusChanged(PlayerAdminStatusChangeEvent event) {
 		addChannelVisibility.set(event.isAdmin());
 		removeChannelVisibility.set(event.isAdmin() && channelList.getChannels().size() > 1);
 		renameChannelVisibility.set(event.isAdmin());
 		soundModifierVisibility.set(event.isAdmin());
+	}
+
+	@EventHandler
+	private void onServerLeave(ServerLeavePostEvent event) {
+		if (!event.getServer().equals(mumbleServer))
+			return;
+
+		EventManager.unregisterListener(this);
 	}
 
 	private void channelRemoveResponse(IResponse response) {

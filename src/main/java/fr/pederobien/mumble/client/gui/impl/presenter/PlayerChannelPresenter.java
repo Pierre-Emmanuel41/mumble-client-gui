@@ -5,6 +5,7 @@ import java.io.IOException;
 import fr.pederobien.mumble.client.event.OtherPlayerDeafenPostEvent;
 import fr.pederobien.mumble.client.event.OtherPlayerMutePostEvent;
 import fr.pederobien.mumble.client.event.PlayerAdminStatusChangeEvent;
+import fr.pederobien.mumble.client.event.ServerLeavePostEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.environment.Environments;
 import fr.pederobien.mumble.client.gui.environment.Variables;
@@ -12,11 +13,9 @@ import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 import fr.pederobien.mumble.client.interfaces.IOtherPlayer;
-import fr.pederobien.mumble.client.interfaces.IPlayer;
 import fr.pederobien.mumble.client.interfaces.IResponse;
 import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
-import fr.pederobien.utils.event.EventPriority;
 import fr.pederobien.utils.event.IEventListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -26,7 +25,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 
 public class PlayerChannelPresenter extends PresenterBase implements IEventListener {
-	private IPlayer player;
+	private IMumbleServer mumbleServer;
 	private IOtherPlayer otherPlayer;
 	private StringProperty playerNameProperty;
 	private BooleanProperty isPlayerMute, isPlayerDeafen;
@@ -39,7 +38,7 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 	private BooleanProperty kickPlayerVisiblity;
 
 	public PlayerChannelPresenter(IMumbleServer mumbleServer, IOtherPlayer otherPlayer) {
-		this.player = mumbleServer.getPlayer();
+		this.mumbleServer = mumbleServer;
 		this.otherPlayer = otherPlayer;
 
 		playerNameProperty = new SimpleStringProperty(otherPlayer.getName());
@@ -56,10 +55,10 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 		EventManager.registerListener(this);
 
 		muteOrUnmuteTextProperty = getPropertyHelper().languageProperty(EMessageCode.MUTE_TOOLTIP);
-		muteOrUnmuteVisibleProperty = new SimpleBooleanProperty(player.isAdmin());
+		muteOrUnmuteVisibleProperty = new SimpleBooleanProperty(mumbleServer.getPlayer().isAdmin());
 
 		kickPlayerTextProperty = getPropertyHelper().languageProperty(EMessageCode.KICK_PLAYER, mumbleServer.getPlayer().getName());
-		kickPlayerVisiblity = new SimpleBooleanProperty(player.isAdmin());
+		kickPlayerVisiblity = new SimpleBooleanProperty(mumbleServer.getPlayer().isAdmin());
 	}
 
 	/**
@@ -160,15 +159,15 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 			muteOrUnmuteTextProperty.setCode(otherPlayer.isMute() ? EMessageCode.UNMUTE_TOOLTIP : EMessageCode.MUTE_TOOLTIP);
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler
 	private void onAdminStatusChanged(PlayerAdminStatusChangeEvent event) {
-		if (!event.getPlayer().equals(player))
+		if (!event.getPlayer().equals(mumbleServer.getPlayer()))
 			return;
 
-		dispatch(() -> kickPlayerVisiblity.set(!player.getName().equals(otherPlayer.getName()) && player.isAdmin()));
+		dispatch(() -> kickPlayerVisiblity.set(!mumbleServer.getPlayer().getName().equals(otherPlayer.getName()) && mumbleServer.getPlayer().isAdmin()));
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler
 	private void onMuteChanged(OtherPlayerMutePostEvent event) {
 		if (!event.getPlayer().equals(otherPlayer))
 			return;
@@ -176,12 +175,20 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 		dispatch(() -> isPlayerMute.set(event.isMute()));
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler
 	private void onDeafenChanged(OtherPlayerDeafenPostEvent event) {
 		if (!event.getPlayer().equals(otherPlayer))
 			return;
 
 		dispatch(() -> isPlayerDeafen.set(event.isDeafen()));
+	}
+
+	@EventHandler
+	private void onServerLeave(ServerLeavePostEvent event) {
+		if (!event.getServer().equals(mumbleServer))
+			return;
+
+		EventManager.unregisterListener(this);
 	}
 
 	private void onKickPlayerResponse(IResponse response) {

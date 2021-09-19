@@ -1,5 +1,6 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
+import fr.pederobien.mumble.client.event.ServerJoinPostEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.ServerChannelsView;
@@ -8,12 +9,15 @@ import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsServer
 import fr.pederobien.mumble.client.gui.model.ServerList;
 import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 import fr.pederobien.mumble.client.interfaces.IResponse;
+import fr.pederobien.utils.event.EventHandler;
+import fr.pederobien.utils.event.EventManager;
+import fr.pederobien.utils.event.IEventListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Alert.AlertType;
 
-public class ServerManagementPresenter extends PresenterBase implements IObsServerListPresenter {
+public class ServerManagementPresenter extends PresenterBase implements IObsServerListPresenter, IEventListener {
 	// Join server -----------------------------------------------------
 	private SimpleLanguageProperty joinServerTextProperty;
 	private BooleanProperty joinServerDisableProperty;
@@ -47,6 +51,8 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 
 		deleteServerTextProperty = getPropertyHelper().languageProperty(EMessageCode.DELETE_SERVER);
 		deleteServerDisableProperty = new SimpleBooleanProperty(true);
+
+		EventManager.registerListener(this);
 	}
 
 	@Override
@@ -168,16 +174,9 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 		serverList.remove(selectedServer);
 	}
 
-	private void performChangesOnServer(IMumbleServer server, String name, String address, int port) {
-		server.setName(name);
-		server.setAddress(address);
-		server.setPort(port);
-	}
-
-	private void joinServerResponse(IResponse response) {
-		handleRequestFailed(response, AlertType.ERROR, EMessageCode.SERVER_JOIN_FAILED_TITLE, EMessageCode.SERVER_JOIN_FAILED_HEADER);
-
-		if (response.hasFailed())
+	@EventHandler
+	private void onServerJoin(ServerJoinPostEvent event) {
+		if (!event.getServer().equals(selectedServer))
 			return;
 
 		dispatch(() -> {
@@ -187,5 +186,16 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 					server.close();
 			});
 		});
+		EventManager.unregisterListener(this);
+	}
+
+	private void performChangesOnServer(IMumbleServer server, String name, String address, int port) {
+		server.setName(name);
+		server.setAddress(address);
+		server.setPort(port);
+	}
+
+	private void joinServerResponse(IResponse response) {
+		handleRequestFailed(response, AlertType.ERROR, EMessageCode.SERVER_JOIN_FAILED_TITLE, EMessageCode.SERVER_JOIN_FAILED_HEADER);
 	}
 }

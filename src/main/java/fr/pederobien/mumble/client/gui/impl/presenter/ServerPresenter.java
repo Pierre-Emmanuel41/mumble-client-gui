@@ -5,6 +5,7 @@ import java.util.Map;
 
 import fr.pederobien.dictionary.interfaces.IMessageCode;
 import fr.pederobien.mumble.client.event.ServerIpAddressChangePostEvent;
+import fr.pederobien.mumble.client.event.ServerJoinPostEvent;
 import fr.pederobien.mumble.client.event.ServerNameChangePostEvent;
 import fr.pederobien.mumble.client.event.ServerPortNumberChangePostEvent;
 import fr.pederobien.mumble.client.event.ServerReachableChangeEvent;
@@ -13,7 +14,6 @@ import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
-import fr.pederobien.utils.event.EventPriority;
 import fr.pederobien.utils.event.IEventListener;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -83,7 +83,7 @@ public class ServerPresenter extends PresenterBase implements IEventListener {
 		return textFillProperty;
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler
 	private void onNameChanged(ServerNameChangePostEvent event) {
 		if (!event.getServer().equals(server))
 			return;
@@ -91,7 +91,7 @@ public class ServerPresenter extends PresenterBase implements IEventListener {
 		serverNameProperty.setValue(event.getServer().getName());
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler
 	private void onIpAddressChanged(ServerIpAddressChangePostEvent event) {
 		if (!event.getServer().equals(server))
 			return;
@@ -99,7 +99,7 @@ public class ServerPresenter extends PresenterBase implements IEventListener {
 		serverIpAddressProperty.setValue(event.getServer().getAddress() + ":" + server.getPort());
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler
 	private void onPortChanged(ServerPortNumberChangePostEvent event) {
 		if (!event.getServer().equals(server))
 			return;
@@ -107,7 +107,7 @@ public class ServerPresenter extends PresenterBase implements IEventListener {
 		serverIpAddressProperty.setValue(server.getAddress() + ":" + event.getServer().getPort());
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler
 	private void onReachableStatusChanged(ServerReachableChangeEvent event) {
 		if (!event.getServer().equals(server))
 			return;
@@ -116,6 +116,11 @@ public class ServerPresenter extends PresenterBase implements IEventListener {
 			serverReachableStatusProperty.setCode(getServerStateCode());
 			textFillProperty.setValue(getServerReachableStatusColor());
 		});
+	}
+
+	@EventHandler
+	private void onServerJoin(ServerJoinPostEvent event) {
+		EventManager.unregisterListener(this);
 	}
 
 	/**

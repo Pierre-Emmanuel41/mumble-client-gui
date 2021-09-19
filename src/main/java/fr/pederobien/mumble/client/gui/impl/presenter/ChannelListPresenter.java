@@ -5,6 +5,7 @@ import java.util.Map;
 
 import fr.pederobien.mumble.client.event.ChannelAddPostEvent;
 import fr.pederobien.mumble.client.event.ChannelRemovePostEvent;
+import fr.pederobien.mumble.client.event.ServerLeavePostEvent;
 import fr.pederobien.mumble.client.event.ServerReachableChangeEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.view.ChannelView;
@@ -15,7 +16,6 @@ import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 import fr.pederobien.mumble.client.interfaces.IResponse;
 import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
-import fr.pederobien.utils.event.EventPriority;
 import fr.pederobien.utils.event.IEventListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -40,7 +40,6 @@ public class ChannelListPresenter extends PresenterBase implements IEventListene
 		channels.addAll(channelList.getChannels().values());
 
 		EventManager.registerListener(this);
-
 	}
 
 	@Override
@@ -87,7 +86,7 @@ public class ChannelListPresenter extends PresenterBase implements IEventListene
 		}, enteredColor);
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler
 	private void onChannelAdded(ChannelAddPostEvent event) {
 		if (!event.getChannelList().equals(channelList))
 			return;
@@ -95,7 +94,7 @@ public class ChannelListPresenter extends PresenterBase implements IEventListene
 		dispatch(() -> channels.add(event.getChannel()));
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler
 	private void onChannelRemoved(ChannelRemovePostEvent event) {
 		if (!event.getChannelList().equals(channelList))
 			return;
@@ -103,14 +102,25 @@ public class ChannelListPresenter extends PresenterBase implements IEventListene
 		dispatch(() -> channels.remove(event.getChannel()));
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler
 	private void onReachableStatusChanged(ServerReachableChangeEvent event) {
+		if (!event.getServer().equals(mumbleServer))
+			return;
+
 		if (event.isReachable()) {
 			event.getServer().join(response -> manageJoinResponse(response));
 			channelList = event.getServer().getChannelList();
 		} else {
 			dispatch(() -> channels.clear());
 		}
+	}
+
+	@EventHandler
+	private void onServerLeave(ServerLeavePostEvent event) {
+		if (!event.getServer().equals(mumbleServer))
+			return;
+
+		EventManager.unregisterListener(this);
 	}
 
 	private void manageJoinResponse(IResponse response) {
