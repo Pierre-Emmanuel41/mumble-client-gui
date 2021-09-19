@@ -287,6 +287,14 @@
 			<value>Vous ne pouvez pas kicker le joueur %s pour la raison suivante :</value>
 		</message>
 		<message>
+			<code>CANNOT_LEAVE_SERVER_RESPONSE_TITLE</code>
+			<value>Impossible de quitter le serveur</value>
+		</message>
+		<message>
+			<code>CANNOT_LEAVE_SERVER_RESPONSE</code>
+			<value>Vous ne pouvez pas quitter le serveur pour la raison suivante :</value>
+		</message>
+		<message>
 			<code>PLAYER_ONLINE</code>
 			<value>En ligne</value>
 		</message>

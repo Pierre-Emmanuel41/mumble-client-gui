@@ -217,9 +217,7 @@ public class PlayerPresenter extends PresenterBase implements IEventListener {
 	 * Disconnect the player from the server. Calling this method send a request to the server and also update the user interface.
 	 */
 	public void disconnectFromServer() {
-		server.leave();
-		EventManager.unregisterListener(this);
-		getPrimaryStage().getScene().setRoot(new MainView(new MainPresenter()).getRoot());
+		server.leave(response -> manageServerLeaveResponse(response));
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -290,5 +288,15 @@ public class PlayerPresenter extends PresenterBase implements IEventListener {
 			playerStatusProperty.setCode(getPlayerStatusCode());
 			playerConnectedProperty.setValue(isOnline);
 		});
+	}
+
+	private void manageServerLeaveResponse(IResponse response) {
+		handleRequestFailed(response, AlertType.ERROR, p -> p.title(EMessageCode.CANNOT_LEAVE_SERVER_RESPONSE_TITLE).header(EMessageCode.CANNOT_LEAVE_SERVER_RESPONSE));
+
+		if (response.hasFailed())
+			return;
+
+		EventManager.unregisterListener(this);
+		getPrimaryStage().getScene().setRoot(new MainView(new MainPresenter()).getRoot());
 	}
 }

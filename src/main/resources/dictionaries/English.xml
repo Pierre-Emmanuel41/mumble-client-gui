@@ -289,6 +289,14 @@
 			<value>You cannot kick the player %s for the following reason :</value>
 		</message>
 		<message>
+			<code>CANNOT_LEAVE_SERVER_RESPONSE_TITLE</code>
+			<value>Fail to leave the server</value>
+		</message>
+		<message>
+			<code>CANNOT_LEAVE_SERVER_RESPONSE</code>
+			<value>You cannot leave the server for the following reason :</value>
+		</message>
+		<message>
 			<code>PLAYER_ONLINE</code>
 			<value>Online</value>
 		</message>

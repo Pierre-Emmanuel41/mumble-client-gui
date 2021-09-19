@@ -191,6 +191,12 @@ public enum EMessageCode implements IMessageCode {
 	// Code for the header of the alert when a player try to kick another player but it fails.
 	CANNOT_KICK_PLAYER_RESPONSE,
 
+	// Code for the title of the alert when a player try to leave a server and it fails.
+	CANNOT_LEAVE_SERVER_RESPONSE_TITLE,
+
+	// Code for the header of the alert when a player try to leave a server and it fails.
+	CANNOT_LEAVE_SERVER_RESPONSE,
+
 	// PLAYER STATUS CODE
 	// -----------------------------------------------------------------------------
 
