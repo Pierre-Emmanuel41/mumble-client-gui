@@ -4,19 +4,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsServerList;
+import fr.pederobien.mumble.client.gui.event.ServerListAddServerPostEvent;
+import fr.pederobien.mumble.client.gui.event.ServerListAddServerPreEvent;
+import fr.pederobien.mumble.client.gui.event.ServerListRemoveServerPostEvent;
+import fr.pederobien.mumble.client.gui.event.ServerListRemoveServerPreEvent;
 import fr.pederobien.mumble.client.impl.MumbleServer;
 import fr.pederobien.mumble.client.interfaces.IMumbleServer;
-import fr.pederobien.utils.IObservable;
-import fr.pederobien.utils.Observable;
+import fr.pederobien.utils.event.EventManager;
 
-public class ServerList implements IObservable<IObsServerList> {
+public class ServerList {
 	private List<IMumbleServer> servers;
-	private Observable<IObsServerList> observers;
 
 	public ServerList() {
 		servers = new ArrayList<IMumbleServer>();
-		observers = new Observable<IObsServerList>();
 	}
 
 	/**
@@ -39,24 +39,16 @@ public class ServerList implements IObservable<IObsServerList> {
 		return new MumbleServer(name, address, port);
 	}
 
-	@Override
-	public void addObserver(IObsServerList obs) {
-		observers.addObserver(obs);
-	}
-
-	@Override
-	public void removeObserver(IObsServerList obs) {
-		observers.removeObserver(obs);
-	}
-
 	/**
 	 * Appends a server to this list.
 	 * 
 	 * @param server The server to add.
 	 */
 	public void add(IMumbleServer server) {
-		servers.add(server);
-		observers.notifyObservers(obs -> obs.onServerAdded(server));
+		EventManager.callEvent(new ServerListAddServerPreEvent(this, server), () -> {
+			servers.add(server);
+			EventManager.callEvent(new ServerListAddServerPostEvent(this, server));
+		});
 	}
 
 	/**
@@ -65,9 +57,11 @@ public class ServerList implements IObservable<IObsServerList> {
 	 * @param server The server to remove.
 	 */
 	public void remove(IMumbleServer server) {
-		server.dispose();
-		servers.remove(server);
-		observers.notifyObservers(obs -> obs.onServerRemoved(server));
+		EventManager.callEvent(new ServerListRemoveServerPreEvent(this, server), () -> {
+			server.dispose();
+			servers.remove(server);
+			EventManager.callEvent(new ServerListRemoveServerPostEvent(this, server));
+		});
 	}
 
 	/**
