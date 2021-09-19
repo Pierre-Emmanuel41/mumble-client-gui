@@ -4,32 +4,18 @@ import java.util.Locale;
 
 import fr.pederobien.dictionary.impl.NotificationCenter;
 import fr.pederobien.dictionary.interfaces.IDictionary;
+import fr.pederobien.mumble.client.gui.event.FontChangeEvent;
+import fr.pederobien.mumble.client.gui.event.LocaleChangeEvent;
 import fr.pederobien.mumble.client.gui.interfaces.IGuiConfiguration;
-import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsGuiConfiguration;
-import fr.pederobien.utils.Observable;
+import fr.pederobien.utils.event.EventManager;
 import javafx.scene.text.Font;
 
 public class GuiConfiguration implements IGuiConfiguration {
 	private static final Font DEFAULT_FONT = Font.getDefault();
 	private static final Locale DEFAULT_LOCALE = Locale.getDefault();
 
-	private Observable<IObsGuiConfiguration> observers;
 	private Font font;
 	private Locale locale;
-
-	public GuiConfiguration() {
-		observers = new Observable<IObsGuiConfiguration>();
-	}
-
-	@Override
-	public void addObserver(IObsGuiConfiguration obs) {
-		observers.addObserver(obs);
-	}
-
-	@Override
-	public void removeObserver(IObsGuiConfiguration obs) {
-		observers.removeObserver(obs);
-	}
 
 	@Override
 	public Font getFont() {
@@ -40,7 +26,7 @@ public class GuiConfiguration implements IGuiConfiguration {
 	public void setFont(Font font) {
 		Font oldFont = getFont();
 		this.font = font;
-		observers.notifyObservers(obs -> obs.onFontChanged(oldFont, this.font));
+		EventManager.callEvent(new FontChangeEvent(this, oldFont, getFont()));
 	}
 
 	@Override
@@ -52,7 +38,7 @@ public class GuiConfiguration implements IGuiConfiguration {
 	public void setLocale(Locale locale) {
 		Locale oldLocale = getLocale();
 		this.locale = locale;
-		observers.notifyObservers(obs -> obs.onLanguageChanged(oldLocale, this.locale));
+		EventManager.callEvent(new LocaleChangeEvent(this, oldLocale, getLocale()));
 	}
 
 	@Override

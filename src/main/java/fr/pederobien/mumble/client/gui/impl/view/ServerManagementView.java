@@ -36,7 +36,7 @@ public class ServerManagementView extends ViewBase<ServerManagementPresenter, Fl
 		add(editButton);
 
 		Button deleteButton = new Button();
-		addButton.fontProperty().bind(getPresenter().fontProperty());
+		deleteButton.fontProperty().bind(getPresenter().fontProperty());
 		deleteButton.textProperty().bind(getPresenter().deleteServerTextProperty());
 		deleteButton.disableProperty().bind(getPresenter().deleteDisableProperty());
 		deleteButton.setOnAction(e -> getPresenter().onDelete());

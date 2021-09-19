@@ -4,11 +4,9 @@ import java.util.Locale;
 
 import fr.pederobien.dictionary.interfaces.IDictionary;
 import fr.pederobien.dictionary.interfaces.IMessageCode;
-import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsGuiConfiguration;
-import fr.pederobien.utils.IObservable;
 import javafx.scene.text.Font;
 
-public interface IGuiConfiguration extends IObservable<IObsGuiConfiguration> {
+public interface IGuiConfiguration {
 
 	/**
 	 * Get the font of the gui configuration. If this configuration is used by a style, then each component created by the style use

@@ -2,22 +2,24 @@ package fr.pederobien.mumble.client.gui.impl.properties;
 
 import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import fr.pederobien.mumble.client.gui.event.FontChangeEvent;
+import fr.pederobien.mumble.client.gui.event.LocaleChangeEvent;
 import fr.pederobien.mumble.client.gui.interfaces.IGuiConfiguration;
-import fr.pederobien.mumble.client.gui.interfaces.observers.model.IObsGuiConfiguration;
-import javafx.scene.text.Font;
+import fr.pederobien.utils.event.EventHandler;
+import fr.pederobien.utils.event.EventManager;
+import fr.pederobien.utils.event.IEventListener;
 
-public class InternalProperty {
+public class InternalProperty implements IEventListener {
 	private Map<Action, Consumer<PropertyChangeEvent>> actions;
 	private IGuiConfiguration guiConfiguration;
 
 	public InternalProperty(IGuiConfiguration guiConfiguration) {
 		this.guiConfiguration = guiConfiguration;
-		this.guiConfiguration.addObserver(new Observer());
-		actions = new HashMap<InternalProperty.Action, Consumer<PropertyChangeEvent>>();
+		EventManager.registerListener(this);
+		actions = new HashMap<Action, Consumer<PropertyChangeEvent>>();
 	}
 
 	/**
@@ -45,22 +47,19 @@ public class InternalProperty {
 		FONT_CHANGED,
 	}
 
-	private class Observer implements IObsGuiConfiguration {
+	@EventHandler
+	public void onLanguageChanged(LocaleChangeEvent event) {
+		firePropertyChanged(Action.LOCALE_CHANGED, "Locale", event.getOldValue(), event.getNewValue());
+	}
 
-		@Override
-		public void onLanguageChanged(Locale oldLocale, Locale newLocale) {
-			firePropertyChanged(Action.LOCALE_CHANGED, "Locale", oldLocale, newLocale);
-		}
+	@EventHandler
+	public void onFontChanged(FontChangeEvent event) {
+		firePropertyChanged(Action.FONT_CHANGED, "Font", event.getOldValue(), event.getNewValue());
+	}
 
-		@Override
-		public void onFontChanged(Font oldFont, Font newFont) {
-			firePropertyChanged(Action.FONT_CHANGED, "Font", oldFont, newFont);
-		}
-
-		private void firePropertyChanged(Action action, String propertyName, Object oldValue, Object newValue) {
-			Consumer<PropertyChangeEvent> consumer = actions.get(action);
-			if (consumer != null)
-				consumer.accept(new PropertyChangeEvent(this, propertyName, oldValue, newValue));
-		}
+	private void firePropertyChanged(Action action, String propertyName, Object oldValue, Object newValue) {
+		Consumer<PropertyChangeEvent> consumer = actions.get(action);
+		if (consumer != null)
+			consumer.accept(new PropertyChangeEvent(this, propertyName, oldValue, newValue));
 	}
 }
