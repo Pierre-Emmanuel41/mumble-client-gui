@@ -133,6 +133,6 @@ public class ChannelListPresenter extends PresenterBase implements IEventListene
 
 	private void addPlayer(IResponse response) {
 		handleRequestFailed(response, AlertType.INFORMATION, EMessageCode.PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL_TITLE,
-				EMessageCode.PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL);
+				EMessageCode.PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL, () -> selectedChannel = null);
 	}
 }

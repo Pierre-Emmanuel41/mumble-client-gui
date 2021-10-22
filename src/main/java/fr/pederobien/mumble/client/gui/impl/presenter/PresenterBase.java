@@ -109,6 +109,30 @@ public abstract class PresenterBase {
 	 * 
 	 * @param response  The response returned by the server.
 	 * @param alertType The type of alert.
+	 * @param title     The message code associated to the title of the alert box.
+	 * @param header    The message code associated to the header of the alert box.
+	 * @param runnable  The runnable to execute if the request has failed.
+	 */
+	protected void handleRequestFailed(IResponse response, AlertType alertType, IMessageCode title, IMessageCode header, Runnable runnable) {
+		if (!response.hasFailed())
+			return;
+
+		dispatch(() -> {
+			AlertPresenter alertPresenter = new AlertPresenter(alertType);
+			alertPresenter.title(title);
+			alertPresenter.header(header);
+			alertPresenter.content(ErrorCodeWrapper.getByErrorCode(response.getErrorCode()).getMessageCode());
+			alertPresenter.getAlert().show();
+		});
+
+		runnable.run();
+	}
+
+	/**
+	 * Display an alert box if and only if the request failed.
+	 * 
+	 * @param response  The response returned by the server.
+	 * @param alertType The type of alert.
 	 * @param consumer  The consumer that set the title and the header message code of the alert box.
 	 */
 	protected void handleRequestFailed(IResponse response, AlertType alertType, Consumer<AlertPresenter> consumer) {
