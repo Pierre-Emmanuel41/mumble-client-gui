@@ -55,10 +55,10 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 		EventManager.registerListener(this);
 
 		muteOrUnmuteTextProperty = getPropertyHelper().languageProperty(EMessageCode.MUTE_TOOLTIP);
-		muteOrUnmuteVisibleProperty = new SimpleBooleanProperty(mumbleServer.getPlayer().isAdmin());
+		muteOrUnmuteVisibleProperty = new SimpleBooleanProperty(!isMainPlayer());
 
 		kickPlayerTextProperty = getPropertyHelper().languageProperty(EMessageCode.KICK_PLAYER, mumbleServer.getPlayer().getName());
-		kickPlayerVisiblity = new SimpleBooleanProperty(mumbleServer.getPlayer().isAdmin());
+		kickPlayerVisiblity = new SimpleBooleanProperty(!isMainPlayer() && mumbleServer.getPlayer().isAdmin());
 	}
 
 	/**
@@ -164,7 +164,7 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 		if (!event.getPlayer().equals(mumbleServer.getPlayer()))
 			return;
 
-		dispatch(() -> kickPlayerVisiblity.set(!mumbleServer.getPlayer().getName().equals(otherPlayer.getName()) && mumbleServer.getPlayer().isAdmin()));
+		dispatch(() -> kickPlayerVisiblity.set(!isMainPlayer() && mumbleServer.getPlayer().isAdmin()));
 	}
 
 	@EventHandler
@@ -194,5 +194,9 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 	private void onKickPlayerResponse(IResponse response) {
 		handleRequestFailed(response, AlertType.ERROR, p -> p.title(EMessageCode.CANNOT_KICK_PLAYER_RESPONSE_TITLE, otherPlayer.getName())
 				.header(EMessageCode.CANNOT_KICK_PLAYER_RESPONSE, otherPlayer.getName()));
+	}
+
+	private boolean isMainPlayer() {
+		return mumbleServer.getPlayer().getName().equals(otherPlayer.getName());
 	}
 }
