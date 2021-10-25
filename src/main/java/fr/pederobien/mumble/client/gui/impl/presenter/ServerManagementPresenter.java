@@ -2,10 +2,11 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import fr.pederobien.mumble.client.event.ServerJoinPostEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
+import fr.pederobien.mumble.client.gui.event.SelectServerPostEvent;
+import fr.pederobien.mumble.client.gui.event.ServerJoinRequestPostEvent;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.ServerChannelsView;
 import fr.pederobien.mumble.client.gui.impl.view.ServerInfoView;
-import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsServerListPresenter;
 import fr.pederobien.mumble.client.gui.model.ServerList;
 import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 import fr.pederobien.mumble.client.interfaces.IResponse;
@@ -17,7 +18,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Alert.AlertType;
 
-public class ServerManagementPresenter extends PresenterBase implements IObsServerListPresenter, IEventListener {
+public class ServerManagementPresenter extends PresenterBase implements IEventListener {
 	// Join server -----------------------------------------------------
 	private SimpleLanguageProperty joinServerTextProperty;
 	private BooleanProperty joinServerDisableProperty;
@@ -53,19 +54,6 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 		deleteServerDisableProperty = new SimpleBooleanProperty(true);
 
 		EventManager.registerListener(this);
-	}
-
-	@Override
-	public void onSelectedServerChanged(IMumbleServer oldServer, IMumbleServer newServer) {
-		selectedServer = newServer;
-		joinServerDisableProperty.setValue(selectedServer == null || !selectedServer.isReachable());
-		editServerDisableProperty.setValue(selectedServer == null);
-		deleteServerDisableProperty.setValue(selectedServer == null);
-	}
-
-	@Override
-	public void onDoubleClickOnServer(IMumbleServer server) {
-		onJoin();
 	}
 
 	public StringProperty joinServerTextProperty() {
@@ -125,10 +113,7 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 	 * Send a request to the server in order to join the selected server and update the user interface.
 	 */
 	public void onJoin() {
-		if (!selectedServer.isReachable())
-			return;
-
-		selectedServer.join(response -> joinServerResponse(response));
+		EventManager.callEvent(new ServerJoinRequestPostEvent(selectedServer));
 	}
 
 	/**
@@ -175,6 +160,14 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 	}
 
 	@EventHandler
+	private void onServerJoinRequestEvent(ServerJoinRequestPostEvent event) {
+		if (!event.getMumbleServer().isReachable())
+			return;
+
+		event.getMumbleServer().join(response -> joinServerResponse(response));
+	}
+
+	@EventHandler
 	private void onServerJoin(ServerJoinPostEvent event) {
 		if (!event.getServer().equals(selectedServer))
 			return;
@@ -187,6 +180,14 @@ public class ServerManagementPresenter extends PresenterBase implements IObsServ
 			});
 		});
 		EventManager.unregisterListener(this);
+	}
+
+	@EventHandler
+	private void onSelectedServerChange(SelectServerPostEvent event) {
+		selectedServer = event.getCurrentServer();
+		joinServerDisableProperty.setValue(selectedServer == null || !selectedServer.isReachable());
+		editServerDisableProperty.setValue(selectedServer == null);
+		deleteServerDisableProperty.setValue(selectedServer == null);
 	}
 
 	private void performChangesOnServer(IMumbleServer server, String name, String address, int port) {

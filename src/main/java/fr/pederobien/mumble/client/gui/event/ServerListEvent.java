@@ -1,9 +1,8 @@
 package fr.pederobien.mumble.client.gui.event;
 
 import fr.pederobien.mumble.client.gui.model.ServerList;
-import fr.pederobien.utils.event.Event;
 
-public class ServerListEvent extends Event {
+public class ServerListEvent extends MumbleGuiEvent {
 	private ServerList serverList;
 
 	/**

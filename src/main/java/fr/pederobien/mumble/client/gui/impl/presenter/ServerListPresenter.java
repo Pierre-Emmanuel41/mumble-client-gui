@@ -2,16 +2,16 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import fr.pederobien.mumble.client.event.ServerJoinPostEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
+import fr.pederobien.mumble.client.gui.event.SelectServerPostEvent;
+import fr.pederobien.mumble.client.gui.event.SelectServerPreEvent;
+import fr.pederobien.mumble.client.gui.event.ServerJoinRequestPostEvent;
 import fr.pederobien.mumble.client.gui.event.ServerListAddServerPostEvent;
 import fr.pederobien.mumble.client.gui.event.ServerListRemoveServerPostEvent;
 import fr.pederobien.mumble.client.gui.impl.properties.ListCellView;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.ServerView;
-import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsServerListPresenter;
 import fr.pederobien.mumble.client.gui.model.ServerList;
 import fr.pederobien.mumble.client.interfaces.IMumbleServer;
-import fr.pederobien.utils.IObservable;
-import fr.pederobien.utils.Observable;
 import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
 import fr.pederobien.utils.event.IEventListener;
@@ -27,13 +27,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
-public class ServerListPresenter extends PresenterBase implements IEventListener, IObservable<IObsServerListPresenter> {
+public class ServerListPresenter extends PresenterBase implements IEventListener {
 	private ServerList serverList;
 	private ObservableList<Object> servers;
 	private BooleanProperty emptyServersListVisibilityProperty;
 	private SimpleLanguageProperty emptyServerTextProperty;
 	private IMumbleServer selectedServer;
-	private Observable<IObsServerListPresenter> observers;
 
 	public ServerListPresenter(ServerList serverList) {
 		this.serverList = serverList;
@@ -42,17 +41,6 @@ public class ServerListPresenter extends PresenterBase implements IEventListener
 
 		emptyServersListVisibilityProperty = new SimpleBooleanProperty(serverList.getServers().isEmpty());
 		emptyServerTextProperty = getPropertyHelper().languageProperty(EMessageCode.EMPTY_SERVER_LIST);
-		observers = new Observable<IObsServerListPresenter>();
-	}
-
-	@Override
-	public void addObserver(IObsServerListPresenter obs) {
-		observers.addObserver(obs);
-	}
-
-	@Override
-	public void removeObserver(IObsServerListPresenter obs) {
-		observers.removeObserver(obs);
 	}
 
 	/**
@@ -87,8 +75,11 @@ public class ServerListPresenter extends PresenterBase implements IEventListener
 	 * @param newServer The new selected server.
 	 */
 	public void onServerSelectedChanged(Object oldServer, Object newServer) {
-		this.selectedServer = (IMumbleServer) newServer;
-		observers.notifyObservers(obs -> obs.onSelectedServerChanged((IMumbleServer) oldServer, (IMumbleServer) newServer));
+		EventManager.callEvent(new SelectServerPreEvent(serverList, selectedServer, (IMumbleServer) newServer), () -> {
+			IMumbleServer previousServer = selectedServer;
+			this.selectedServer = (IMumbleServer) newServer;
+			EventManager.callEvent(new SelectServerPostEvent(serverList, previousServer, selectedServer));
+		});
 	}
 
 	/**
@@ -105,7 +96,7 @@ public class ServerListPresenter extends PresenterBase implements IEventListener
 	 */
 	public void onDoubleClickOnSelectedServer(MouseEvent event) {
 		if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2 && !(event.getTarget() instanceof ListCellView))
-			observers.notifyObservers(obs -> obs.onDoubleClickOnServer(selectedServer));
+			EventManager.callEvent(new ServerJoinRequestPostEvent(selectedServer));
 	}
 
 	@EventHandler

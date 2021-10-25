@@ -1,5 +1,6 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
+import fr.pederobien.communication.impl.LogEventListener;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.view.ServerListView;
 import fr.pederobien.mumble.client.gui.impl.view.ServerManagementView;
@@ -12,25 +13,24 @@ public class MainPresenter extends PresenterBase {
 	private ServerListView serverListView;
 	private ServerManagementView serverManagementView;
 	private StringProperty titleLanguageProperty;
+	private LogEventListener logListener;
 
 	public MainPresenter() {
 		for (IMumbleServer server : ServerListPersistence.getInstance().get().getServers())
 			server.open();
 
-		ServerListPresenter serverListPresenter = new ServerListPresenter(ServerListPersistence.getInstance().get());
-		serverListView = new ServerListView(serverListPresenter);
-
-		ServerManagementPresenter serverManagementPresenter = new ServerManagementPresenter(ServerListPersistence.getInstance().get());
-		serverListPresenter.addObserver(serverManagementPresenter);
-		serverManagementView = new ServerManagementView(serverManagementPresenter);
-
+		serverListView = new ServerListView(new ServerListPresenter(ServerListPersistence.getInstance().get()));
+		serverManagementView = new ServerManagementView(new ServerManagementPresenter(ServerListPersistence.getInstance().get()));
 		titleLanguageProperty = getPropertyHelper().languageProperty(EMessageCode.MUMBLE_WINDOW_TITLE);
+		logListener = new LogEventListener();
+		logListener.register();
 	}
 
 	@Override
 	public void onCloseRequest() {
 		GuiConfigurationPersistence.getInstance().save();
 		ServerListPersistence.getInstance().save();
+		logListener.unregister();
 	}
 
 	/**
