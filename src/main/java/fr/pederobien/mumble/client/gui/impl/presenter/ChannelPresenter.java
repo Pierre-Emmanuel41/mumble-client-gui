@@ -9,19 +9,18 @@ import fr.pederobien.mumble.client.event.PlayerRemoveFromChannelPostEvent;
 import fr.pederobien.mumble.client.event.ServerLeavePostEvent;
 import fr.pederobien.mumble.client.event.SoundModifierNameChangePostEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
+import fr.pederobien.mumble.client.gui.event.JoinChannelPostEvent;
+import fr.pederobien.mumble.client.gui.event.JoinChannelPreEvent;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.AddChannelView;
 import fr.pederobien.mumble.client.gui.impl.view.PlayerChannelView;
 import fr.pederobien.mumble.client.gui.impl.view.RenameChannelView;
 import fr.pederobien.mumble.client.gui.impl.view.SoundModifierView;
-import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsChannelPresenter;
 import fr.pederobien.mumble.client.interfaces.IChannel;
 import fr.pederobien.mumble.client.interfaces.IChannelList;
 import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 import fr.pederobien.mumble.client.interfaces.IOtherPlayer;
 import fr.pederobien.mumble.client.interfaces.IResponse;
-import fr.pederobien.utils.IObservable;
-import fr.pederobien.utils.Observable;
 import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
 import fr.pederobien.utils.event.IEventListener;
@@ -40,11 +39,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
-public class ChannelPresenter extends PresenterBase implements IEventListener, IObservable<IObsChannelPresenter> {
+public class ChannelPresenter extends PresenterBase implements IEventListener {
 	private IMumbleServer mumbleServer;
 	private IChannelList channelList;
 	private IChannel channel;
-	private Observable<IObsChannelPresenter> observers;
 
 	private ObservableList<Object> players;
 	private StringProperty channelNameProperty;
@@ -69,7 +67,6 @@ public class ChannelPresenter extends PresenterBase implements IEventListener, I
 
 		EventManager.registerListener(this);
 
-		observers = new Observable<IObsChannelPresenter>();
 		players = FXCollections.observableArrayList(channel.getPlayers().values());
 		channelNameProperty = new SimpleStringProperty(channel.getName());
 
@@ -84,16 +81,6 @@ public class ChannelPresenter extends PresenterBase implements IEventListener, I
 
 		soundModifierTextProperty = getPropertyHelper().languageProperty(EMessageCode.SOUND_MODIFIER, channel.getSoundModifier().getName());
 		soundModifierVisibility = new SimpleBooleanProperty(mumbleServer.getPlayer().isAdmin());
-	}
-
-	@Override
-	public void addObserver(IObsChannelPresenter obs) {
-		observers.addObserver(obs);
-	}
-
-	@Override
-	public void removeObserver(IObsChannelPresenter obs) {
-		observers.removeObserver(obs);
 	}
 
 	/**
@@ -135,7 +122,10 @@ public class ChannelPresenter extends PresenterBase implements IEventListener, I
 		if (event.getButton() != MouseButton.PRIMARY)
 			return;
 
-		observers.notifyObservers(obs -> obs.onChannelClicked(channel));
+		EventManager.callEvent(new JoinChannelPreEvent(mumbleServer, mumbleServer.getPlayer().getChannel(), channel), () -> {
+			IChannel previousChannel = mumbleServer.getPlayer().getChannel();
+			EventManager.callEvent(new JoinChannelPostEvent(mumbleServer, previousChannel, channel));
+		});
 	}
 
 	/**

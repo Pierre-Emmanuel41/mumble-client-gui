@@ -8,8 +8,8 @@ import fr.pederobien.mumble.client.event.ChannelRemovePostEvent;
 import fr.pederobien.mumble.client.event.ServerLeavePostEvent;
 import fr.pederobien.mumble.client.event.ServerReachableChangeEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
+import fr.pederobien.mumble.client.gui.event.JoinChannelPostEvent;
 import fr.pederobien.mumble.client.gui.impl.view.ChannelView;
-import fr.pederobien.mumble.client.gui.interfaces.observers.presenter.IObsChannelPresenter;
 import fr.pederobien.mumble.client.interfaces.IChannel;
 import fr.pederobien.mumble.client.interfaces.IChannelList;
 import fr.pederobien.mumble.client.interfaces.IMumbleServer;
@@ -25,7 +25,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
-public class ChannelListPresenter extends PresenterBase implements IEventListener, IObsChannelPresenter {
+public class ChannelListPresenter extends PresenterBase implements IEventListener {
 	private IMumbleServer mumbleServer;
 	private IChannel selectedChannel;
 	private IChannelList channelList;
@@ -40,20 +40,6 @@ public class ChannelListPresenter extends PresenterBase implements IEventListene
 		channels.addAll(channelList.getChannels().values());
 
 		EventManager.registerListener(this);
-	}
-
-	@Override
-	public void onChannelClicked(IChannel channel) {
-		if (selectedChannel == null) {
-			selectedChannel = channel;
-			selectedChannel.addPlayer(response -> addPlayer(response));
-		} else {
-			selectedChannel.removePlayer(response -> {
-				removePlayer(response);
-				selectedChannel = channel;
-				selectedChannel.addPlayer(r -> addPlayer(r));
-			});
-		}
 	}
 
 	/**
@@ -77,9 +63,7 @@ public class ChannelListPresenter extends PresenterBase implements IEventListene
 		return listView -> getPropertyHelper().cellView(item -> {
 			ChannelView view = channelViews.get(item);
 			if (view == null) {
-				ChannelPresenter presenter = new ChannelPresenter(mumbleServer, (IChannel) item);
-				presenter.addObserver(this);
-				view = new ChannelView(presenter);
+				view = new ChannelView(new ChannelPresenter(mumbleServer, (IChannel) item));
 				channelViews.put((IChannel) item, view);
 			}
 			return view.getRoot();
@@ -100,6 +84,20 @@ public class ChannelListPresenter extends PresenterBase implements IEventListene
 			return;
 
 		dispatch(() -> channels.remove(event.getChannel()));
+	}
+
+	@EventHandler
+	public void onJoinChannel(JoinChannelPostEvent event) {
+		if (selectedChannel == null) {
+			selectedChannel = event.getCurrentChannel();
+			selectedChannel.addPlayer(response -> addPlayer(response));
+		} else {
+			selectedChannel.removePlayer(response -> {
+				removePlayer(response);
+				selectedChannel = event.getCurrentChannel();
+				selectedChannel.addPlayer(r -> addPlayer(r));
+			});
+		}
 	}
 
 	@EventHandler
