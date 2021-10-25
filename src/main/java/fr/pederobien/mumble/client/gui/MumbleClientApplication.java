@@ -13,7 +13,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class Main extends Application {
+public class MumbleClientApplication extends Application {
 	private static PropertyHelper propertyHelper;
 	private static Stage primaryStage;
 
@@ -42,7 +42,7 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		Main.primaryStage = primaryStage;
+		MumbleClientApplication.primaryStage = primaryStage;
 
 		MainPresenter mainPresenter = new MainPresenter();
 		MainView mainView = new MainView(mainPresenter);

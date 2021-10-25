@@ -81,7 +81,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>fr.pederobien.mumble.client.gui.Main</mainClass>
+							<mainClass>fr.pederobien.mumble.client.gui.MumbleClientApplication</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>

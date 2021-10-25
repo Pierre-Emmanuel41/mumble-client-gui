@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import fr.pederobien.dictionary.interfaces.IMessageCode;
-import fr.pederobien.mumble.client.gui.Main;
+import fr.pederobien.mumble.client.gui.MumbleClientApplication;
 import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
 import fr.pederobien.mumble.client.gui.impl.properties.PropertyHelper;
 import fr.pederobien.mumble.client.interfaces.IResponse;
@@ -43,14 +43,14 @@ public abstract class PresenterBase {
 	 * @return The primary stage of the application.
 	 */
 	protected Stage getPrimaryStage() {
-		return Main.getStage();
+		return MumbleClientApplication.getStage();
 	}
 
 	/**
 	 * @return The helper that creates properties.
 	 */
 	protected PropertyHelper getPropertyHelper() {
-		return Main.getPropertyHelper();
+		return MumbleClientApplication.getPropertyHelper();
 	}
 
 	/**
