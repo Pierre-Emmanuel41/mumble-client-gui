@@ -1,5 +1,8 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import fr.pederobien.mumble.client.event.ServerJoinPostEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.event.SelectServerPostEvent;
@@ -30,6 +33,7 @@ import javafx.util.Callback;
 public class ServerListPresenter extends PresenterBase implements IEventListener {
 	private ServerList serverList;
 	private ObservableList<Object> servers;
+	private Map<IMumbleServer, ServerView> serverViews;
 	private BooleanProperty emptyServersListVisibilityProperty;
 	private SimpleLanguageProperty emptyServerTextProperty;
 	private IMumbleServer selectedServer;
@@ -38,6 +42,7 @@ public class ServerListPresenter extends PresenterBase implements IEventListener
 		this.serverList = serverList;
 		EventManager.registerListener(this);
 		servers = FXCollections.observableArrayList(serverList.getServers());
+		serverViews = new HashMap<IMumbleServer, ServerView>();
 
 		emptyServersListVisibilityProperty = new SimpleBooleanProperty(serverList.getServers().isEmpty());
 		emptyServerTextProperty = getPropertyHelper().languageProperty(EMessageCode.EMPTY_SERVER_LIST);
@@ -65,7 +70,16 @@ public class ServerListPresenter extends PresenterBase implements IEventListener
 	}
 
 	public <T> Callback<ListView<T>, ListCell<T>> serverViewFactory(Color enteredColor) {
-		return listView -> getPropertyHelper().cellView(item -> new ServerView(ServerPresenter.getOrCreateServerPresenter((IMumbleServer) item)).getRoot(), enteredColor);
+		// return listView -> getPropertyHelper().cellView(item -> new
+		// ServerView(ServerPresenter.getOrCreateServerPresenter((IMumbleServer) item)).getRoot(), enteredColor);
+		return listView -> getPropertyHelper().cellView(item -> {
+			ServerView view = serverViews.get(item);
+			if (view == null) {
+				view = new ServerView(new ServerPresenter((IMumbleServer) item));
+				serverViews.put((IMumbleServer) item, view);
+			}
+			return view.getRoot();
+		}, enteredColor);
 	}
 
 	/**

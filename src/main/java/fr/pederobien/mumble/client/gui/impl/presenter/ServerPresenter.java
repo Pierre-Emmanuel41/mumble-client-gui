@@ -1,8 +1,5 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import fr.pederobien.dictionary.interfaces.IMessageCode;
 import fr.pederobien.mumble.client.event.ServerIpAddressChangePostEvent;
 import fr.pederobien.mumble.client.event.ServerJoinPostEvent;
@@ -23,31 +20,20 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 public class ServerPresenter extends PresenterBase implements IEventListener {
-	private static final Map<IMumbleServer, ServerPresenter> PRESENTERS = new HashMap<IMumbleServer, ServerPresenter>();
 	private IMumbleServer server;
 	private StringProperty serverNameProperty, serverIpAddressProperty;
 	private SimpleLanguageProperty serverReachableStatusProperty;
 	private ObjectProperty<Paint> textFillProperty;
 
-	public static ServerPresenter getOrCreateServerPresenter(IMumbleServer server) {
-		ServerPresenter presenter = PRESENTERS.get(server);
-		if (presenter != null)
-			return presenter;
-
-		presenter = new ServerPresenter(server);
-		PRESENTERS.put(server, presenter);
-		return presenter;
-	}
-
-	private ServerPresenter(IMumbleServer server) {
+	public ServerPresenter(IMumbleServer server) {
 		this.server = server;
-
-		EventManager.registerListener(this);
 
 		serverNameProperty = new SimpleStringProperty(server.getName());
 		serverIpAddressProperty = new SimpleStringProperty(server.getAddress() + ":" + server.getPort());
 		serverReachableStatusProperty = getPropertyHelper().languageProperty(getServerStateCode());
 		textFillProperty = new SimpleObjectProperty<Paint>(getServerReachableStatusColor());
+
+		EventManager.registerListener(this);
 	}
 
 	@Override
