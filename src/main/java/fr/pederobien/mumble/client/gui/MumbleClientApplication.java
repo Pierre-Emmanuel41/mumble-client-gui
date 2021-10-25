@@ -44,10 +44,8 @@ public class MumbleClientApplication extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		MumbleClientApplication.primaryStage = primaryStage;
 
-		MainPresenter mainPresenter = new MainPresenter();
-		MainView mainView = new MainView(mainPresenter);
-
-		primaryStage.titleProperty().bind(mainPresenter.titleLanguageProperty());
+		MainView mainView = new MainView(new MainPresenter());
+		primaryStage.titleProperty().bind(mainView.getPresenter().titleLanguageProperty());
 		primaryStage.setScene(new Scene(mainView.getRoot()));
 		primaryStage.setMaximized(true);
 		primaryStage.show();

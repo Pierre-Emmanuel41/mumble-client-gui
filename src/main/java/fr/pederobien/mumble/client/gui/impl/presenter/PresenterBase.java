@@ -16,13 +16,17 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public abstract class PresenterBase {
-	private static final List<PresenterBase> PRESENTERS = new ArrayList<PresenterBase>();
-	private ObjectProperty<Font> fontProperty;
+	private static final List<PresenterBase> PRESENTERS;
+	private static final ObjectProperty<Font> FONT_PROPERTY;
+
+	static {
+		PRESENTERS = new ArrayList<PresenterBase>();
+		FONT_PROPERTY = MumbleClientApplication.getPropertyHelper().fontProperty();
+	}
 
 	protected PresenterBase() {
 		PRESENTERS.add(this);
 		getPrimaryStage().setOnCloseRequest(e -> PRESENTERS.forEach(presenter -> presenter.onCloseRequest()));
-		fontProperty = getPropertyHelper().fontProperty();
 	}
 
 	/**
@@ -36,7 +40,7 @@ public abstract class PresenterBase {
 	 * @return The font property used for each view.
 	 */
 	public ObjectProperty<Font> fontProperty() {
-		return fontProperty;
+		return FONT_PROPERTY;
 	}
 
 	/**
