@@ -57,7 +57,7 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 		muteOrUnmuteTextProperty = getPropertyHelper().languageProperty(EMessageCode.MUTE_TOOLTIP);
 		muteOrUnmuteVisibleProperty = new SimpleBooleanProperty(!isMainPlayer());
 
-		kickPlayerTextProperty = getPropertyHelper().languageProperty(EMessageCode.KICK_PLAYER, mumbleServer.getPlayer().getName());
+		kickPlayerTextProperty = getPropertyHelper().languageProperty(EMessageCode.KICK_PLAYER, otherPlayer.getName());
 		kickPlayerVisiblity = new SimpleBooleanProperty(!isMainPlayer() && mumbleServer.getPlayer().isAdmin());
 	}
 
