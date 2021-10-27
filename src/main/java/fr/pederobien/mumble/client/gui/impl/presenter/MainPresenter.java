@@ -6,6 +6,7 @@ import fr.pederobien.mumble.client.gui.impl.view.ServerManagementView;
 import fr.pederobien.mumble.client.gui.persistence.configuration.GuiConfigurationPersistence;
 import fr.pederobien.mumble.client.gui.persistence.model.ServerListPersistence;
 import fr.pederobien.mumble.client.interfaces.IMumbleServer;
+import fr.pederobien.sound.event.SoundEvent;
 import fr.pederobien.utils.event.EventLogger;
 import javafx.beans.property.StringProperty;
 
@@ -14,9 +15,12 @@ public class MainPresenter extends PresenterBase {
 	private ServerManagementView serverManagementView;
 	private StringProperty titleLanguageProperty;
 
-	public MainPresenter() {
+	static {
 		EventLogger.instance().register();
+		EventLogger.instance().ignore(SoundEvent.class);
+	}
 
+	public MainPresenter() {
 		for (IMumbleServer server : ServerListPersistence.getInstance().get().getServers())
 			server.open();
 

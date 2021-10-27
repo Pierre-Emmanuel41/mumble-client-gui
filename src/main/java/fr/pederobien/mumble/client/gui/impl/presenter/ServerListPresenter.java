@@ -92,7 +92,7 @@ public class ServerListPresenter extends PresenterBase implements IEventListener
 	public void onServerSelectedChanged(Object oldServer, Object newServer) {
 		IMumbleServer previousServer = selectedServer;
 		SelectServerPreEvent preEvent = new SelectServerPreEvent(serverList, selectedServer, (IMumbleServer) newServer);
-		SelectServerPostEvent postEvent = new SelectServerPostEvent(serverList, previousServer, selectedServer);
+		SelectServerPostEvent postEvent = new SelectServerPostEvent(serverList, previousServer, (IMumbleServer) newServer);
 		EventManager.callEvent(preEvent, () -> this.selectedServer = (IMumbleServer) newServer, postEvent);
 	}
 
