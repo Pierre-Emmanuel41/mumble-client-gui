@@ -4,7 +4,7 @@ import fr.pederobien.mumble.client.event.ChannelAddPostEvent;
 import fr.pederobien.mumble.client.event.ChannelNameChangePostEvent;
 import fr.pederobien.mumble.client.event.ChannelRemovePostEvent;
 import fr.pederobien.mumble.client.event.PlayerAddToChannelPostEvent;
-import fr.pederobien.mumble.client.event.PlayerAdminStatusChangeEvent;
+import fr.pederobien.mumble.client.event.PlayerAdminStatusChangePostEvent;
 import fr.pederobien.mumble.client.event.PlayerRemoveFromChannelPostEvent;
 import fr.pederobien.mumble.client.event.ServerLeavePostEvent;
 import fr.pederobien.mumble.client.event.SoundModifierNameChangePostEvent;
@@ -24,7 +24,6 @@ import fr.pederobien.mumble.client.interfaces.IResponse;
 import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
 import fr.pederobien.utils.event.IEventListener;
-import fr.pederobien.utils.event.LogEvent;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -82,8 +81,6 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 
 		soundModifierTextProperty = getPropertyHelper().languageProperty(EMessageCode.SOUND_MODIFIER, channel.getSoundModifier().getName());
 		soundModifierVisibility = new SimpleBooleanProperty(mumbleServer.getPlayer().isAdmin());
-
-		EventManager.callEvent(new LogEvent("Creating ChannelPresenter for channel " + channel.getName()));
 	}
 
 	/**
@@ -125,10 +122,10 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 		if (event.getButton() != MouseButton.PRIMARY)
 			return;
 
-		EventManager.callEvent(new ChannelJoinRequestPreEvent(mumbleServer, mumbleServer.getPlayer().getChannel(), channel), () -> {
-			IChannel previousChannel = mumbleServer.getPlayer().getChannel();
-			EventManager.callEvent(new ChannelJoinRequestPostEvent(mumbleServer, previousChannel, channel));
-		});
+		IChannel currentChannel = mumbleServer.getPlayer().getChannel();
+		ChannelJoinRequestPreEvent preEvent = new ChannelJoinRequestPreEvent(mumbleServer, currentChannel, channel);
+		ChannelJoinRequestPostEvent posEvent = new ChannelJoinRequestPostEvent(mumbleServer, currentChannel, channel);
+		EventManager.callEvent(preEvent, () -> EventManager.callEvent(posEvent));
 	}
 
 	/**
@@ -274,7 +271,7 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 	}
 
 	@EventHandler
-	private void onAdminStatusChanged(PlayerAdminStatusChangeEvent event) {
+	private void onAdminStatusChanged(PlayerAdminStatusChangePostEvent event) {
 		addChannelVisibility.set(event.isAdmin());
 		removeChannelVisibility.set(event.isAdmin() && channelList.getChannels().size() > 1);
 		renameChannelVisibility.set(event.isAdmin());

@@ -4,7 +4,7 @@ import java.util.Locale;
 
 import fr.pederobien.mumble.client.gui.interfaces.IGuiConfiguration;
 
-public class LocaleChangeEvent extends GuiConfigurationEvent<Locale> {
+public class LocaleChangePostEvent extends GuiConfigurationEvent<Locale> {
 
 	/**
 	 * Creates an event thrown when the locale of the given configuration has changed.
@@ -13,7 +13,7 @@ public class LocaleChangeEvent extends GuiConfigurationEvent<Locale> {
 	 * @param oldValue      The old locale.
 	 * @param newValue      The current locale.
 	 */
-	public LocaleChangeEvent(IGuiConfiguration configuration, Locale oldValue, Locale newValue) {
+	public LocaleChangePostEvent(IGuiConfiguration configuration, Locale oldValue, Locale newValue) {
 		super(configuration, oldValue, newValue);
 	}
 }

@@ -8,6 +8,7 @@ import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.event.SelectServerPostEvent;
 import fr.pederobien.mumble.client.gui.event.SelectServerPreEvent;
 import fr.pederobien.mumble.client.gui.event.ServerJoinRequestPostEvent;
+import fr.pederobien.mumble.client.gui.event.ServerJoinRequestPreEvent;
 import fr.pederobien.mumble.client.gui.event.ServerListAddServerPostEvent;
 import fr.pederobien.mumble.client.gui.event.ServerListRemoveServerPostEvent;
 import fr.pederobien.mumble.client.gui.impl.properties.ListCellView;
@@ -89,11 +90,10 @@ public class ServerListPresenter extends PresenterBase implements IEventListener
 	 * @param newServer The new selected server.
 	 */
 	public void onServerSelectedChanged(Object oldServer, Object newServer) {
-		EventManager.callEvent(new SelectServerPreEvent(serverList, selectedServer, (IMumbleServer) newServer), () -> {
-			IMumbleServer previousServer = selectedServer;
-			this.selectedServer = (IMumbleServer) newServer;
-			EventManager.callEvent(new SelectServerPostEvent(serverList, previousServer, selectedServer));
-		});
+		IMumbleServer previousServer = selectedServer;
+		SelectServerPreEvent preEvent = new SelectServerPreEvent(serverList, selectedServer, (IMumbleServer) newServer);
+		SelectServerPostEvent postEvent = new SelectServerPostEvent(serverList, previousServer, selectedServer);
+		EventManager.callEvent(preEvent, () -> this.selectedServer = (IMumbleServer) newServer, postEvent);
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class ServerListPresenter extends PresenterBase implements IEventListener
 	 */
 	public void onDoubleClickOnSelectedServer(MouseEvent event) {
 		if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2 && !(event.getTarget() instanceof ListCellView))
-			EventManager.callEvent(new ServerJoinRequestPostEvent(selectedServer), () -> EventManager.callEvent(new ServerJoinRequestPostEvent(selectedServer)));
+			EventManager.callEvent(new ServerJoinRequestPreEvent(selectedServer), () -> EventManager.callEvent(new ServerJoinRequestPostEvent(selectedServer)));
 	}
 
 	@EventHandler

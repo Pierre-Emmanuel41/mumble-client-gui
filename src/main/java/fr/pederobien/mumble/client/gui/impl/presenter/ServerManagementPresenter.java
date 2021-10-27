@@ -4,6 +4,7 @@ import fr.pederobien.mumble.client.event.ServerJoinPostEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.event.SelectServerPostEvent;
 import fr.pederobien.mumble.client.gui.event.ServerJoinRequestPostEvent;
+import fr.pederobien.mumble.client.gui.event.ServerJoinRequestPreEvent;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.ServerChannelsView;
 import fr.pederobien.mumble.client.gui.impl.view.ServerInfoView;
@@ -113,7 +114,7 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 	 * Send a request to the server in order to join the selected server and update the user interface.
 	 */
 	public void onJoin() {
-		EventManager.callEvent(new ServerJoinRequestPostEvent(selectedServer));
+		EventManager.callEvent(new ServerJoinRequestPreEvent(selectedServer), () -> EventManager.callEvent(new ServerJoinRequestPostEvent(selectedServer)));
 	}
 
 	/**

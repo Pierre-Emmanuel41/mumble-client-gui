@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import fr.pederobien.mumble.client.event.OtherPlayerDeafenPostEvent;
 import fr.pederobien.mumble.client.event.OtherPlayerMutePostEvent;
-import fr.pederobien.mumble.client.event.PlayerAdminStatusChangeEvent;
+import fr.pederobien.mumble.client.event.PlayerAdminStatusChangePostEvent;
 import fr.pederobien.mumble.client.event.ServerLeavePostEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.environment.Environments;
@@ -160,7 +160,7 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 	}
 
 	@EventHandler
-	private void onAdminStatusChanged(PlayerAdminStatusChangeEvent event) {
+	private void onAdminStatusChanged(PlayerAdminStatusChangePostEvent event) {
 		if (!event.getPlayer().equals(mumbleServer.getPlayer()))
 			return;
 

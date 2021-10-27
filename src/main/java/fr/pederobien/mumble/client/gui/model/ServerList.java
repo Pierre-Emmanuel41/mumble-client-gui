@@ -45,10 +45,7 @@ public class ServerList {
 	 * @param server The server to add.
 	 */
 	public void add(IMumbleServer server) {
-		EventManager.callEvent(new ServerListAddServerPreEvent(this, server), () -> {
-			servers.add(server);
-			EventManager.callEvent(new ServerListAddServerPostEvent(this, server));
-		});
+		EventManager.callEvent(new ServerListAddServerPreEvent(this, server), () -> servers.add(server), new ServerListAddServerPostEvent(this, server));
 	}
 
 	/**
@@ -57,11 +54,11 @@ public class ServerList {
 	 * @param server The server to remove.
 	 */
 	public void remove(IMumbleServer server) {
-		EventManager.callEvent(new ServerListRemoveServerPreEvent(this, server), () -> {
+		Runnable remove = () -> {
 			server.dispose();
 			servers.remove(server);
-			EventManager.callEvent(new ServerListRemoveServerPostEvent(this, server));
-		});
+		};
+		EventManager.callEvent(new ServerListRemoveServerPreEvent(this, server), remove, new ServerListRemoveServerPostEvent(this, server));
 	}
 
 	/**

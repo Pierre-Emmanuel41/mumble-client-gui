@@ -4,8 +4,8 @@ import java.util.Locale;
 
 import fr.pederobien.dictionary.impl.NotificationCenter;
 import fr.pederobien.dictionary.interfaces.IDictionary;
-import fr.pederobien.mumble.client.gui.event.FontChangeEvent;
-import fr.pederobien.mumble.client.gui.event.LocaleChangeEvent;
+import fr.pederobien.mumble.client.gui.event.FontChangePostEvent;
+import fr.pederobien.mumble.client.gui.event.LocaleChangePostEvent;
 import fr.pederobien.mumble.client.gui.interfaces.IGuiConfiguration;
 import fr.pederobien.utils.event.EventManager;
 import javafx.scene.text.Font;
@@ -26,7 +26,7 @@ public class GuiConfiguration implements IGuiConfiguration {
 	public void setFont(Font font) {
 		Font oldFont = getFont();
 		this.font = font;
-		EventManager.callEvent(new FontChangeEvent(this, oldFont, getFont()));
+		EventManager.callEvent(new FontChangePostEvent(this, oldFont, getFont()));
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class GuiConfiguration implements IGuiConfiguration {
 	public void setLocale(Locale locale) {
 		Locale oldLocale = getLocale();
 		this.locale = locale;
-		EventManager.callEvent(new LocaleChangeEvent(this, oldLocale, getLocale()));
+		EventManager.callEvent(new LocaleChangePostEvent(this, oldLocale, getLocale()));
 	}
 
 	@Override

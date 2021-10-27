@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import fr.pederobien.mumble.client.gui.event.FontChangeEvent;
-import fr.pederobien.mumble.client.gui.event.LocaleChangeEvent;
+import fr.pederobien.mumble.client.gui.event.FontChangePostEvent;
+import fr.pederobien.mumble.client.gui.event.LocaleChangePostEvent;
 import fr.pederobien.mumble.client.gui.interfaces.IGuiConfiguration;
 import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
@@ -48,12 +48,12 @@ public class InternalProperty implements IEventListener {
 	}
 
 	@EventHandler
-	public void onLanguageChanged(LocaleChangeEvent event) {
+	public void onLanguageChanged(LocaleChangePostEvent event) {
 		firePropertyChanged(Action.LOCALE_CHANGED, "Locale", event.getOldValue(), event.getNewValue());
 	}
 
 	@EventHandler
-	public void onFontChanged(FontChangeEvent event) {
+	public void onFontChanged(FontChangePostEvent event) {
 		firePropertyChanged(Action.FONT_CHANGED, "Font", event.getOldValue(), event.getNewValue());
 	}
 
