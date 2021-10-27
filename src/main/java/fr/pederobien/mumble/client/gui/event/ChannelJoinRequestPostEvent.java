@@ -1,11 +1,13 @@
 package fr.pederobien.mumble.client.gui.event;
 
+import java.util.StringJoiner;
+
 import fr.pederobien.mumble.client.event.ServerEvent;
 import fr.pederobien.mumble.client.interfaces.IChannel;
 import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 import fr.pederobien.utils.ICancellable;
 
-public class JoinChannelPostEvent extends ServerEvent implements ICancellable {
+public class ChannelJoinRequestPostEvent extends ServerEvent implements ICancellable {
 	private boolean isCancelled;
 	private IChannel previousChannel, currentChannel;
 
@@ -16,7 +18,7 @@ public class JoinChannelPostEvent extends ServerEvent implements ICancellable {
 	 * @param previousChannel The channel previously selected in the user interface.
 	 * @param previousChannel The channel currently selected in the user interface.
 	 */
-	public JoinChannelPostEvent(IMumbleServer server, IChannel previousChannel, IChannel currentChannel) {
+	public ChannelJoinRequestPostEvent(IMumbleServer server, IChannel previousChannel, IChannel currentChannel) {
 		super(server);
 		this.previousChannel = previousChannel;
 		this.currentChannel = currentChannel;
@@ -44,5 +46,14 @@ public class JoinChannelPostEvent extends ServerEvent implements ICancellable {
 	 */
 	public IChannel getCurrentChannel() {
 		return currentChannel;
+	}
+
+	@Override
+	public String toString() {
+		StringJoiner joiner = new StringJoiner(",", "{", "}");
+		joiner.add("server=" + getServer().getName());
+		joiner.add("previousChannel=" + (getPreviousChannel() == null ? null : getPreviousChannel().getName()));
+		joiner.add("currentChannel=" + (getCurrentChannel() == null ? null : getCurrentChannel().getName()));
+		return super.toString();
 	}
 }

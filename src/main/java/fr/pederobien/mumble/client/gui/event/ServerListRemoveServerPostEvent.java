@@ -1,5 +1,7 @@
 package fr.pederobien.mumble.client.gui.event;
 
+import java.util.StringJoiner;
+
 import fr.pederobien.mumble.client.gui.model.ServerList;
 import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 
@@ -22,5 +24,13 @@ public class ServerListRemoveServerPostEvent extends ServerListEvent {
 	 */
 	public IMumbleServer getServer() {
 		return server;
+	}
+
+	@Override
+	public String toString() {
+		StringJoiner joiner = new StringJoiner(",", "{", "}");
+		joiner.add("serverList=" + getServerList().hashCode());
+		joiner.add("server=" + getServer().getName());
+		return String.format("%s_%s", getName(), joiner);
 	}
 }

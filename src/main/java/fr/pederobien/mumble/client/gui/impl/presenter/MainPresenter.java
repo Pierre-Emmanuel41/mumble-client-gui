@@ -1,36 +1,35 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
-import fr.pederobien.communication.impl.LogEventListener;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.view.ServerListView;
 import fr.pederobien.mumble.client.gui.impl.view.ServerManagementView;
 import fr.pederobien.mumble.client.gui.persistence.configuration.GuiConfigurationPersistence;
 import fr.pederobien.mumble.client.gui.persistence.model.ServerListPersistence;
 import fr.pederobien.mumble.client.interfaces.IMumbleServer;
+import fr.pederobien.utils.event.EventLogger;
 import javafx.beans.property.StringProperty;
 
 public class MainPresenter extends PresenterBase {
 	private ServerListView serverListView;
 	private ServerManagementView serverManagementView;
 	private StringProperty titleLanguageProperty;
-	private LogEventListener logListener;
 
 	public MainPresenter() {
+		EventLogger.instance().register();
+
 		for (IMumbleServer server : ServerListPersistence.getInstance().get().getServers())
 			server.open();
 
 		serverListView = new ServerListView(new ServerListPresenter(ServerListPersistence.getInstance().get()));
 		serverManagementView = new ServerManagementView(new ServerManagementPresenter(ServerListPersistence.getInstance().get()));
 		titleLanguageProperty = getPropertyHelper().languageProperty(EMessageCode.MUMBLE_WINDOW_TITLE);
-		logListener = new LogEventListener();
-		logListener.register();
 	}
 
 	@Override
 	public void onCloseRequest() {
 		GuiConfigurationPersistence.getInstance().save();
 		ServerListPersistence.getInstance().save();
-		logListener.unregister();
+		EventLogger.instance().unregister();
 	}
 
 	/**

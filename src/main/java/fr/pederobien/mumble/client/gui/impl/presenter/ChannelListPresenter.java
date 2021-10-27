@@ -8,7 +8,7 @@ import fr.pederobien.mumble.client.event.ChannelRemovePostEvent;
 import fr.pederobien.mumble.client.event.ServerLeavePostEvent;
 import fr.pederobien.mumble.client.event.ServerReachableChangeEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
-import fr.pederobien.mumble.client.gui.event.JoinChannelPostEvent;
+import fr.pederobien.mumble.client.gui.event.ChannelJoinRequestPostEvent;
 import fr.pederobien.mumble.client.gui.impl.view.ChannelView;
 import fr.pederobien.mumble.client.interfaces.IChannel;
 import fr.pederobien.mumble.client.interfaces.IChannelList;
@@ -27,7 +27,6 @@ import javafx.util.Callback;
 
 public class ChannelListPresenter extends PresenterBase implements IEventListener {
 	private IMumbleServer mumbleServer;
-	private IChannel selectedChannel;
 	private IChannelList channelList;
 	private ObservableList<Object> channels;
 	private Map<IChannel, ChannelView> channelViews;
@@ -87,17 +86,10 @@ public class ChannelListPresenter extends PresenterBase implements IEventListene
 	}
 
 	@EventHandler
-	public void onJoinChannel(JoinChannelPostEvent event) {
-		if (selectedChannel == null) {
-			selectedChannel = event.getCurrentChannel();
-			selectedChannel.addPlayer(response -> addPlayer(response));
-		} else {
-			selectedChannel.removePlayer(response -> {
-				removePlayer(response);
-				selectedChannel = event.getCurrentChannel();
-				selectedChannel.addPlayer(r -> addPlayer(r));
-			});
-		}
+	public void onJoinChannel(ChannelJoinRequestPostEvent event) {
+		if (mumbleServer.getPlayer().getChannel() != null)
+			mumbleServer.getPlayer().getChannel().removePlayer(response -> removePlayer(response));
+		event.getCurrentChannel().addPlayer(r -> addPlayer(r));
 	}
 
 	@EventHandler
@@ -131,6 +123,6 @@ public class ChannelListPresenter extends PresenterBase implements IEventListene
 
 	private void addPlayer(IResponse response) {
 		handleRequestFailed(response, AlertType.INFORMATION, EMessageCode.PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL_TITLE,
-				EMessageCode.PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL, () -> selectedChannel = null);
+				EMessageCode.PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL);
 	}
 }

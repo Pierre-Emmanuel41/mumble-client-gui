@@ -1,12 +1,14 @@
 package fr.pederobien.mumble.client.gui.event;
 
+import java.util.StringJoiner;
+
 import fr.pederobien.mumble.client.gui.model.ServerList;
 import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 import fr.pederobien.utils.ICancellable;
 
 public class SelectServerPreEvent extends ServerListEvent implements ICancellable {
 	private boolean isCancelled;
-	private IMumbleServer currentServer, futurServer;
+	private IMumbleServer currentServer, futureServer;
 
 	/**
 	 * Creates an event thrown the selected server in user interface is about to change.
@@ -15,10 +17,10 @@ public class SelectServerPreEvent extends ServerListEvent implements ICancellabl
 	 * @param currentServer The server currently selected in the user interface.
 	 * @param futurServer   The server that is about to be selected.
 	 */
-	public SelectServerPreEvent(ServerList serverList, IMumbleServer currentServer, IMumbleServer futurServer) {
+	public SelectServerPreEvent(ServerList serverList, IMumbleServer currentServer, IMumbleServer futureServer) {
 		super(serverList);
 		this.currentServer = currentServer;
-		this.futurServer = futurServer;
+		this.futureServer = futureServer;
 	}
 
 	@Override
@@ -41,7 +43,16 @@ public class SelectServerPreEvent extends ServerListEvent implements ICancellabl
 	/**
 	 * @return The server that is about to be selected.
 	 */
-	public IMumbleServer getFuturServer() {
-		return futurServer;
+	public IMumbleServer getFutureServer() {
+		return futureServer;
+	}
+
+	@Override
+	public String toString() {
+		StringJoiner joiner = new StringJoiner(",", "{", "}");
+		joiner.add("serverList=" + getServerList().hashCode());
+		joiner.add("currentServer=" + (getCurrentServer() == null ? null : getCurrentServer().getName()));
+		joiner.add("futureServer=" + (getFutureServer() == null ? null : getFutureServer().getName()));
+		return super.toString();
 	}
 }

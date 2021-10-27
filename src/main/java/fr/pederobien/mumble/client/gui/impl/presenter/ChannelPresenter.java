@@ -9,8 +9,8 @@ import fr.pederobien.mumble.client.event.PlayerRemoveFromChannelPostEvent;
 import fr.pederobien.mumble.client.event.ServerLeavePostEvent;
 import fr.pederobien.mumble.client.event.SoundModifierNameChangePostEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
-import fr.pederobien.mumble.client.gui.event.JoinChannelPostEvent;
-import fr.pederobien.mumble.client.gui.event.JoinChannelPreEvent;
+import fr.pederobien.mumble.client.gui.event.ChannelJoinRequestPostEvent;
+import fr.pederobien.mumble.client.gui.event.ChannelJoinRequestPreEvent;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.AddChannelView;
 import fr.pederobien.mumble.client.gui.impl.view.PlayerChannelView;
@@ -24,6 +24,7 @@ import fr.pederobien.mumble.client.interfaces.IResponse;
 import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
 import fr.pederobien.utils.event.IEventListener;
+import fr.pederobien.utils.event.LogEvent;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -81,6 +82,8 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 
 		soundModifierTextProperty = getPropertyHelper().languageProperty(EMessageCode.SOUND_MODIFIER, channel.getSoundModifier().getName());
 		soundModifierVisibility = new SimpleBooleanProperty(mumbleServer.getPlayer().isAdmin());
+
+		EventManager.callEvent(new LogEvent("Creating ChannelPresenter for channel " + channel.getName()));
 	}
 
 	/**
@@ -122,9 +125,9 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 		if (event.getButton() != MouseButton.PRIMARY)
 			return;
 
-		EventManager.callEvent(new JoinChannelPreEvent(mumbleServer, mumbleServer.getPlayer().getChannel(), channel), () -> {
+		EventManager.callEvent(new ChannelJoinRequestPreEvent(mumbleServer, mumbleServer.getPlayer().getChannel(), channel), () -> {
 			IChannel previousChannel = mumbleServer.getPlayer().getChannel();
-			EventManager.callEvent(new JoinChannelPostEvent(mumbleServer, previousChannel, channel));
+			EventManager.callEvent(new ChannelJoinRequestPostEvent(mumbleServer, previousChannel, channel));
 		});
 	}
 

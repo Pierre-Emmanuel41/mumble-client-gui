@@ -110,7 +110,7 @@ public class ServerListPresenter extends PresenterBase implements IEventListener
 	 */
 	public void onDoubleClickOnSelectedServer(MouseEvent event) {
 		if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2 && !(event.getTarget() instanceof ListCellView))
-			EventManager.callEvent(new ServerJoinRequestPostEvent(selectedServer));
+			EventManager.callEvent(new ServerJoinRequestPostEvent(selectedServer), () -> EventManager.callEvent(new ServerJoinRequestPostEvent(selectedServer)));
 	}
 
 	@EventHandler

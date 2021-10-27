@@ -1,5 +1,7 @@
 package fr.pederobien.mumble.client.gui.event;
 
+import java.util.StringJoiner;
+
 import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 
 public class ServerJoinRequestPostEvent extends MumbleServerEvent {
@@ -11,5 +13,12 @@ public class ServerJoinRequestPostEvent extends MumbleServerEvent {
 	 */
 	public ServerJoinRequestPostEvent(IMumbleServer mumbleServer) {
 		super(mumbleServer);
+	}
+
+	@Override
+	public String toString() {
+		StringJoiner joiner = new StringJoiner(",", "{", "}");
+		joiner.add("server=" + getMumbleServer());
+		return String.format("%s_%s", getName(), joiner);
 	}
 }
