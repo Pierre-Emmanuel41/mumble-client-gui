@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import fr.pederobien.mumble.client.gui.environment.Variables;
 import fr.pederobien.mumble.client.gui.model.ServerList;
 import fr.pederobien.mumble.client.gui.persistence.model.loaders.ServerListLoaderV10;
 import fr.pederobien.mumble.client.interfaces.IMumbleServer;
@@ -15,7 +16,7 @@ public class ServerListPersistence extends AbstractXmlPersistence<ServerList> {
 	private static final String ROOT_XML_DOCUMENT = "ServerList";
 
 	private ServerListPersistence() {
-		super(Paths.get(System.getenv("APPDATA"), ".mumble"));
+		super(Paths.get(Variables.MUMBLE_FOLDER.getFileName()));
 		register(new ServerListLoaderV10());
 	}
 

@@ -1,14 +1,23 @@
 package fr.pederobien.mumble.client.gui.environment;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public enum Variables {
 	// Folder that contains resources files
-	RESOURCES_FOLDER("src/main/resources/"),
+	RESOURCES_FOLDER(Paths.get("src", "main", "resources")),
 
 	// Folder that contains dictionaries
-	DICTIONARIES_FOLDER(RESOURCES_FOLDER.getFileName().concat("dictionaries").concat("/")),
+	DICTIONARIES_FOLDER(RESOURCES_FOLDER.getPath().resolve("dictionaries")),
 
 	// Folder that contains pictures
-	IMAGE_FOLDER(RESOURCES_FOLDER.getFileName().concat("images").concat("/")),
+	IMAGE_FOLDER(RESOURCES_FOLDER.getPath().resolve("images")),
+
+	// Folder that contains configuration files,
+	MUMBLE_FOLDER(Paths.get(System.getenv("APPDATA"), ".mumble")),
+
+	// Folder that contains log files
+	LOG_FOLDER(MUMBLE_FOLDER.getPath().resolve("logs")),
 
 	// File that contains gui configuration parameters.
 	GUI_CONFIGURATION("GuiConfiguration"),
@@ -37,10 +46,16 @@ public enum Variables {
 	// File that correspond to the hang up.
 	HANG_UP("Hangup.png");
 
+	private Path path;
 	private String fileName;
 
 	private Variables(String fileName) {
 		this.fileName = fileName;
+	}
+
+	private Variables(Path path) {
+		this.path = path;
+		this.fileName = path.toString();
 	}
 
 	/**
@@ -48,5 +63,12 @@ public enum Variables {
 	 */
 	public String getFileName() {
 		return fileName;
+	}
+
+	/**
+	 * @return The path leading to this variable. This path is null when the variable refers to a file and not to a folder.
+	 */
+	public Path getPath() {
+		return path;
 	}
 }

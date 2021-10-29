@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import fr.pederobien.mumble.client.gui.environment.Variables;
 import fr.pederobien.mumble.client.gui.impl.GuiConfiguration;
 import fr.pederobien.mumble.client.gui.interfaces.IGuiConfiguration;
 import fr.pederobien.mumble.client.gui.persistence.configuration.loaders.GuiConfigurationLoaderV10;
@@ -15,7 +16,7 @@ public class GuiConfigurationPersistence extends AbstractXmlPersistence<IGuiConf
 	private static final String XML_ROOT_ELEMENT = "GuiConfiguration";
 
 	protected GuiConfigurationPersistence() {
-		super(Paths.get(System.getenv("APPDATA"), ".mumble"));
+		super(Paths.get(Variables.MUMBLE_FOLDER.getFileName()));
 		register(new GuiConfigurationLoaderV10());
 	}
 

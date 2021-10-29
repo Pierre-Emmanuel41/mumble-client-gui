@@ -47,7 +47,7 @@ public abstract class AbstractEnvironment implements IEnvironment {
 	 * @return The concatenated path.
 	 */
 	protected String getDictionaryPath(String dictionaryName) {
-		return Variables.DICTIONARIES_FOLDER.getFileName().concat(dictionaryName);
+		return Variables.DICTIONARIES_FOLDER.getPath().resolve(dictionaryName).toString();
 	}
 
 	/**
@@ -57,6 +57,6 @@ public abstract class AbstractEnvironment implements IEnvironment {
 	 * @return The concatenated path.
 	 */
 	protected String getImagePath(String imageName) {
-		return Variables.IMAGE_FOLDER.getFileName().concat(imageName);
+		return Variables.IMAGE_FOLDER.getPath().resolve(imageName).toString();
 	}
 }
