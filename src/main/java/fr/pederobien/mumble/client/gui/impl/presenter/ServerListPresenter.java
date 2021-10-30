@@ -71,8 +71,6 @@ public class ServerListPresenter extends PresenterBase implements IEventListener
 	}
 
 	public <T> Callback<ListView<T>, ListCell<T>> serverViewFactory(Color enteredColor) {
-		// return listView -> getPropertyHelper().cellView(item -> new
-		// ServerView(ServerPresenter.getOrCreateServerPresenter((IMumbleServer) item)).getRoot(), enteredColor);
 		return listView -> getPropertyHelper().cellView(item -> {
 			ServerView view = serverViews.get(item);
 			if (view == null) {
@@ -110,7 +108,7 @@ public class ServerListPresenter extends PresenterBase implements IEventListener
 	 */
 	public void onDoubleClickOnSelectedServer(MouseEvent event) {
 		if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2 && !(event.getTarget() instanceof ListCellView))
-			EventManager.callEvent(new ServerJoinRequestPreEvent(selectedServer), () -> EventManager.callEvent(new ServerJoinRequestPostEvent(selectedServer)));
+			EventManager.callEvent(new ServerJoinRequestPreEvent(selectedServer), new ServerJoinRequestPostEvent(selectedServer));
 	}
 
 	@EventHandler

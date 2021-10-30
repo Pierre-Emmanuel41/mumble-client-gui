@@ -114,7 +114,7 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 	 * Send a request to the server in order to join the selected server and update the user interface.
 	 */
 	public void onJoin() {
-		EventManager.callEvent(new ServerJoinRequestPreEvent(selectedServer), () -> EventManager.callEvent(new ServerJoinRequestPostEvent(selectedServer)));
+		EventManager.callEvent(new ServerJoinRequestPreEvent(selectedServer), new ServerJoinRequestPostEvent(selectedServer));
 	}
 
 	/**

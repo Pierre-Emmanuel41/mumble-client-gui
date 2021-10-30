@@ -125,7 +125,7 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 		IChannel currentChannel = mumbleServer.getPlayer().getChannel();
 		ChannelJoinRequestPreEvent preEvent = new ChannelJoinRequestPreEvent(mumbleServer, currentChannel, channel);
 		ChannelJoinRequestPostEvent posEvent = new ChannelJoinRequestPostEvent(mumbleServer, currentChannel, channel);
-		EventManager.callEvent(preEvent, () -> EventManager.callEvent(posEvent));
+		EventManager.callEvent(preEvent, posEvent);
 	}
 
 	/**
