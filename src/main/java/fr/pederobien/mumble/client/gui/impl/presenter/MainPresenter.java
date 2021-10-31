@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import fr.pederobien.communication.event.ConnectionEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.environment.Variables;
 import fr.pederobien.mumble.client.gui.impl.view.ServerListView;
@@ -28,7 +29,7 @@ public class MainPresenter extends PresenterBase {
 
 	static {
 		EventLogger.instance().register();
-		EventLogger.instance().ignore(SoundEvent.class);
+		EventLogger.instance().ignore(SoundEvent.class).ignore(ConnectionEvent.class);
 	}
 
 	public MainPresenter() {
