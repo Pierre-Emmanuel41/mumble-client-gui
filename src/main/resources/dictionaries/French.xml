@@ -10,15 +10,15 @@
 	<messages>
 		<message>
 			<code>APPLICATION_ALREADY_RUNNING_TITLE</code>
-			<value>Mumble client gui est en cours d'exécution</value>
+			<value>Mumble Client est en cours d'exécution</value>
 		</message>
 		<message>
 			<code>APPLICATION_ALREADY_RUNNING_HEADER</code>
-			<value>Impossible de lancer l'appplication Mumble client gui car cette application est déjà en cours d'exécution.</value>
+			<value>Impossible de lancer l'appplication Mumble Client car cette application est déjà en cours d'exécution.</value>
 		</message>
 		<message>
 			<code>MUMBLE_WINDOW_TITLE</code>
-			<value>Mumble client gui</value>
+			<value>Mumble Client</value>
 		</message>
 		<message>
 			<code>OK</code>

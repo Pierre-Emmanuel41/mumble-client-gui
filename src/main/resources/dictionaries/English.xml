@@ -12,15 +12,15 @@
 	<messages>
 		<message>
 			<code>APPLICATION_ALREADY_RUNNING_TITLE</code>
-			<value>Mumble client gui is already running</value>
+			<value>Mumble Client is already running</value>
 		</message>
 		<message>
 			<code>APPLICATION_ALREADY_RUNNING_HEADER</code>
-			<value>Cannot run the application Mumble client gui because this app is already running.</value>
+			<value>Cannot run the application Mumble Client because this app is already running.</value>
 		</message>
 		<message>
 			<code>MUMBLE_WINDOW_TITLE</code>
-			<value>Mumble client gui</value>
+			<value>Mumble Client</value>
 		</message>
 		<message>
 			<code>OK</code>
