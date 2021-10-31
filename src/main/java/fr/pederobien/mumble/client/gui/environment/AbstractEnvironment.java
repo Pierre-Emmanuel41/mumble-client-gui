@@ -8,6 +8,8 @@ import fr.pederobien.mumble.client.gui.interfaces.IGuiConfiguration;
 import javafx.scene.image.Image;
 
 public abstract class AbstractEnvironment implements IEnvironment {
+	private static final char SLASH = '\\';
+	private static final char FORWARD_SLASH = '/';
 	private String url;
 	private IGuiConfiguration guiconfiguration;
 
@@ -47,7 +49,7 @@ public abstract class AbstractEnvironment implements IEnvironment {
 	 * @return The concatenated path.
 	 */
 	protected String getDictionaryPath(String dictionaryName) {
-		return Variables.DICTIONARIES_FOLDER.getPath().resolve(dictionaryName).toString();
+		return Variables.DICTIONARIES_FOLDER.getPath().resolve(dictionaryName).toString().replace(SLASH, FORWARD_SLASH);
 	}
 
 	/**
@@ -57,6 +59,6 @@ public abstract class AbstractEnvironment implements IEnvironment {
 	 * @return The concatenated path.
 	 */
 	protected String getImagePath(String imageName) {
-		return Variables.IMAGE_FOLDER.getPath().resolve(imageName).toString();
+		return Variables.IMAGE_FOLDER.getPath().resolve(imageName).toString().replace(SLASH, FORWARD_SLASH);
 	}
 }
