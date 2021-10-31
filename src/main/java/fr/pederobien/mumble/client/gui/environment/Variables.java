@@ -19,6 +19,9 @@ public enum Variables {
 	// Folder that contains log files
 	LOG_FOLDER(MUMBLE_FOLDER.getPath().resolve("logs")),
 
+	// File used to create only one instance of the application
+	LOCK_FILE(MUMBLE_FOLDER.getPath().resolve("MumbleClientApplication.lock")),
+
 	// File that contains gui configuration parameters.
 	GUI_CONFIGURATION("GuiConfiguration"),
 

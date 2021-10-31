@@ -3,6 +3,14 @@ package fr.pederobien.mumble.client.gui.dictionary;
 import fr.pederobien.dictionary.interfaces.IMessageCode;
 
 public enum EMessageCode implements IMessageCode {
+	// APPLICATION ALREADY RUNNING
+	// -----------------------------------------------------------------------------
+	// Code for the title of the alert when running the application while one is already running.
+	APPLICATION_ALREADY_RUNNING_TITLE,
+
+	// Code for the the header of the alert when running the application while one is already running.
+	APPLICATION_ALREADY_RUNNING_HEADER,
+
 	// MAIN WINDOW TITLE
 	// -----------------------------------------------------------------------------
 
