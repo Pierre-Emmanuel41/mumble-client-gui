@@ -1,11 +1,6 @@
 package fr.pederobien.mumble.client.gui;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.channels.FileChannel;
-import java.nio.channels.FileLock;
 
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.environment.Environments;
@@ -16,6 +11,7 @@ import fr.pederobien.mumble.client.gui.impl.properties.PropertyHelper;
 import fr.pederobien.mumble.client.gui.impl.view.MainView;
 import fr.pederobien.mumble.client.gui.persistence.configuration.GuiConfigurationPersistence;
 import fr.pederobien.mumble.client.gui.persistence.model.ServerListPersistence;
+import fr.pederobien.utils.ApplicationLock;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -25,8 +21,10 @@ import javafx.stage.Stage;
 public class MumbleClientApplication extends Application {
 	private static PropertyHelper propertyHelper;
 	private static Stage primaryStage;
+	private static ApplicationLock lock;
 
 	public static void main(String[] args) {
+		lock = new ApplicationLock(Variables.LOCK_FILE.getFileName(), Variables.MUMBLE_FOLDER.getPath());
 		launch(args);
 	}
 
@@ -43,7 +41,7 @@ public class MumbleClientApplication extends Application {
 		propertyHelper = new PropertyHelper(GuiConfigurationPersistence.getInstance().get());
 		Environments.registerDictionaries();
 
-		if (!handleLock()) {
+		if (!lock.lock()) {
 			AlertPresenter presenter = new AlertPresenter(AlertType.ERROR);
 			presenter.title(EMessageCode.APPLICATION_ALREADY_RUNNING_TITLE);
 			presenter.header(EMessageCode.APPLICATION_ALREADY_RUNNING_HEADER);
@@ -77,39 +75,5 @@ public class MumbleClientApplication extends Application {
 	 */
 	public static Stage getStage() {
 		return primaryStage;
-	}
-
-	@SuppressWarnings("resource")
-	private boolean handleLock() {
-		File lock = Variables.LOCK_FILE.getPath().toFile();
-
-		try {
-			if (lock.exists() && !lock.delete() || !lock.createNewFile())
-				return false;
-
-			FileChannel fileChannel = new RandomAccessFile(lock, "rw").getChannel();
-			FileLock fileLock = fileChannel.tryLock();
-
-			if (fileLock == null) {
-				fileChannel.close();
-				return false;
-			}
-
-			Runnable unlock = () -> {
-				try {
-					if (fileLock != null)
-						fileLock.release();
-					fileChannel.close();
-					lock.delete();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			};
-
-			Runtime.getRuntime().addShutdownHook(new Thread(unlock));
-		} catch (IOException e) {
-			return false;
-		}
-		return true;
 	}
 }

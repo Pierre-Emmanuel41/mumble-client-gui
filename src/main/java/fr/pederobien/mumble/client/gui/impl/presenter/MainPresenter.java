@@ -30,6 +30,7 @@ public class MainPresenter extends PresenterBase {
 	static {
 		EventLogger.instance().register();
 		EventLogger.instance().ignore(SoundEvent.class).ignore(ConnectionEvent.class);
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> saveLog()));
 	}
 
 	public MainPresenter() {
@@ -46,7 +47,6 @@ public class MainPresenter extends PresenterBase {
 		GuiConfigurationPersistence.getInstance().save();
 		ServerListPersistence.getInstance().save();
 		EventLogger.instance().unregister();
-		saveLog();
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class MainPresenter extends PresenterBase {
 		return serverManagementView;
 	}
 
-	private void saveLog() {
+	private static void saveLog() {
 		// Creates intermediate folders if they don't exist.
 		if (!Files.exists(Variables.LOG_FOLDER.getPath()))
 			Variables.LOG_FOLDER.getPath().toFile().mkdirs();
