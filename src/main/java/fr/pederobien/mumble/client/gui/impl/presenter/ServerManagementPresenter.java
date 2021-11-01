@@ -113,7 +113,7 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 	 * Send a request to the server in order to join the selected server and update the user interface.
 	 */
 	public void onJoin() {
-		EventManager.callEvent(new ServerJoinRequestPreEvent(serverList.getSelectedServer()), new ServerJoinRequestPostEvent(serverList.getSelectedServer()));
+		EventManager.callEvent(new ServerJoinRequestPreEvent(serverList.getSelectedServer()));
 	}
 
 	/**
@@ -160,7 +160,7 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 	}
 
 	@EventHandler
-	private void onServerJoinRequestEvent(ServerJoinRequestPostEvent event) {
+	private void onServerJoinRequestEvent(ServerJoinRequestPreEvent event) {
 		if (!event.getMumbleServer().isReachable())
 			return;
 
@@ -197,5 +197,7 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 
 	private void joinServerResponse(IResponse response) {
 		handleRequestFailed(response, AlertType.ERROR, EMessageCode.SERVER_JOIN_FAILED_TITLE, EMessageCode.SERVER_JOIN_FAILED_HEADER);
+		if (!response.hasFailed())
+			EventManager.callEvent(new ServerJoinRequestPostEvent(serverList.getSelectedServer()));
 	}
 }

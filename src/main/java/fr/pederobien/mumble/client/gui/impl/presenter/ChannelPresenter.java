@@ -23,6 +23,7 @@ import fr.pederobien.mumble.client.interfaces.IOtherPlayer;
 import fr.pederobien.mumble.client.interfaces.IResponse;
 import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
+import fr.pederobien.utils.event.EventPriority;
 import fr.pederobien.utils.event.IEventListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -122,10 +123,7 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 		if (event.getButton() != MouseButton.PRIMARY)
 			return;
 
-		IChannel currentChannel = mumbleServer.getPlayer().getChannel();
-		ChannelJoinRequestPreEvent preEvent = new ChannelJoinRequestPreEvent(mumbleServer, currentChannel, channel);
-		ChannelJoinRequestPostEvent posEvent = new ChannelJoinRequestPostEvent(mumbleServer, currentChannel, channel);
-		EventManager.callEvent(preEvent, posEvent);
+		EventManager.callEvent(new ChannelJoinRequestPreEvent(mumbleServer, mumbleServer.getPlayer().getChannel(), channel));
 	}
 
 	/**
@@ -276,6 +274,14 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 		removeChannelVisibility.set(event.isAdmin() && channelList.getChannels().size() > 1);
 		renameChannelVisibility.set(event.isAdmin());
 		soundModifierVisibility.set(event.isAdmin());
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	private void onChannelClicked(ChannelJoinRequestPreEvent event) {
+		if (!event.getFutureChannel().equals(channel))
+			return;
+
+		EventManager.callEvent(new ChannelJoinRequestPostEvent(mumbleServer, mumbleServer.getPlayer().getChannel(), channel));
 	}
 
 	@EventHandler

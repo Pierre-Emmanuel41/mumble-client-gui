@@ -7,7 +7,6 @@ import fr.pederobien.mumble.client.event.ServerJoinPostEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.event.SelectServerPostEvent;
 import fr.pederobien.mumble.client.gui.event.SelectServerPreEvent;
-import fr.pederobien.mumble.client.gui.event.ServerJoinRequestPostEvent;
 import fr.pederobien.mumble.client.gui.event.ServerJoinRequestPreEvent;
 import fr.pederobien.mumble.client.gui.event.ServerListAddServerPostEvent;
 import fr.pederobien.mumble.client.gui.event.ServerListRemoveServerPostEvent;
@@ -98,7 +97,7 @@ public class ServerListPresenter extends PresenterBase implements IEventListener
 	 */
 	public void onDoubleClickOnSelectedServer(MouseEvent event) {
 		if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2 && !(event.getTarget() instanceof ListCellView))
-			EventManager.callEvent(new ServerJoinRequestPreEvent(serverList.getSelectedServer()), new ServerJoinRequestPostEvent(serverList.getSelectedServer()));
+			EventManager.callEvent(new ServerJoinRequestPreEvent(serverList.getSelectedServer()));
 	}
 
 	@EventHandler
