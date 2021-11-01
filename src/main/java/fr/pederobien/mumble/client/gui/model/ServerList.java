@@ -10,13 +10,18 @@ import fr.pederobien.mumble.client.gui.event.ServerListRemoveServerPostEvent;
 import fr.pederobien.mumble.client.gui.event.ServerListRemoveServerPreEvent;
 import fr.pederobien.mumble.client.impl.MumbleServer;
 import fr.pederobien.mumble.client.interfaces.IMumbleServer;
+import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
+import fr.pederobien.utils.event.EventPriority;
+import fr.pederobien.utils.event.IEventListener;
 
-public class ServerList {
+public class ServerList implements IEventListener {
 	private List<IMumbleServer> servers;
+	private IMumbleServer selectedServer;
 
 	public ServerList() {
 		servers = new ArrayList<IMumbleServer>();
+		EventManager.registerListener(this);
 	}
 
 	/**
@@ -45,7 +50,7 @@ public class ServerList {
 	 * @param server The server to add.
 	 */
 	public void add(IMumbleServer server) {
-		EventManager.callEvent(new ServerListAddServerPreEvent(this, server), () -> servers.add(server), new ServerListAddServerPostEvent(this, server));
+		EventManager.callEvent(new ServerListAddServerPreEvent(this, server));
 	}
 
 	/**
@@ -54,11 +59,7 @@ public class ServerList {
 	 * @param server The server to remove.
 	 */
 	public void remove(IMumbleServer server) {
-		Runnable remove = () -> {
-			server.dispose();
-			servers.remove(server);
-		};
-		EventManager.callEvent(new ServerListRemoveServerPreEvent(this, server), remove, new ServerListRemoveServerPostEvent(this, server));
+		EventManager.callEvent(new ServerListRemoveServerPreEvent(this, server));
 	}
 
 	/**
@@ -69,11 +70,47 @@ public class ServerList {
 	}
 
 	/**
+	 * @return The server currently selected in the user interface.
+	 */
+	public IMumbleServer getSelectedServer() {
+		return selectedServer;
+	}
+
+	/**
+	 * Set the selected server in the user interface.
+	 * 
+	 * @param selectedServer The new selected server.
+	 */
+	public void setSelectedServer(IMumbleServer selectedServer) {
+		this.selectedServer = selectedServer;
+	}
+
+	/**
 	 * Removes all of the elements from this list. The list will be empty after this call returns.
 	 */
 	public void clear() {
 		int size = servers.size();
 		for (int i = 0; i < size; i++)
 			remove(servers.get(0));
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	private void onServerAdd(ServerListAddServerPreEvent event) {
+		if (!event.getServerList().equals(this))
+			return;
+
+		servers.add(event.getServer());
+		EventManager.callEvent(new ServerListAddServerPostEvent(this, event.getServer()));
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	private void onServerRemove(ServerListRemoveServerPreEvent event) {
+		if (!event.getServerList().equals(this))
+			return;
+
+		event.getServer().dispose();
+		if (servers.remove(event.getServer()) && event.getServer().equals(selectedServer))
+			setSelectedServer(null);
+		EventManager.callEvent(new ServerListRemoveServerPostEvent(this, event.getServer()));
 	}
 }

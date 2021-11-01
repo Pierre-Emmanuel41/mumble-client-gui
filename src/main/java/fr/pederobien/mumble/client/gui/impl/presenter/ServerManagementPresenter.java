@@ -37,7 +37,6 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 	private BooleanProperty deleteServerDisableProperty;
 
 	private ServerList serverList;
-	private IMumbleServer selectedServer;
 
 	public ServerManagementPresenter(ServerList serverList) {
 		this.serverList = serverList;
@@ -114,7 +113,7 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 	 * Send a request to the server in order to join the selected server and update the user interface.
 	 */
 	public void onJoin() {
-		EventManager.callEvent(new ServerJoinRequestPreEvent(selectedServer), new ServerJoinRequestPostEvent(selectedServer));
+		EventManager.callEvent(new ServerJoinRequestPreEvent(serverList.getSelectedServer()), new ServerJoinRequestPostEvent(serverList.getSelectedServer()));
 	}
 
 	/**
@@ -134,8 +133,8 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 	 * Creates a new window in which the user can edit a mumble server.
 	 */
 	public void onEdit() {
-		selectedServer.close();
-		new ServerInfoView(getPrimaryStage(), new ServerInfoPresenter(serverList, selectedServer) {
+		serverList.getSelectedServer().close();
+		new ServerInfoView(getPrimaryStage(), new ServerInfoPresenter(serverList, serverList.getSelectedServer()) {
 			@Override
 			protected void onOkButtonClicked(IMumbleServer server, String name, String address, int port) {
 				performChangesOnServer(server, name, address, port);
@@ -146,7 +145,7 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 
 			@Override
 			public boolean onCancelButtonClicked() {
-				selectedServer.open();
+				serverList.getSelectedServer().open();
 				return super.onCancelButtonClicked();
 			}
 		});
@@ -156,8 +155,8 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 	 * Dispose the selected server and removes it from the server list.
 	 */
 	public void onDelete() {
-		selectedServer.dispose();
-		serverList.remove(selectedServer);
+		serverList.getSelectedServer().dispose();
+		serverList.remove(serverList.getSelectedServer());
 	}
 
 	@EventHandler
@@ -170,13 +169,13 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 
 	@EventHandler
 	private void onServerJoin(ServerJoinPostEvent event) {
-		if (!event.getServer().equals(selectedServer))
+		if (!event.getServer().equals(serverList.getSelectedServer()))
 			return;
 
 		dispatch(() -> {
-			getPrimaryStage().getScene().setRoot(new ServerChannelsView(new ServerChannelsPresenter(selectedServer)).getRoot());
+			getPrimaryStage().getScene().setRoot(new ServerChannelsView(new ServerChannelsPresenter(serverList.getSelectedServer())).getRoot());
 			serverList.getServers().forEach(server -> {
-				if (!server.equals(selectedServer))
+				if (!server.equals(serverList.getSelectedServer()))
 					server.close();
 			});
 		});
@@ -185,10 +184,9 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 
 	@EventHandler
 	private void onSelectedServerChange(SelectServerPostEvent event) {
-		selectedServer = event.getCurrentServer();
-		joinServerDisableProperty.setValue(selectedServer == null || !selectedServer.isReachable());
-		editServerDisableProperty.setValue(selectedServer == null);
-		deleteServerDisableProperty.setValue(selectedServer == null);
+		joinServerDisableProperty.setValue(serverList.getSelectedServer() == null || !serverList.getSelectedServer().isReachable());
+		editServerDisableProperty.setValue(serverList.getSelectedServer() == null);
+		deleteServerDisableProperty.setValue(serverList.getSelectedServer() == null);
 	}
 
 	private void performChangesOnServer(IMumbleServer server, String name, String address, int port) {

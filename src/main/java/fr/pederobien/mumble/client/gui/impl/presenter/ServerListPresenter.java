@@ -18,6 +18,7 @@ import fr.pederobien.mumble.client.gui.model.ServerList;
 import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
+import fr.pederobien.utils.event.EventPriority;
 import fr.pederobien.utils.event.IEventListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -37,7 +38,6 @@ public class ServerListPresenter extends PresenterBase implements IEventListener
 	private Map<IMumbleServer, ServerView> serverViews;
 	private BooleanProperty emptyServersListVisibilityProperty;
 	private SimpleLanguageProperty emptyServerTextProperty;
-	private IMumbleServer selectedServer;
 
 	public ServerListPresenter(ServerList serverList) {
 		this.serverList = serverList;
@@ -88,17 +88,7 @@ public class ServerListPresenter extends PresenterBase implements IEventListener
 	 * @param newServer The new selected server.
 	 */
 	public void onServerSelectedChanged(Object oldServer, Object newServer) {
-		IMumbleServer previousServer = selectedServer;
-		SelectServerPreEvent preEvent = new SelectServerPreEvent(serverList, selectedServer, (IMumbleServer) newServer);
-		SelectServerPostEvent postEvent = new SelectServerPostEvent(serverList, previousServer, (IMumbleServer) newServer);
-		EventManager.callEvent(preEvent, () -> this.selectedServer = (IMumbleServer) newServer, postEvent);
-	}
-
-	/**
-	 * @return The server currently selected in the list.
-	 */
-	public IMumbleServer getSelectedServer() {
-		return selectedServer;
+		EventManager.callEvent(new SelectServerPreEvent(serverList, (IMumbleServer) oldServer, (IMumbleServer) newServer));
 	}
 
 	/**
@@ -108,7 +98,7 @@ public class ServerListPresenter extends PresenterBase implements IEventListener
 	 */
 	public void onDoubleClickOnSelectedServer(MouseEvent event) {
 		if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2 && !(event.getTarget() instanceof ListCellView))
-			EventManager.callEvent(new ServerJoinRequestPreEvent(selectedServer), new ServerJoinRequestPostEvent(selectedServer));
+			EventManager.callEvent(new ServerJoinRequestPreEvent(serverList.getSelectedServer()), new ServerJoinRequestPostEvent(serverList.getSelectedServer()));
 	}
 
 	@EventHandler
@@ -132,5 +122,14 @@ public class ServerListPresenter extends PresenterBase implements IEventListener
 
 		servers.remove(event.getServer());
 		emptyServersListVisibilityProperty.setValue(servers.isEmpty());
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	private void onSelectServer(SelectServerPreEvent event) {
+		if (!event.getServerList().equals(serverList))
+			return;
+
+		serverList.setSelectedServer(event.getFutureServer());
+		EventManager.callEvent(new SelectServerPostEvent(serverList, event.getCurrentServer(), event.getFutureServer()));
 	}
 }
