@@ -45,7 +45,7 @@ public class SoundModifierPresenter extends OkCancelPresenter {
 		if (okDisableProperty.get())
 			return false;
 
-		channel.setSoundModifier(newSoundModifier.getName(), response -> soundModifierResponse(response));
+		channel.setSoundModifier(newSoundModifier.getName(), newSoundModifier.getParameters(), response -> soundModifierResponse(response));
 		return true;
 	}
 
