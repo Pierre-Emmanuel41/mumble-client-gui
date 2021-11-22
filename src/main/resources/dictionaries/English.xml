@@ -80,6 +80,14 @@
 			<value>The player is not registered in a channel.</value>
 		</message>
 		<message>
+			<code>SOUND_MODIFIER_DOES_NOT_EXIST</code>
+			<value>The sound modifier does not exist.</value>
+		</message>
+		<message>
+			<code>PARAMETER_DOES_NOT_EXIST</code>
+			<value>The parameter does not exist.</value>
+		</message>
+		<message>
 			<code>UNKNOWN</code>
 			<value>Cannot parse the error code.</value>
 		</message>		
@@ -299,6 +307,14 @@
 		<message>
 			<code>CANNOT_LEAVE_SERVER_RESPONSE_TITLE</code>
 			<value>Fail to leave the server</value>
+		</message>
+		<message>
+			<code>TRUE</code>
+			<value>True</value>
+		</message>
+		<message>
+			<code>FALSE</code>
+			<value>False</value>
 		</message>
 		<message>
 			<code>CANNOT_LEAVE_SERVER_RESPONSE</code>

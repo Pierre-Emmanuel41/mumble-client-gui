@@ -78,6 +78,14 @@
 			<value>Le joueur n'est pas enregistré dans un channel.</value>
 		</message>
 		<message>
+			<code>SOUND_MODIFIER_DOES_NOT_EXIST</code>
+			<value>Le modifieur de son n'existe pas.</value>
+		</message>
+		<message>
+			<code>PARAMETER_DOES_NOT_EXIST</code>
+			<value>Le paramètre n'existe pas.</value>
+		</message>
+		<message>
 			<code>UNKNOWN</code>
 			<value>Impossible d'interpréter le code d'erreur.</value>
 		</message>		
@@ -301,6 +309,14 @@
 		<message>
 			<code>CANNOT_LEAVE_SERVER_RESPONSE</code>
 			<value>Vous ne pouvez pas quitter le serveur pour la raison suivante :</value>
+		</message>
+		<message>
+			<code>TRUE</code>
+			<value>Vrai</value>
+		</message>
+		<message>
+			<code>FALSE</code>
+			<value>Faux</value>
 		</message>
 		<message>
 			<code>PLAYER_ONLINE</code>

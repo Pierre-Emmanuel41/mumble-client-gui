@@ -205,6 +205,12 @@ public enum EMessageCode implements IMessageCode {
 	// Code for the header of the alert when a player try to leave a server and it fails.
 	CANNOT_LEAVE_SERVER_RESPONSE,
 
+	// Code that correspond to the word "true"
+	TRUE,
+
+	// Code that correspond to the word "false"
+	FALSE,
+
 	// PLAYER STATUS CODE
 	// -----------------------------------------------------------------------------
 
