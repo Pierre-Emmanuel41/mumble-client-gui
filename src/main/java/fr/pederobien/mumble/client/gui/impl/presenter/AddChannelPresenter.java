@@ -1,11 +1,19 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
+import fr.pederobien.mumble.client.gui.event.ParameterValueChangeRequestEvent;
 import fr.pederobien.mumble.client.gui.impl.generic.OkCancelPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleTooltipProperty;
+import fr.pederobien.mumble.client.gui.impl.view.SelectableSoundModifierView;
 import fr.pederobien.mumble.client.interfaces.IChannelList;
 import fr.pederobien.mumble.client.interfaces.IResponse;
+import fr.pederobien.mumble.client.interfaces.ISoundModifierList;
+import fr.pederobien.utils.event.EventHandler;
+import fr.pederobien.utils.event.EventManager;
+import fr.pederobien.utils.event.EventPriority;
+import fr.pederobien.utils.event.IEventListener;
+import fr.pederobien.utils.event.LogEvent;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -21,7 +29,7 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 
-public class AddChannelPresenter extends OkCancelPresenter {
+public class AddChannelPresenter extends OkCancelPresenter implements IEventListener {
 	private IChannelList channelList;
 
 	private SimpleLanguageProperty titleTextProperty;
@@ -32,8 +40,13 @@ public class AddChannelPresenter extends OkCancelPresenter {
 	private SimpleLanguageProperty channelNamePromptProperty;
 	private SimpleTooltipProperty channelNameTooltipProperty;
 
+	private SelectableSoundModifierPresenter selectableSoundModifierPresenter;
+	private SelectableSoundModifierView selectableSoundModifierView;
+
 	// Buttons ---------------------------------------------------
 	private BooleanProperty okDisableProperty;
+
+	private boolean isNotValid;
 
 	public AddChannelPresenter(IChannelList channelList) {
 		this.channelList = channelList;
@@ -46,7 +59,13 @@ public class AddChannelPresenter extends OkCancelPresenter {
 		channelNamePromptProperty = getPropertyHelper().languageProperty(EMessageCode.ADD_CHANNEL_NAME_PROMPT);
 		channelNameTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.CHANNEL_NAME_TOOLTIP);
 
+		ISoundModifierList soundModifierList = channelList.getMumbleServer().getSoundModifierList();
+		selectableSoundModifierPresenter = new SelectableSoundModifierPresenter(soundModifierList, soundModifierList.getDefaultSoundModifier());
+		selectableSoundModifierView = new SelectableSoundModifierView(selectableSoundModifierPresenter);
+
+		isNotValid = true;
 		okDisableProperty = new SimpleBooleanProperty(true);
+		EventManager.registerListener(this);
 	}
 
 	@Override
@@ -58,8 +77,18 @@ public class AddChannelPresenter extends OkCancelPresenter {
 	public boolean onOkButtonClicked() {
 		if (okDisableProperty.get())
 			return false;
-		channelList.addChannel(channelNameProperty.get(), null, response -> channelNameResponse(response));
+
+		if (!selectableSoundModifierPresenter.onOkButtonClicked())
+			return false;
+
+		channelList.addChannel(channelNameProperty.get(), selectableSoundModifierPresenter.getSelectedSoundModifier(), response -> channelNameResponse(response));
 		return true;
+	}
+
+	@Override
+	public void onClosing() {
+		selectableSoundModifierPresenter.onClosing();
+		EventManager.unregisterListener(this);
 	}
 
 	@Override
@@ -104,6 +133,13 @@ public class AddChannelPresenter extends OkCancelPresenter {
 		return channelNameTooltipProperty;
 	}
 
+	/**
+	 * @return The view that allows the user to select a sound modifier.
+	 */
+	public SelectableSoundModifierView getSelectableSoundModifierView() {
+		return selectableSoundModifierView;
+	}
+
 	public void validateChannelName() {
 		String channelName = channelNameProperty.get();
 		boolean isChannelNameLengthOk = channelName.length() > 5;
@@ -115,14 +151,31 @@ public class AddChannelPresenter extends OkCancelPresenter {
 
 		if (isChannelNameLengthOk && isChannelNameUnique && isChannelNameWithoutSpaces) {
 			channelNameBorderProperty.set(Border.EMPTY);
-			okDisableProperty.set(false);
+			isNotValid = false;
 		} else {
 			channelNameBorderProperty.set(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));
-			okDisableProperty.set(true);
+			isNotValid = true;
 		}
+		updateOkDisable();
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	private void onParameterChangeValue(ParameterValueChangeRequestEvent event) {
+		updateOkDisable();
 	}
 
 	private void channelNameResponse(IResponse response) {
 		handleRequestFailed(response, AlertType.ERROR, EMessageCode.ADD_CHANNEL_TITLE, EMessageCode.ADD_CHANNEL_NAME_RESPONSE);
+	}
+
+	private void updateOkDisable() {
+		if (selectableSoundModifierPresenter.getOldSoundModifier().equals(selectableSoundModifierPresenter.getSelectedSoundModifier()))
+			okDisableProperty.set(isNotValid);
+		else {
+			okDisableProperty.set(isNotValid || selectableSoundModifierPresenter.okDisableProperty().get());
+			String clazz = "AddChannelPresenter";
+			String formatter = "[%s] not valid %s, okDisable %s";
+			EventManager.callEvent(new LogEvent(formatter, clazz, isNotValid, okDisableProperty.get()));
+		}
 	}
 }

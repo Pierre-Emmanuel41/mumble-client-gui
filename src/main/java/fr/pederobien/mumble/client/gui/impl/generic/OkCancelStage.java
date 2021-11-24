@@ -12,26 +12,29 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class OkCancelStage extends ViewBase<OkCancelPresenter, GridPane> {
 	private double marginBetweenRootAndChildren = 10.0;
+	private Stage stage;
 
 	public OkCancelStage(Stage initOwner, IOkCancelView view) {
 		super(view.getPresenter(), new GridPane());
 
-		Stage stage = new Stage();
+		stage = new Stage();
 		stage.titleProperty().bind(getPresenter().titleTextProperty());
+		stage.setOnCloseRequest(e -> getPresenter().onClosing());
 
 		getRoot().setPadding(new Insets(marginBetweenRootAndChildren));
 		getRoot().setAlignment(Pos.CENTER);
 		getRoot().addEventHandler(KeyEvent.KEY_RELEASED, e -> {
 			if (e.getCode() == KeyCode.ENTER && getPresenter().onOkButtonClicked())
-				stage.close();
+				stage.fireEvent(new WindowEvent(initOwner, WindowEvent.WINDOW_CLOSE_REQUEST));
 		});
 
 		getRoot().addEventHandler(KeyEvent.KEY_RELEASED, e -> {
 			if (e.getCode() == KeyCode.ESCAPE && getPresenter().onCancelButtonClicked())
-				stage.close();
+				stage.fireEvent(new WindowEvent(initOwner, WindowEvent.WINDOW_CLOSE_REQUEST));
 		});
 
 		getRoot().add(view.getRoot(), 0, 0);
@@ -47,7 +50,7 @@ public class OkCancelStage extends ViewBase<OkCancelPresenter, GridPane> {
 		ok.textProperty().bind(getPresenter().okTextProperty());
 		ok.setOnAction(e -> {
 			if (getPresenter().onOkButtonClicked())
-				stage.close();
+				stage.fireEvent(new WindowEvent(initOwner, WindowEvent.WINDOW_CLOSE_REQUEST));
 		});
 		ok.disableProperty().bind(getPresenter().okDisableProperty());
 		buttons.getChildren().add(ok);
@@ -58,7 +61,7 @@ public class OkCancelStage extends ViewBase<OkCancelPresenter, GridPane> {
 		cancel.textProperty().bind(getPresenter().cancelTextProperty());
 		cancel.setOnAction(e -> {
 			if (getPresenter().onCancelButtonClicked())
-				stage.close();
+				stage.fireEvent(new WindowEvent(initOwner, WindowEvent.WINDOW_CLOSE_REQUEST));
 		});
 		buttons.getChildren().add(cancel);
 		FlowPane.setMargin(cancel, new Insets(0, 0, 0, 10));
@@ -74,5 +77,12 @@ public class OkCancelStage extends ViewBase<OkCancelPresenter, GridPane> {
 		stage.show();
 
 		view.onPostShown();
+	}
+
+	/**
+	 * @return The stage associated to this generic view.
+	 */
+	public Stage getStage() {
+		return stage;
 	}
 }

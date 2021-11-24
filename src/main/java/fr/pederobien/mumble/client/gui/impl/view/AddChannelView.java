@@ -4,12 +4,14 @@ import fr.pederobien.mumble.client.gui.impl.generic.OkCancelStage;
 import fr.pederobien.mumble.client.gui.impl.presenter.AddChannelPresenter;
 import fr.pederobien.mumble.client.gui.interfaces.IOkCancelView;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-public class AddChannelView extends ViewBase<AddChannelPresenter, FlowPane> implements IOkCancelView {
+public class AddChannelView extends ViewBase<AddChannelPresenter, BorderPane> implements IOkCancelView {
 	private double marginBetweenRootAndChildren = 10.0;
 	private double marginBetweenLabelAndTextField = 20.0;
 
@@ -17,13 +19,14 @@ public class AddChannelView extends ViewBase<AddChannelPresenter, FlowPane> impl
 	private TextField channelNameTextField;
 
 	public AddChannelView(Stage initOwner, AddChannelPresenter presenter) {
-		super(presenter, new FlowPane());
-		getRoot().setPrefWidth(490);
+		super(presenter, new BorderPane());
 
+		HBox top = new HBox();
+		top.setAlignment(Pos.CENTER_LEFT);
 		channelNameLabel = new Label();
 		channelNameLabel.fontProperty().bind(getPresenter().fontProperty());
 		channelNameLabel.textProperty().bind(getPresenter().channelNameTextProperty());
-		getRoot().getChildren().add(channelNameLabel);
+		top.getChildren().add(channelNameLabel);
 
 		channelNameTextField = new TextField();
 		channelNameTextField.fontProperty().bind(getPresenter().fontProperty());
@@ -33,10 +36,13 @@ public class AddChannelView extends ViewBase<AddChannelPresenter, FlowPane> impl
 		channelNameTextField.textProperty().addListener((obs, oldValue, newValue) -> getPresenter().validateChannelName());
 		channelNameTextField.tooltipProperty().bind(getPresenter().channelNameTooltipProperty());
 
-		getRoot().getChildren().add(channelNameTextField);
-		FlowPane.setMargin(channelNameTextField, new Insets(0, 0, 0, marginBetweenLabelAndTextField));
+		top.getChildren().add(channelNameTextField);
+		HBox.setMargin(channelNameTextField, new Insets(0, 0, 0, marginBetweenLabelAndTextField));
+		getRoot().setTop(top);
+		BorderPane.setMargin(top, new Insets(0, 0, 5, 0));
 
-		new OkCancelStage(initOwner, this);
+		getRoot().setCenter(getPresenter().getSelectableSoundModifierView().getRoot());
+		getPresenter().getSelectableSoundModifierView().setStage(new OkCancelStage(initOwner, this).getStage());
 	}
 
 	@Override

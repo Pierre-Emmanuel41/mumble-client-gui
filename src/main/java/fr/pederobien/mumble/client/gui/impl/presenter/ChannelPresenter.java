@@ -3,11 +3,11 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 import fr.pederobien.mumble.client.event.ChannelAddPostEvent;
 import fr.pederobien.mumble.client.event.ChannelNameChangePostEvent;
 import fr.pederobien.mumble.client.event.ChannelRemovePostEvent;
+import fr.pederobien.mumble.client.event.ChannelSoundModifierChangePostEvent;
 import fr.pederobien.mumble.client.event.PlayerAddToChannelPostEvent;
 import fr.pederobien.mumble.client.event.PlayerAdminStatusChangePostEvent;
 import fr.pederobien.mumble.client.event.PlayerRemoveFromChannelPostEvent;
 import fr.pederobien.mumble.client.event.ServerLeavePostEvent;
-import fr.pederobien.mumble.client.event.SoundModifierNameChangePostEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.event.ChannelJoinRequestPostEvent;
 import fr.pederobien.mumble.client.gui.event.ChannelJoinRequestPreEvent;
@@ -221,11 +221,11 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 	}
 
 	@EventHandler
-	private void onSoundModifierNameChange(SoundModifierNameChangePostEvent event) {
-		if (!event.getSoundModifier().equals(channel.getSoundModifier()))
+	private void onChannelSoundModifierChange(ChannelSoundModifierChangePostEvent event) {
+		if (!event.getChannel().equals(channel))
 			return;
 
-		dispatch(() -> soundModifierTextProperty.setCode(EMessageCode.SOUND_MODIFIER, event.getSoundModifier().getName()));
+		dispatch(() -> soundModifierTextProperty.setCode(EMessageCode.SOUND_MODIFIER, event.getChannel().getSoundModifier().getName()));
 	}
 
 	@EventHandler

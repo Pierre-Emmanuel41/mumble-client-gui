@@ -42,6 +42,13 @@ public abstract class OkCancelPresenter extends PresenterBase {
 	}
 
 	/**
+	 * Action to execute when the stage is about to be closed.
+	 */
+	public void onClosing() {
+
+	}
+
+	/**
 	 * @return The text displayed on the ok button.
 	 */
 	public StringProperty okTextProperty() {

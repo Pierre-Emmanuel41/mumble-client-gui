@@ -36,7 +36,9 @@ public class ChannelListPresenter extends PresenterBase implements IEventListene
 		channels = FXCollections.observableArrayList();
 		channelViews = new HashMap<IChannel, ChannelView>();
 		channelList = mumbleServer.getChannelList();
-		channels.addAll(channelList.getChannels().values());
+
+		for (Map.Entry<String, IChannel> entry : channelList)
+			channels.add(entry.getValue());
 
 		EventManager.registerListener(this);
 	}
