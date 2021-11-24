@@ -33,7 +33,7 @@ public class SoundModifierPresenter extends OkCancelPresenter {
 
 	@Override
 	public boolean onOkButtonClicked() {
-		if (selectableSoundModifierPresenter.okDisableProperty().get())
+		if (okDisableProperty().get())
 			return false;
 
 		if (!selectableSoundModifierPresenter.onOkButtonClicked())

@@ -32,7 +32,8 @@ public class ParameterListPresenter extends OkCancelPresenter implements IEventL
 		for (Map.Entry<String, IParameter<?>> entry : parameterList)
 			parameterViews.add(new ParameterView(new ParameterPresenter(entry.getValue())));
 
-		okDisableProperty = new SimpleBooleanProperty(true);
+		// OK button not disabled if there are no parameter
+		okDisableProperty = new SimpleBooleanProperty(parameterList.size() != 0);
 		EventManager.registerListener(this);
 	}
 
@@ -46,7 +47,8 @@ public class ParameterListPresenter extends OkCancelPresenter implements IEventL
 		if (okDisableProperty.get())
 			return false;
 
-		boolean result = false;
+		// Result initialized to true if there are no parameter
+		boolean result = parameterList.size() == 0;
 		for (ParameterView view : parameterViews)
 			result |= view.getPresenter().onOkButtonClicked();
 
