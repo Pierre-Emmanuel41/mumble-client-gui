@@ -80,7 +80,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>fr.pederobien.mumble.client.gui.MumbleClientApplication</mainClass>
+							<mainClass>fr.pederobien.mumble.client.gui.MumbleClientApplicationLauncher</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
