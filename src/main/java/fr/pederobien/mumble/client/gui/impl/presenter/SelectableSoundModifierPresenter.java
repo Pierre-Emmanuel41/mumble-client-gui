@@ -16,7 +16,6 @@ import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
 import fr.pederobien.utils.event.EventPriority;
 import fr.pederobien.utils.event.IEventListener;
-import fr.pederobien.utils.event.LogEvent;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -126,10 +125,6 @@ public class SelectableSoundModifierPresenter extends OkCancelPresenter implemen
 		boolean isNotValid = selectedParameterListViewProperty.get().getPresenter().isNotValid(false);
 		boolean isIdentical = selectedParameterListViewProperty.get().getPresenter().isIdentical(false);
 		okDisableProperty.set(identicalSoundModifier ? isNotValid || isIdentical : isNotValid);
-
-		String clazz = "SelectableSoundModifierPresenter";
-		String formatter = "[%s] identical %s, is not valid %s, identical parameter value %s, okDisable %s";
-		EventManager.callEvent(new LogEvent(formatter, clazz, identicalSoundModifier, isNotValid, isIdentical, okDisableProperty.get()));
 	}
 
 	private void onSelectedSoundModifierChange(String oldValue, String newValue) {

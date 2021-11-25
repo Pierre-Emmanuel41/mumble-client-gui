@@ -13,7 +13,6 @@ import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
 import fr.pederobien.utils.event.EventPriority;
 import fr.pederobien.utils.event.IEventListener;
-import fr.pederobien.utils.event.LogEvent;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -171,11 +170,7 @@ public class AddChannelPresenter extends OkCancelPresenter implements IEventList
 	private void updateOkDisable() {
 		if (selectableSoundModifierPresenter.getOldSoundModifier().equals(selectableSoundModifierPresenter.getSelectedSoundModifier()))
 			okDisableProperty.set(isNotValid);
-		else {
+		else
 			okDisableProperty.set(isNotValid || selectableSoundModifierPresenter.okDisableProperty().get());
-			String clazz = "AddChannelPresenter";
-			String formatter = "[%s] not valid %s, okDisable %s";
-			EventManager.callEvent(new LogEvent(formatter, clazz, isNotValid, okDisableProperty.get()));
-		}
 	}
 }

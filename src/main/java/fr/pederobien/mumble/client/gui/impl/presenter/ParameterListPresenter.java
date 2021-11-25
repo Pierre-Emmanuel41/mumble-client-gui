@@ -11,7 +11,6 @@ import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
 import fr.pederobien.utils.event.EventPriority;
 import fr.pederobien.utils.event.IEventListener;
-import fr.pederobien.utils.event.LogEvent;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
@@ -120,8 +119,5 @@ public class ParameterListPresenter extends OkCancelPresenter implements IEventL
 		}
 
 		okDisableProperty.set(isNotValid || isIdentical);
-		String clazz = "ParameterListPresenter";
-		String formatter = "[%s] is not valid %s, is identical %s, okDisable %s";
-		EventManager.callEvent(new LogEvent(formatter, clazz, isNotValid, isIdentical, okDisableProperty.get()));
 	}
 }
