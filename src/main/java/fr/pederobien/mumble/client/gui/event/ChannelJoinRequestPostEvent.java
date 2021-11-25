@@ -54,6 +54,6 @@ public class ChannelJoinRequestPostEvent extends ServerEvent implements ICancell
 		joiner.add("server=" + getServer().getName());
 		joiner.add("previousChannel=" + (getPreviousChannel() == null ? null : getPreviousChannel().getName()));
 		joiner.add("currentChannel=" + (getCurrentChannel() == null ? null : getCurrentChannel().getName()));
-		return super.toString();
+		return String.format("%s_%s", getName(), joiner);
 	}
 }

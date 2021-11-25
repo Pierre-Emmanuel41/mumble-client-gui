@@ -54,6 +54,6 @@ public class ChannelJoinRequestPreEvent extends ServerEvent implements ICancella
 		joiner.add("server=" + getServer().getName());
 		joiner.add("currentChannel=" + (getCurrentChannel() == null ? null : getCurrentChannel().getName()));
 		joiner.add("futureChannel=" + (getFutureChannel() == null ? null : getFutureChannel().getName()));
-		return super.toString();
+		return String.format("%s_%s", getName(), joiner);
 	}
 }
