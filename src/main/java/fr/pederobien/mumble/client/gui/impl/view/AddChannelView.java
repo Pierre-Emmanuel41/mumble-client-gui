@@ -9,7 +9,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 
 public class AddChannelView extends ViewBase<AddChannelPresenter, BorderPane> implements IOkCancelView {
 	private double marginBetweenRootAndChildren = 10.0;
@@ -18,7 +17,7 @@ public class AddChannelView extends ViewBase<AddChannelPresenter, BorderPane> im
 	private Label channelNameLabel;
 	private TextField channelNameTextField;
 
-	public AddChannelView(Stage initOwner, AddChannelPresenter presenter) {
+	public AddChannelView(AddChannelPresenter presenter) {
 		super(presenter, new BorderPane());
 
 		HBox top = new HBox();
@@ -42,7 +41,7 @@ public class AddChannelView extends ViewBase<AddChannelPresenter, BorderPane> im
 		BorderPane.setMargin(top, new Insets(0, 0, 5, 0));
 
 		getRoot().setCenter(getPresenter().getSelectableSoundModifierView().getRoot());
-		getPresenter().getSelectableSoundModifierView().setStage(new OkCancelStage(initOwner, this).getStage());
+		getPresenter().getSelectableSoundModifierView().setStage(new OkCancelStage(getPrimaryStage(), this).getStage());
 	}
 
 	@Override

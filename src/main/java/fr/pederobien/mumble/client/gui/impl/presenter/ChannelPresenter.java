@@ -147,7 +147,7 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 	 * the user can write the name of the new channel.
 	 */
 	public void onAddChannel() {
-		new AddChannelView(getPrimaryStage(), new AddChannelPresenter(channelList));
+		new AddChannelView(new AddChannelPresenter(channelList));
 	}
 
 	/**
@@ -199,7 +199,7 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 	 * in which the user can write the new channel name.
 	 */
 	public void onRenameChannel() {
-		new RenameChannelView(getPrimaryStage(), new RenameChannelPresenter(channelList, channel));
+		new RenameChannelView(new RenameChannelPresenter(channelList, channel));
 	}
 
 	/**
@@ -217,7 +217,7 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 	}
 
 	public void onSetSoundModifier() {
-		new SoundModifierView(getPrimaryStage(), new SoundModifierPresenter(channel));
+		new SoundModifierView(new SoundModifierPresenter(channel));
 	}
 
 	@EventHandler

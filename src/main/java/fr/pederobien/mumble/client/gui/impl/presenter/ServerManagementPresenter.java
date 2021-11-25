@@ -120,7 +120,7 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 	 * Creates a new window in which the user can add a new mumble server.
 	 */
 	public void onAdd() {
-		new ServerInfoView(getPrimaryStage(), new ServerInfoPresenter(serverList, ServerList.createNewDefaultServer()) {
+		new ServerInfoView(new ServerInfoPresenter(serverList, ServerList.createNewDefaultServer()) {
 			@Override
 			protected void onOkButtonClicked(IMumbleServer server, String name, String address, int port) {
 				performChangesOnServer(server, name, address, port);
@@ -134,7 +134,7 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 	 */
 	public void onEdit() {
 		serverList.getSelectedServer().close();
-		new ServerInfoView(getPrimaryStage(), new ServerInfoPresenter(serverList, serverList.getSelectedServer()) {
+		new ServerInfoView(new ServerInfoPresenter(serverList, serverList.getSelectedServer()) {
 			@Override
 			protected void onOkButtonClicked(IMumbleServer server, String name, String address, int port) {
 				performChangesOnServer(server, name, address, port);

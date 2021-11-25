@@ -1,8 +1,10 @@
 package fr.pederobien.mumble.client.gui.impl.view;
 
+import fr.pederobien.mumble.client.gui.MumbleClientApplication;
 import fr.pederobien.mumble.client.gui.impl.presenter.PresenterBase;
 import javafx.application.Platform;
 import javafx.scene.Parent;
+import javafx.stage.Stage;
 
 public abstract class ViewBase<T extends PresenterBase, U extends Parent> {
 	private T presenter;
@@ -55,5 +57,12 @@ public abstract class ViewBase<T extends PresenterBase, U extends Parent> {
 	 */
 	protected void dispatch(Runnable runnable) {
 		Platform.runLater(runnable);
+	}
+
+	/**
+	 * @return The primary stage of the application.
+	 */
+	protected Stage getPrimaryStage() {
+		return MumbleClientApplication.getStage();
 	}
 }

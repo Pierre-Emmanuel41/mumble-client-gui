@@ -7,7 +7,6 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
-import javafx.stage.Stage;
 
 public class RenameChannelView extends ViewBase<RenameChannelPresenter, FlowPane> implements IOkCancelView {
 	private double marginBetweenRootAndChildren = 10.0;
@@ -16,7 +15,7 @@ public class RenameChannelView extends ViewBase<RenameChannelPresenter, FlowPane
 	private Label channelNameLabel;
 	private TextField channelNameTextField;
 
-	public RenameChannelView(Stage initOwner, RenameChannelPresenter presenter) {
+	public RenameChannelView(RenameChannelPresenter presenter) {
 		super(presenter, new FlowPane());
 		getRoot().setPrefWidth(490);
 
@@ -35,7 +34,7 @@ public class RenameChannelView extends ViewBase<RenameChannelPresenter, FlowPane
 		getRoot().getChildren().add(channelNameTextField);
 		FlowPane.setMargin(channelNameTextField, new Insets(0, 0, 0, marginBetweenLabelAndTextField));
 
-		new OkCancelStage(initOwner, this);
+		new OkCancelStage(getPrimaryStage(), this);
 	}
 
 	@Override
