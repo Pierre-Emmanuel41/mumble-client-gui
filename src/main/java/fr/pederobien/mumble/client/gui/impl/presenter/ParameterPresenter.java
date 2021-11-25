@@ -1,8 +1,10 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import fr.pederobien.mumble.client.event.ParameterValueChangePostEvent;
+import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.event.ParameterValueChangeRequestEvent;
 import fr.pederobien.mumble.client.gui.impl.generic.OkCancelPresenter;
+import fr.pederobien.mumble.client.gui.impl.properties.SimpleTooltipProperty;
 import fr.pederobien.mumble.client.impl.RangeParameter;
 import fr.pederobien.mumble.client.interfaces.IParameter;
 import fr.pederobien.mumble.client.interfaces.IResponse;
@@ -11,25 +13,43 @@ import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
 import fr.pederobien.utils.event.IEventListener;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.control.Tooltip;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 
 public class ParameterPresenter extends OkCancelPresenter implements IEventListener {
 	private IParameter<?> parameter;
 	private Object newValue;
 	private StringProperty parameterNameProperty, valueProperty;
 	private BooleanProperty okDisableProperty;
+	private ObjectProperty<Border> borderProperty;
+	private SimpleTooltipProperty tooltipProperty;
 	private boolean isNotValid, internalUpdate;
 
 	public ParameterPresenter(IParameter<?> parameter) {
 		this.parameter = parameter;
+		newValue = parameter.getValue();
 
 		parameterNameProperty = new SimpleStringProperty(String.format("%s :", parameter.getName()));
 		valueProperty = new SimpleStringProperty(parameter.getValue().toString());
 		valueProperty.addListener((obs, oldValue, newValue) -> validate(newValue));
 		okDisableProperty = new SimpleBooleanProperty(true);
-		newValue = parameter.getValue();
+		borderProperty = new SimpleObjectProperty<Border>(null);
+
+		RangeParameter<?> rangeParam = getRangeParameter();
+		if (rangeParam != null)
+			tooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.RANGE_PARAMETER_TOOLTIP, rangeParam.getType(), rangeParam.getMin(), rangeParam.getMax());
+		else
+			tooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.PARAMETER_TOOLTIP, parameter.getType());
 
 		EventManager.registerListener(this);
 	}
@@ -95,6 +115,21 @@ public class ParameterPresenter extends OkCancelPresenter implements IEventListe
 		return newValue != null && newValue.equals(parameter.getValue());
 	}
 
+	/**
+	 * @return The property to change the border for the parameter value input.
+	 */
+	public ObjectProperty<Border> borderProperty() {
+		return borderProperty;
+	}
+
+	/**
+	 * @return The property that contains the tooltip of the component in which the parameter value is written. This tooltip contains
+	 *         a description of constraints for the parameter value.
+	 */
+	public ObjectProperty<Tooltip> tooltipProperty() {
+		return tooltipProperty;
+	}
+
 	@EventHandler
 	private void onParameterValueChange(ParameterValueChangePostEvent event) {
 		if (!event.getParameter().equals(parameter))
@@ -120,12 +155,15 @@ public class ParameterPresenter extends OkCancelPresenter implements IEventListe
 				throw new Exception();
 
 			newValue = parameter.getType().getValue(value);
-			if (parameter instanceof RangeParameter)
-				((RangeParameter<?>) parameter).checkRange(parameter.getType().getValue(value));
+			RangeParameter<?> rangeParameter = getRangeParameter();
+			if (rangeParameter != null)
+				rangeParameter.checkRange(parameter.getType().getValue(value));
 			isNotValid = false;
+			borderProperty.set(Border.EMPTY);
 		} catch (Exception e) {
 			newValue = null;
 			isNotValid = true;
+			borderProperty.set(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));
 		}
 
 		okDisableProperty.set(isNotValid || isIdentical());
@@ -134,5 +172,11 @@ public class ParameterPresenter extends OkCancelPresenter implements IEventListe
 
 	private void handleResponse(IResponse response) {
 		// Do nothing
+	}
+
+	private RangeParameter<?> getRangeParameter() {
+		if (parameter instanceof RangeParameter)
+			return (RangeParameter<?>) parameter;
+		return null;
 	}
 }

@@ -215,6 +215,12 @@ public enum EMessageCode implements IMessageCode {
 	// Code that correspond to the word "false"
 	FALSE,
 
+	// Code for a normal parameter value tooltip (text field)
+	PARAMETER_TOOLTIP,
+
+	// Code for a range parameter value tooltip (text field)
+	RANGE_PARAMETER_TOOLTIP,
+
 	// PLAYER STATUS CODE
 	// -----------------------------------------------------------------------------
 

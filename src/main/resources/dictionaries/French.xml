@@ -322,6 +322,14 @@
 			<code>FALSE</code>
 			<value>Faux</value>
 		</message>
+				<message>
+			<code>PARAMETER_TOOLTIP</code>
+			<value>Le paramètre doit être un %s</value>
+		</message>
+		<message>
+			<code>RANGE_PARAMETER_TOOLTIP</code>
+			<value>Le paramètre doit être un %s et être compris dans l'intervalle [%s,%s]</value>
+		</message>
 		<message>
 			<code>PLAYER_ONLINE</code>
 			<value>En ligne</value>

@@ -321,6 +321,14 @@
 			<value>False</value>
 		</message>
 		<message>
+			<code>PARAMETER_TOOLTIP</code>
+			<value>The parameter must be a %s</value>
+		</message>
+		<message>
+			<code>RANGE_PARAMETER_TOOLTIP</code>
+			<value>The parameter must be a %s and should be in range [%s,%s]</value>
+		</message>
+		<message>
 			<code>CANNOT_LEAVE_SERVER_RESPONSE</code>
 			<value>You cannot leave the server for the following reason :</value>
 		</message>

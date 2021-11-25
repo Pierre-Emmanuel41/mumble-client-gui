@@ -69,6 +69,8 @@ public class ParameterView extends ViewBase<ParameterPresenter, HBox> {
 		TextField textfield = new TextField();
 		textfield.fontProperty().bind(getPresenter().fontProperty());
 		textfield.textProperty().bindBidirectional(getPresenter().valueProperty());
+		textfield.borderProperty().bind(getPresenter().borderProperty());
+		textfield.tooltipProperty().bind(getPresenter().tooltipProperty());
 		return textfield;
 	}
 
