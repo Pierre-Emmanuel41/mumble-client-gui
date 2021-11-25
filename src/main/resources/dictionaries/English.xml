@@ -23,6 +23,10 @@
 			<value>Mumble Client</value>
 		</message>
 		<message>
+			<code>SERVER_WINDOW_TITLE</code>
+			<value>%s@%s:%s</value>
+		</message>
+		<message>
 			<code>OK</code>
 			<value>Ok</value>
 		</message>

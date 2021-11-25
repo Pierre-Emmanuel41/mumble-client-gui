@@ -20,12 +20,10 @@ import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 import fr.pederobien.sound.event.SoundEvent;
 import fr.pederobien.utils.event.EventCalledEvent;
 import fr.pederobien.utils.event.EventLogger;
-import javafx.beans.property.StringProperty;
 
 public class MainPresenter extends PresenterBase {
 	private ServerListView serverListView;
 	private ServerManagementView serverManagementView;
-	private StringProperty titleLanguageProperty;
 
 	static {
 		EventLogger.instance().register();
@@ -34,12 +32,13 @@ public class MainPresenter extends PresenterBase {
 	}
 
 	public MainPresenter() {
+		setPrimaryStageTitle(EMessageCode.MUMBLE_WINDOW_TITLE);
+
 		for (IMumbleServer server : ServerListPersistence.getInstance().get().getServers())
 			server.open();
 
 		serverListView = new ServerListView(new ServerListPresenter(ServerListPersistence.getInstance().get()));
 		serverManagementView = new ServerManagementView(new ServerManagementPresenter(ServerListPersistence.getInstance().get()));
-		titleLanguageProperty = getPropertyHelper().languageProperty(EMessageCode.MUMBLE_WINDOW_TITLE);
 	}
 
 	@Override
@@ -47,13 +46,6 @@ public class MainPresenter extends PresenterBase {
 		GuiConfigurationPersistence.getInstance().save();
 		ServerListPersistence.getInstance().save();
 		EventLogger.instance().unregister();
-	}
-
-	/**
-	 * @return The string property corresponding to the title of the stage.
-	 */
-	public StringProperty titleLanguageProperty() {
-		return titleLanguageProperty;
 	}
 
 	/**

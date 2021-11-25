@@ -257,8 +257,8 @@ public class PlayerPresenter extends PresenterBase implements IEventListener {
 		if (!event.getServer().equals(server))
 			return;
 
+		dispatch(() -> getPrimaryStage().getScene().setRoot(new MainView(new MainPresenter()).getRoot()));
 		EventManager.unregisterListener(this);
-		getPrimaryStage().getScene().setRoot(new MainView(new MainPresenter()).getRoot());
 	}
 
 	private IMessageCode getPlayerStatusCode() {

@@ -57,7 +57,6 @@ public class MumbleClientApplication extends Application {
 		}
 
 		MainView mainView = new MainView(new MainPresenter());
-		primaryStage.titleProperty().bind(mainView.getPresenter().titleLanguageProperty());
 		primaryStage.setScene(new Scene(mainView.getRoot()));
 		primaryStage.setMaximized(true);
 		primaryStage.show();

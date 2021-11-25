@@ -1,5 +1,6 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
+import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.view.ChannelListView;
 import fr.pederobien.mumble.client.gui.impl.view.PlayerView;
 import fr.pederobien.mumble.client.interfaces.IMumbleServer;
@@ -9,6 +10,7 @@ public class ServerChannelsPresenter extends PresenterBase {
 	private ChannelListView channelListView;
 
 	public ServerChannelsPresenter(IMumbleServer server) {
+		setPrimaryStageTitle(EMessageCode.SERVER_WINDOW_TITLE, server.getName(), server.getAddress(), server.getPort());
 		playerView = new PlayerView(new PlayerPresenter(server));
 		channelListView = new ChannelListView(new ChannelListPresenter(server));
 	}

@@ -14,7 +14,11 @@ public enum EMessageCode implements IMessageCode {
 	// MAIN WINDOW TITLE
 	// -----------------------------------------------------------------------------
 
+	// Window title when server list is displayed.
 	MUMBLE_WINDOW_TITLE,
+
+	// Windows title when a server has been selected to be joined.
+	SERVER_WINDOW_TITLE,
 
 	// MOST GENERIC CODE
 	// -----------------------------------------------------------------------------

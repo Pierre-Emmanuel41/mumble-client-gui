@@ -6,8 +6,10 @@ import java.util.function.Consumer;
 
 import fr.pederobien.dictionary.interfaces.IMessageCode;
 import fr.pederobien.mumble.client.gui.MumbleClientApplication;
+import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
 import fr.pederobien.mumble.client.gui.impl.properties.PropertyHelper;
+import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.interfaces.IResponse;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -85,6 +87,16 @@ public abstract class PresenterBase {
 	 */
 	protected void dispatch(Runnable runnable) {
 		Platform.runLater(runnable);
+	}
+
+	/**
+	 * Set the primary stage title. It creates a {@link SimpleLanguageProperty} and the primary stage title property is bound to it.
+	 * 
+	 * @param code The code associated to the message to display.
+	 * @param args The message arguments if the message needs arguments.
+	 */
+	protected void setPrimaryStageTitle(EMessageCode code, Object... args) {
+		getPrimaryStage().titleProperty().bind(getPropertyHelper().languageProperty(code, args));
 	}
 
 	/**
