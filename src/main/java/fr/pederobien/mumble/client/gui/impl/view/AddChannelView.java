@@ -40,12 +40,13 @@ public class AddChannelView extends ViewBase<AddChannelPresenter, BorderPane> im
 		getRoot().setTop(top);
 		BorderPane.setMargin(top, new Insets(0, 0, 5, 0));
 
-		getRoot().setCenter(getPresenter().getSelectableSoundModifierView().getRoot());
-		getPresenter().getSelectableSoundModifierView().setStage(new OkCancelStage(getPrimaryStage(), this).getStage());
+		getRoot().setCenter(getPresenter().selectableSoundModifierView().getRoot());
+		getPresenter().selectableSoundModifierView().setStage(new OkCancelStage(getPrimaryStage(), this).getStage());
 	}
 
 	@Override
 	public void onPostShown() {
 		channelNameTextField.setPrefWidth(getRoot().getWidth() - 2 * marginBetweenRootAndChildren - channelNameLabel.getWidth() - marginBetweenLabelAndTextField);
+		getPresenter().selectableSoundModifierView().onPostShown();
 	}
 }

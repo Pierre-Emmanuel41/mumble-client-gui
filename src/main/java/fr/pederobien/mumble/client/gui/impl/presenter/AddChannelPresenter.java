@@ -135,7 +135,7 @@ public class AddChannelPresenter extends OkCancelPresenter implements IEventList
 	/**
 	 * @return The view that allows the user to select a sound modifier.
 	 */
-	public SelectableSoundModifierView getSelectableSoundModifierView() {
+	public SelectableSoundModifierView selectableSoundModifierView() {
 		return selectableSoundModifierView;
 	}
 
