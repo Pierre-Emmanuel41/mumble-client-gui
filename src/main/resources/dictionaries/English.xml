@@ -313,12 +313,12 @@
 			<value>Fail to leave the server</value>
 		</message>
 		<message>
-			<code>TRUE</code>
-			<value>True</value>
+			<code>ENABLE</code>
+			<value>Enable</value>
 		</message>
 		<message>
-			<code>FALSE</code>
-			<value>False</value>
+			<code>DISBALE</code>
+			<value>Disable</value>
 		</message>
 		<message>
 			<code>PARAMETER_TOOLTIP</code>

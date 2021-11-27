@@ -62,7 +62,8 @@ public class SelectableSoundModifierPresenter extends OkCancelPresenter implemen
 		if (okDisableProperty.get())
 			return false;
 
-		return selectedParameterListViewProperty.get().getPresenter().onOkButtonClicked();
+		selectedParameterListViewProperty.get().getPresenter().onOkButtonClicked();
+		return true;
 	}
 
 	@Override

@@ -315,12 +315,12 @@
 			<value>Vous ne pouvez pas quitter le serveur pour la raison suivante :</value>
 		</message>
 		<message>
-			<code>TRUE</code>
-			<value>Vrai</value>
+			<code>ENABLE</code>
+			<value>Activer</value>
 		</message>
 		<message>
-			<code>FALSE</code>
-			<value>Faux</value>
+			<code>DISABLE</code>
+			<value>Désactiver</value>
 		</message>
 				<message>
 			<code>PARAMETER_TOOLTIP</code>

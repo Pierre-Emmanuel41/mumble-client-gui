@@ -54,7 +54,7 @@ public class ParameterView extends ViewBase<ParameterPresenter, HBox> {
 
 	private ToggleButton createBooleanView() {
 		boolean value = Boolean.parseBoolean(getPresenter().valueProperty().getValue());
-		booleanTextProperty = MumbleClientApplication.getPropertyHelper().languageProperty(value ? EMessageCode.TRUE : EMessageCode.FALSE);
+		booleanTextProperty = MumbleClientApplication.getPropertyHelper().languageProperty(value ? EMessageCode.ENABLE : EMessageCode.DISABLE);
 		booleanParameterValue = new SimpleBooleanProperty(value);
 		booleanParameterValue.addListener((obs, oldValue, newValue) -> onToggleButtonClicked(newValue));
 
@@ -75,7 +75,7 @@ public class ParameterView extends ViewBase<ParameterPresenter, HBox> {
 	}
 
 	private void onToggleButtonClicked(Boolean newValue) {
-		booleanTextProperty.setCode(newValue ? EMessageCode.TRUE : EMessageCode.FALSE);
+		booleanTextProperty.setCode(newValue ? EMessageCode.ENABLE : EMessageCode.DISABLE);
 		getPresenter().valueProperty().set(newValue.toString());
 	}
 }

@@ -209,11 +209,11 @@ public enum EMessageCode implements IMessageCode {
 	// Code for the header of the alert when a player try to leave a server and it fails.
 	CANNOT_LEAVE_SERVER_RESPONSE,
 
-	// Code that correspond to the word "true"
-	TRUE,
+	// Code that correspond to the word "Enabled"
+	ENABLE,
 
-	// Code that correspond to the word "false"
-	FALSE,
+	// Code that correspond to the word "Disabled"
+	DISABLE,
 
 	// Code for a normal parameter value tooltip (text field)
 	PARAMETER_TOOLTIP,
