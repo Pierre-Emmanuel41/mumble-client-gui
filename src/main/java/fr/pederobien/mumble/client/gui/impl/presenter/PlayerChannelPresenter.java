@@ -5,6 +5,7 @@ import java.io.IOException;
 import fr.pederobien.mumble.client.event.OtherPlayerDeafenPostEvent;
 import fr.pederobien.mumble.client.event.OtherPlayerMutePostEvent;
 import fr.pederobien.mumble.client.event.PlayerAdminStatusChangePostEvent;
+import fr.pederobien.mumble.client.event.PlayerSpeakEvent;
 import fr.pederobien.mumble.client.event.ServerLeavePostEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.environment.Environments;
@@ -181,6 +182,12 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 			return;
 
 		dispatch(() -> isPlayerDeafen.set(event.isDeafen()));
+	}
+
+	@EventHandler
+	private void onPlayerSpeak(PlayerSpeakEvent event) {
+		if (!event.getPlayer().equals(otherPlayer))
+			return;
 	}
 
 	@EventHandler

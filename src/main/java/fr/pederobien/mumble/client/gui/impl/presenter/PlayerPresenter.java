@@ -7,6 +7,7 @@ import fr.pederobien.mumble.client.event.PlayerChannelChangePostEvent;
 import fr.pederobien.mumble.client.event.PlayerDeafenChangePostEvent;
 import fr.pederobien.mumble.client.event.PlayerMuteChangePostEvent;
 import fr.pederobien.mumble.client.event.PlayerOnlineStatusChangeEvent;
+import fr.pederobien.mumble.client.event.PlayerSpeakEvent;
 import fr.pederobien.mumble.client.event.ServerLeavePostEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.environment.Environments;
@@ -250,6 +251,12 @@ public class PlayerPresenter extends PresenterBase implements IEventListener {
 			return;
 
 		updateDeafenOrUndeafen();
+	}
+
+	@EventHandler
+	private void onPlayerSpeak(PlayerSpeakEvent event) {
+		if (!event.getPlayer().getName().equals(player.getName()))
+			return;
 	}
 
 	@EventHandler
