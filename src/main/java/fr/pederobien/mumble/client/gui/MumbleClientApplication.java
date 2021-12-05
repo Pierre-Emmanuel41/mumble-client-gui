@@ -1,7 +1,5 @@
 package fr.pederobien.mumble.client.gui;
 
-import java.io.FileNotFoundException;
-
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.environment.Environments;
 import fr.pederobien.mumble.client.gui.environment.Variables;
@@ -32,13 +30,9 @@ public class MumbleClientApplication extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		MumbleClientApplication.primaryStage = primaryStage;
 
-		try {
-			GuiConfigurationPersistence.getInstance().load(Variables.GUI_CONFIGURATION.getFileName());
-		} catch (FileNotFoundException e) {
-			GuiConfigurationPersistence.getInstance().saveDefault();
-		}
+		GuiConfigurationPersistence.getInstance().deserialize();
 
-		propertyHelper = new PropertyHelper(GuiConfigurationPersistence.getInstance().get());
+		propertyHelper = new PropertyHelper(GuiConfigurationPersistence.getInstance().getGuiConfiguration());
 		Environments.registerDictionaries();
 
 		if (!lock.lock()) {
@@ -50,11 +44,7 @@ public class MumbleClientApplication extends Application {
 			return;
 		}
 
-		try {
-			ServerListPersistence.getInstance().load(Variables.SERVER_LIST.getFileName());
-		} catch (FileNotFoundException e) {
-			ServerListPersistence.getInstance().saveDefault();
-		}
+		ServerListPersistence.getInstance().deserialize();
 
 		MainView mainView = new MainView(new MainPresenter());
 		primaryStage.setScene(new Scene(mainView.getRoot()));

@@ -2,7 +2,7 @@ package fr.pederobien.mumble.client.gui.impl;
 
 import java.util.Locale;
 
-import fr.pederobien.dictionary.impl.NotificationCenter;
+import fr.pederobien.dictionary.impl.DictionaryContext;
 import fr.pederobien.dictionary.interfaces.IDictionary;
 import fr.pederobien.mumble.client.gui.event.FontChangePostEvent;
 import fr.pederobien.mumble.client.gui.event.LocaleChangePostEvent;
@@ -43,6 +43,6 @@ public class GuiConfiguration implements IGuiConfiguration {
 
 	@Override
 	public void registerDictionary(IDictionary dictionary) {
-		NotificationCenter.getInstance().getDictionaryContext().register(dictionary);
+		DictionaryContext.getInstance().register(dictionary);
 	}
 }

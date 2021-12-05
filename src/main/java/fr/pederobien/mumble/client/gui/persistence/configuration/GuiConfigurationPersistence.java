@@ -1,25 +1,27 @@
 package fr.pederobien.mumble.client.gui.persistence.configuration;
 
-import java.io.IOException;
-import java.nio.file.Paths;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import fr.pederobien.mumble.client.gui.environment.Variables;
 import fr.pederobien.mumble.client.gui.impl.GuiConfiguration;
 import fr.pederobien.mumble.client.gui.interfaces.IGuiConfiguration;
-import fr.pederobien.mumble.client.gui.persistence.configuration.loaders.GuiConfigurationLoaderV10;
-import fr.pederobien.persistence.impl.xml.AbstractXmlPersistence;
+import fr.pederobien.mumble.client.gui.persistence.configuration.loaders.GuiConfigurationSerializerV10;
+import fr.pederobien.persistence.impl.Persistences;
+import fr.pederobien.persistence.impl.xml.XmlPersistence;
+import fr.pederobien.persistence.interfaces.IPersistence;
 
-public class GuiConfigurationPersistence extends AbstractXmlPersistence<IGuiConfiguration> {
-	private static final String XML_ROOT_ELEMENT = "GuiConfiguration";
+public class GuiConfigurationPersistence {
+	private XmlPersistence<IGuiConfiguration> persistence;
+	private IGuiConfiguration guiConfiguration;
 
 	protected GuiConfigurationPersistence() {
-		super(Paths.get(Variables.MUMBLE_FOLDER.getFileName()));
-		register(new GuiConfigurationLoaderV10());
+		persistence = Persistences.xmlPersistence();
+		persistence.register(persistence.adapt(new GuiConfigurationSerializerV10()));
+
+		guiConfiguration = new GuiConfiguration();
 	}
 
+	/**
+	 * @return The single instance of the persistence that serialize or deserialize a gui configuration.
+	 */
 	public static GuiConfigurationPersistence getInstance() {
 		return SingletonHolder.PERSISTENCE;
 	}
@@ -28,42 +30,29 @@ public class GuiConfigurationPersistence extends AbstractXmlPersistence<IGuiConf
 		private static final GuiConfigurationPersistence PERSISTENCE = new GuiConfigurationPersistence();
 	}
 
-	@Override
-	public boolean save() {
-		if (get() == null)
-			return true;
-
-		Document doc = newDocument();
-		doc.setXmlStandalone(true);
-
-		Element root = createElement(doc, XML_ROOT_ELEMENT);
-		doc.appendChild(root);
-
-		Element version = createElement(doc, VERSION);
-		version.appendChild(doc.createTextNode(getVersion().toString()));
-		root.appendChild(version);
-
-		Element locale = createElement(doc, GuiConfigurationXmlTag.LOCALE);
-		locale.appendChild(doc.createTextNode(get().getLocale().getLanguage()));
-		root.appendChild(locale);
-
-		Element font = createElement(doc, GuiConfigurationXmlTag.FONT);
-		setAttribute(font, GuiConfigurationXmlTag.FONT_FAMILY, get().getFont().getFamily());
-		setAttribute(font, GuiConfigurationXmlTag.FONT_SIZE, get().getFont().getSize());
-		root.appendChild(font);
-
-		saveDocument(doc, XML_ROOT_ELEMENT);
-		return true;
+	/**
+	 * Save the gui configuration at the following path: <code>%appdata%/.mumble/GuiConfiguration.xml</code>.
+	 * 
+	 * @return True if the save went well.
+	 */
+	public boolean serialize() {
+		return persistence.serialize(guiConfiguration, IPersistence.LATEST,
+				Variables.MUMBLE_FOLDER.getPath().resolve(Variables.GUI_CONFIGURATION.getFileName()).toString());
 	}
 
-	@Override
-	protected Document createDoc(Object... args) throws IOException {
-		return parseFromFileName((String) args[0]);
+	/**
+	 * Load the gui configuration at the following path: <code>%appdata%/.mumble/serverList.xml</code>.
+	 * 
+	 * @return True if the load went well.
+	 */
+	public boolean deserialize() {
+		return persistence.deserialize(guiConfiguration, Variables.MUMBLE_FOLDER.getPath().resolve(Variables.GUI_CONFIGURATION.getFileName()).toString());
 	}
 
-	public void saveDefault() {
-		set(new GuiConfiguration());
-		save();
+	/**
+	 * @return The gui configuration associated to this persistence.
+	 */
+	public IGuiConfiguration getGuiConfiguration() {
+		return guiConfiguration;
 	}
-
 }

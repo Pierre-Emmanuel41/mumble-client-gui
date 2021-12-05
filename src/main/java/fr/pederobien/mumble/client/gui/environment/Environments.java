@@ -18,8 +18,8 @@ public class Environments {
 
 	private Environments() {
 		String url = getClass().getResource(getClass().getSimpleName() + ".class").toExternalForm();
-		development = new DevelopmentEnvironment(url, GuiConfigurationPersistence.getInstance().get());
-		production = new ProductionEnvironment(url, GuiConfigurationPersistence.getInstance().get());
+		development = new DevelopmentEnvironment(url, GuiConfigurationPersistence.getInstance().getGuiConfiguration());
+		production = new ProductionEnvironment(url, GuiConfigurationPersistence.getInstance().getGuiConfiguration());
 		current = url.startsWith(IEnvironment.FILE_PREFIX) ? development : url.startsWith(IEnvironment.JAR_PREFIX) ? production : null;
 
 		if (current == null)

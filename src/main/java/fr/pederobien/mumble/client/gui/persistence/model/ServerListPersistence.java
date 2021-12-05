@@ -1,25 +1,26 @@
 package fr.pederobien.mumble.client.gui.persistence.model;
 
-import java.io.IOException;
-import java.nio.file.Paths;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import fr.pederobien.mumble.client.gui.environment.Variables;
 import fr.pederobien.mumble.client.gui.model.ServerList;
-import fr.pederobien.mumble.client.gui.persistence.model.loaders.ServerListLoaderV10;
-import fr.pederobien.mumble.client.interfaces.IMumbleServer;
-import fr.pederobien.persistence.impl.xml.AbstractXmlPersistence;
+import fr.pederobien.mumble.client.gui.persistence.model.loaders.ServerListSerializerV10;
+import fr.pederobien.persistence.impl.Persistences;
+import fr.pederobien.persistence.impl.xml.XmlPersistence;
+import fr.pederobien.persistence.interfaces.IPersistence;
 
-public class ServerListPersistence extends AbstractXmlPersistence<ServerList> {
-	private static final String ROOT_XML_DOCUMENT = "ServerList";
+public class ServerListPersistence {
+	private XmlPersistence<ServerList> persistence;
+	private ServerList serverList;
 
 	private ServerListPersistence() {
-		super(Paths.get(Variables.MUMBLE_FOLDER.getFileName()));
-		register(new ServerListLoaderV10());
+		persistence = Persistences.xmlPersistence();
+		persistence.register(persistence.adapt(new ServerListSerializerV10()));
+
+		serverList = new ServerList();
 	}
 
+	/**
+	 * @return The single instance of the persistence that serialize or deserialize a server list.
+	 */
 	public static ServerListPersistence getInstance() {
 		return SingletonHolder.PERSISTENCE;
 	}
@@ -28,42 +29,28 @@ public class ServerListPersistence extends AbstractXmlPersistence<ServerList> {
 		private static final ServerListPersistence PERSISTENCE = new ServerListPersistence();
 	}
 
-	@Override
-	public boolean save() {
-		if (get() == null)
-			return true;
-
-		Document doc = newDocument();
-		doc.setXmlStandalone(true);
-
-		Element root = createElement(doc, ROOT_XML_DOCUMENT);
-		doc.appendChild(root);
-
-		Element version = createElement(doc, VERSION);
-		version.appendChild(doc.createTextNode(getVersion().toString()));
-		root.appendChild(version);
-
-		Element servers = createElement(doc, ServersXmlTag.SERVERS);
-		for (IMumbleServer s : get().getServers()) {
-			Element server = createElement(doc, ServersXmlTag.SERVER);
-			setAttribute(server, ServersXmlTag.NAME, s.getName());
-			setAttribute(server, ServersXmlTag.SERVER_ADDRESS, s.getAddress());
-			setAttribute(server, ServersXmlTag.SERVER_PORT, s.getPort());
-			servers.appendChild(server);
-		}
-		root.appendChild(servers);
-
-		saveDocument(doc, ROOT_XML_DOCUMENT);
-		return true;
+	/**
+	 * Save the server list at the following path: <code>%appdata%/.mumble/serverList.xml</code>.
+	 * 
+	 * @return True if the save went well.
+	 */
+	public boolean serialize() {
+		return persistence.serialize(serverList, IPersistence.LATEST, Variables.MUMBLE_FOLDER.getPath().resolve(Variables.SERVER_LIST.getFileName()).toString());
 	}
 
-	@Override
-	protected Document createDoc(Object... args) throws IOException {
-		return parseFromFileName((String) args[0]);
+	/**
+	 * Load the server list at the following path: <code>%appdata%/.mumble/serverList.xml</code>.
+	 * 
+	 * @return True if the load went well.
+	 */
+	public boolean deserialize() {
+		return persistence.deserialize(serverList, Variables.MUMBLE_FOLDER.getPath().resolve(Variables.SERVER_LIST.getFileName()).toString());
 	}
 
-	public void saveDefault() {
-		set(new ServerList());
-		save();
+	/**
+	 * @return The server list associated to this persistence.
+	 */
+	public ServerList getServerList() {
+		return serverList;
 	}
 }

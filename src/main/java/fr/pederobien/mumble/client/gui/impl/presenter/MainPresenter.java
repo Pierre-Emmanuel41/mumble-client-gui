@@ -15,17 +15,17 @@ public class MainPresenter extends PresenterBase {
 	public MainPresenter() {
 		setPrimaryStageTitle(EMessageCode.MUMBLE_WINDOW_TITLE);
 
-		for (IMumbleServer server : ServerListPersistence.getInstance().get().getServers())
+		for (IMumbleServer server : ServerListPersistence.getInstance().getServerList().getServers())
 			server.open();
 
-		serverListView = new ServerListView(new ServerListPresenter(ServerListPersistence.getInstance().get()));
-		serverManagementView = new ServerManagementView(new ServerManagementPresenter(ServerListPersistence.getInstance().get()));
+		serverListView = new ServerListView(new ServerListPresenter(ServerListPersistence.getInstance().getServerList()));
+		serverManagementView = new ServerManagementView(new ServerManagementPresenter(ServerListPersistence.getInstance().getServerList()));
 	}
 
 	@Override
 	public void onCloseRequest() {
-		GuiConfigurationPersistence.getInstance().save();
-		ServerListPersistence.getInstance().save();
+		GuiConfigurationPersistence.getInstance().serialize();
+		ServerListPersistence.getInstance().serialize();
 		EventLogger.instance().unregister();
 	}
 

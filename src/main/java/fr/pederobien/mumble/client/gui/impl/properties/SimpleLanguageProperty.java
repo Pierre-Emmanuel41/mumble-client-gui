@@ -1,7 +1,7 @@
 package fr.pederobien.mumble.client.gui.impl.properties;
 
+import fr.pederobien.dictionary.impl.DictionaryContext;
 import fr.pederobien.dictionary.impl.MessageEvent;
-import fr.pederobien.dictionary.impl.NotificationCenter;
 import fr.pederobien.dictionary.interfaces.IDictionaryContext;
 import fr.pederobien.dictionary.interfaces.IMessageCode;
 import fr.pederobien.mumble.client.gui.impl.properties.InternalProperty.Action;
@@ -57,7 +57,7 @@ public class SimpleLanguageProperty extends SimpleStringProperty {
 	}
 
 	private void update() {
-		IDictionaryContext context = NotificationCenter.getInstance().getDictionaryContext();
+		IDictionaryContext context = DictionaryContext.getInstance();
 		setValue(context.getMessage(new MessageEvent(internalProperty.getGuiConfiguration().getLocale(), getCode(), getArgs())));
 	}
 }

@@ -23,10 +23,10 @@ public enum Variables {
 	LOCK_FILE("MumbleClientApplication.lock"),
 
 	// File that contains gui configuration parameters.
-	GUI_CONFIGURATION("GuiConfiguration"),
+	GUI_CONFIGURATION("GuiConfiguration.xml"),
 
 	// File that contains all registered servers.
-	SERVER_LIST("ServerList"),
+	SERVER_LIST("ServerList.xml"),
 
 	// File that correspond to the unmute microphone.
 	MICROPHONE_UNMUTE("Unmute.png"),
