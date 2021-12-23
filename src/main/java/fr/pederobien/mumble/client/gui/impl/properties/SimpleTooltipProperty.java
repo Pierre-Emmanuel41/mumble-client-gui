@@ -1,6 +1,6 @@
 package fr.pederobien.mumble.client.gui.impl.properties;
 
-import fr.pederobien.dictionary.interfaces.IMessageCode;
+import fr.pederobien.mumble.client.gui.interfaces.ICode;
 import fr.pederobien.mumble.client.gui.interfaces.IGuiConfiguration;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Tooltip;
@@ -16,7 +16,7 @@ public class SimpleTooltipProperty extends SimpleObjectProperty<Tooltip> {
 	 * @param code             The code associated to the message to display.
 	 * @param args             The message arguments if the message needs arguments.
 	 */
-	public SimpleTooltipProperty(IGuiConfiguration guiConfiguration, IMessageCode code, Object... args) {
+	public SimpleTooltipProperty(IGuiConfiguration guiConfiguration, ICode code, Object... args) {
 		super(new Tooltip());
 		textProperty = new SimpleLanguageProperty(guiConfiguration, code, args);
 		getValue().fontProperty().bind(new SimpleFontProperty(guiConfiguration));
@@ -29,7 +29,7 @@ public class SimpleTooltipProperty extends SimpleObjectProperty<Tooltip> {
 	 * @param code The new code associated to the message to display.
 	 * @param args The new arguments array associated to the code.
 	 */
-	public void setMessageCode(IMessageCode code, Object... args) {
+	public void setMessageCode(ICode code, Object... args) {
 		textProperty.setCode(code, args);
 	}
 }

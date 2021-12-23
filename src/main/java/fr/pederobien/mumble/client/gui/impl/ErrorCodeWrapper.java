@@ -3,8 +3,8 @@ package fr.pederobien.mumble.client.gui.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import fr.pederobien.dictionary.interfaces.IMessageCode;
 import fr.pederobien.mumble.client.gui.dictionary.EErrorMessageCode;
+import fr.pederobien.mumble.client.gui.interfaces.ICode;
 import fr.pederobien.mumble.common.impl.ErrorCode;
 
 public enum ErrorCodeWrapper {
@@ -49,9 +49,9 @@ public enum ErrorCodeWrapper {
 
 	private static final Map<ErrorCode, ErrorCodeWrapper> codes;
 	private ErrorCode errorCode;
-	private IMessageCode messageCode;
+	private ICode messageCode;
 
-	private ErrorCodeWrapper(ErrorCode errorCode, IMessageCode messageCode) {
+	private ErrorCodeWrapper(ErrorCode errorCode, ICode messageCode) {
 		this.errorCode = errorCode;
 		this.messageCode = messageCode;
 	}
@@ -77,7 +77,7 @@ public enum ErrorCodeWrapper {
 	/**
 	 * @return The message code associated to this wrapper.
 	 */
-	public IMessageCode getMessageCode() {
+	public ICode getMessageCode() {
 		return messageCode;
 	}
 

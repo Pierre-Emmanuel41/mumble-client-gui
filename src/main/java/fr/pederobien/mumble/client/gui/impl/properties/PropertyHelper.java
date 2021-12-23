@@ -2,7 +2,7 @@ package fr.pederobien.mumble.client.gui.impl.properties;
 
 import java.util.function.Function;
 
-import fr.pederobien.dictionary.interfaces.IMessageCode;
+import fr.pederobien.mumble.client.gui.interfaces.ICode;
 import fr.pederobien.mumble.client.gui.interfaces.IGuiConfiguration;
 import javafx.scene.Parent;
 import javafx.scene.paint.Color;
@@ -23,7 +23,7 @@ public class PropertyHelper {
 	 * 
 	 * @return the created language property.
 	 */
-	public SimpleLanguageProperty languageProperty(IMessageCode code, Object... args) {
+	public SimpleLanguageProperty languageProperty(ICode code, Object... args) {
 		return new SimpleLanguageProperty(guiConfiguration, code, args);
 	}
 
@@ -46,7 +46,7 @@ public class PropertyHelper {
 	 * 
 	 * @return the created tooltip property.
 	 */
-	public SimpleTooltipProperty tooltipProperty(IMessageCode code, Object... args) {
+	public SimpleTooltipProperty tooltipProperty(ICode code, Object... args) {
 		return new SimpleTooltipProperty(guiConfiguration, code, args);
 	}
 

@@ -1,16 +1,15 @@
 package fr.pederobien.mumble.client.gui.impl.properties;
 
-import fr.pederobien.dictionary.impl.DictionaryContext;
 import fr.pederobien.dictionary.impl.MessageEvent;
 import fr.pederobien.dictionary.interfaces.IDictionaryContext;
-import fr.pederobien.dictionary.interfaces.IMessageCode;
 import fr.pederobien.mumble.client.gui.impl.properties.InternalProperty.Action;
+import fr.pederobien.mumble.client.gui.interfaces.ICode;
 import fr.pederobien.mumble.client.gui.interfaces.IGuiConfiguration;
 import javafx.beans.property.SimpleStringProperty;
 
 public class SimpleLanguageProperty extends SimpleStringProperty {
 	private InternalProperty internalProperty;
-	private IMessageCode code;
+	private ICode code;
 	private Object[] args;
 
 	/**
@@ -21,7 +20,7 @@ public class SimpleLanguageProperty extends SimpleStringProperty {
 	 * @param code             The code associated to the message to display.
 	 * @param args             The message arguments if the message needs arguments.
 	 */
-	public SimpleLanguageProperty(IGuiConfiguration guiConfiguration, IMessageCode code, Object... args) {
+	public SimpleLanguageProperty(IGuiConfiguration guiConfiguration, ICode code, Object... args) {
 		internalProperty = new InternalProperty(guiConfiguration);
 		this.code = code;
 		this.args = args;
@@ -33,7 +32,7 @@ public class SimpleLanguageProperty extends SimpleStringProperty {
 	/**
 	 * @return The code associated to this property.
 	 */
-	public IMessageCode getCode() {
+	public ICode getCode() {
 		return code;
 	}
 
@@ -43,7 +42,7 @@ public class SimpleLanguageProperty extends SimpleStringProperty {
 	 * @param code The new code associated to the message to display.
 	 * @param args The new arguments array associated to the code.
 	 */
-	public void setCode(IMessageCode code, Object... args) {
+	public void setCode(ICode code, Object... args) {
 		this.code = code;
 		this.args = args;
 		update();
@@ -57,7 +56,7 @@ public class SimpleLanguageProperty extends SimpleStringProperty {
 	}
 
 	private void update() {
-		IDictionaryContext context = DictionaryContext.getInstance();
-		setValue(context.getMessage(new MessageEvent(internalProperty.getGuiConfiguration().getLocale(), getCode(), getArgs())));
+		IDictionaryContext context = internalProperty.getGuiConfiguration().getDictionaryContext();
+		setValue(context.getMessage(new MessageEvent(internalProperty.getGuiConfiguration().getLocale(), getCode().toString(), getArgs())));
 	}
 }

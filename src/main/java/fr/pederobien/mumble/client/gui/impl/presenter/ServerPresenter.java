@@ -1,6 +1,5 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
-import fr.pederobien.dictionary.interfaces.IMessageCode;
 import fr.pederobien.mumble.client.event.ServerIpAddressChangePostEvent;
 import fr.pederobien.mumble.client.event.ServerJoinPostEvent;
 import fr.pederobien.mumble.client.event.ServerNameChangePostEvent;
@@ -8,6 +7,7 @@ import fr.pederobien.mumble.client.event.ServerPortNumberChangePostEvent;
 import fr.pederobien.mumble.client.event.ServerReachableChangeEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
+import fr.pederobien.mumble.client.gui.interfaces.ICode;
 import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
@@ -112,7 +112,7 @@ public class ServerPresenter extends PresenterBase implements IEventListener {
 	/**
 	 * @return The code associated to the message to be displayed when the server is reachable or not.
 	 */
-	private IMessageCode getServerStateCode() {
+	private ICode getServerStateCode() {
 		return server.isReachable() ? EMessageCode.REACHABLE_SERVER : EMessageCode.UNREACHABLE_SERVER;
 	}
 

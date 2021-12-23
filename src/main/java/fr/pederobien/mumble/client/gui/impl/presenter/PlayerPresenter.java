@@ -2,7 +2,6 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import java.io.IOException;
 
-import fr.pederobien.dictionary.interfaces.IMessageCode;
 import fr.pederobien.mumble.client.event.PlayerChannelChangePostEvent;
 import fr.pederobien.mumble.client.event.PlayerDeafenChangePostEvent;
 import fr.pederobien.mumble.client.event.PlayerMuteChangePostEvent;
@@ -15,6 +14,7 @@ import fr.pederobien.mumble.client.gui.environment.Variables;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleTooltipProperty;
 import fr.pederobien.mumble.client.gui.impl.view.MainView;
+import fr.pederobien.mumble.client.gui.interfaces.ICode;
 import fr.pederobien.mumble.client.interfaces.IMumbleServer;
 import fr.pederobien.mumble.client.interfaces.IPlayer;
 import fr.pederobien.mumble.client.interfaces.IResponse;
@@ -268,7 +268,7 @@ public class PlayerPresenter extends PresenterBase implements IEventListener {
 		EventManager.unregisterListener(this);
 	}
 
-	private IMessageCode getPlayerStatusCode() {
+	private ICode getPlayerStatusCode() {
 		return player.isOnline() ? EMessageCode.PLAYER_ONLINE : EMessageCode.PLAYER_OFFLINE;
 	}
 

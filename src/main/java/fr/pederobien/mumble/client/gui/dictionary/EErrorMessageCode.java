@@ -1,8 +1,8 @@
 package fr.pederobien.mumble.client.gui.dictionary;
 
-import fr.pederobien.dictionary.interfaces.IMessageCode;
+import fr.pederobien.mumble.client.gui.interfaces.ICode;
 
-public enum EErrorMessageCode implements IMessageCode {
+public enum EErrorMessageCode implements ICode {
 	// Code when no errors happened.
 	NONE,
 

@@ -1,8 +1,8 @@
 package fr.pederobien.mumble.client.gui.dictionary;
 
-import fr.pederobien.dictionary.interfaces.IMessageCode;
+import fr.pederobien.mumble.client.gui.interfaces.ICode;
 
-public enum EMessageCode implements IMessageCode {
+public enum EMessageCode implements ICode {
 	// APPLICATION ALREADY RUNNING
 	// -----------------------------------------------------------------------------
 	// Code for the title of the alert when running the application while one is already running.

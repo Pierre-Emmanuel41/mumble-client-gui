@@ -2,8 +2,7 @@ package fr.pederobien.mumble.client.gui.interfaces;
 
 import java.util.Locale;
 
-import fr.pederobien.dictionary.interfaces.IDictionary;
-import fr.pederobien.dictionary.interfaces.IMessageCode;
+import fr.pederobien.dictionary.interfaces.IDictionaryContext;
 import javafx.scene.text.Font;
 
 public interface IGuiConfiguration {
@@ -37,12 +36,7 @@ public interface IGuiConfiguration {
 	public void setLocale(Locale locale);
 
 	/**
-	 * Register the specified dictionary for this gui configuration. All registered dictionaries are used to display message
-	 * associated to code.
-	 * 
-	 * @param dictionary The dictionary to register.
-	 * 
-	 * @see IMessageCode
+	 * @return The context that gather dictionaries for this GUI configuration.
 	 */
-	public void registerDictionary(IDictionary dictionary);
+	IDictionaryContext getDictionaryContext();
 }

@@ -3,7 +3,7 @@ package fr.pederobien.mumble.client.gui.impl;
 import java.util.Locale;
 
 import fr.pederobien.dictionary.impl.DictionaryContext;
-import fr.pederobien.dictionary.interfaces.IDictionary;
+import fr.pederobien.dictionary.interfaces.IDictionaryContext;
 import fr.pederobien.mumble.client.gui.event.FontChangePostEvent;
 import fr.pederobien.mumble.client.gui.event.LocaleChangePostEvent;
 import fr.pederobien.mumble.client.gui.interfaces.IGuiConfiguration;
@@ -16,6 +16,11 @@ public class GuiConfiguration implements IGuiConfiguration {
 
 	private Font font;
 	private Locale locale;
+	private IDictionaryContext dictionaryContext;
+
+	public GuiConfiguration() {
+		dictionaryContext = new DictionaryContext();
+	}
 
 	@Override
 	public Font getFont() {
@@ -42,7 +47,7 @@ public class GuiConfiguration implements IGuiConfiguration {
 	}
 
 	@Override
-	public void registerDictionary(IDictionary dictionary) {
-		DictionaryContext.getInstance().register(dictionary);
+	public IDictionaryContext getDictionaryContext() {
+		return dictionaryContext;
 	}
 }

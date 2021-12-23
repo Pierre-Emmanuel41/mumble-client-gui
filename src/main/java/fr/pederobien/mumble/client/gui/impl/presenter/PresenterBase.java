@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import fr.pederobien.dictionary.interfaces.IMessageCode;
 import fr.pederobien.mumble.client.gui.MumbleClientApplication;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
 import fr.pederobien.mumble.client.gui.impl.properties.PropertyHelper;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
+import fr.pederobien.mumble.client.gui.interfaces.ICode;
 import fr.pederobien.mumble.client.interfaces.IResponse;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -107,7 +107,7 @@ public abstract class PresenterBase {
 	 * @param title     The message code associated to the title of the alert box.
 	 * @param header    The message code associated to the header of the alert box.
 	 */
-	protected void handleRequestFailed(IResponse response, AlertType alertType, IMessageCode title, IMessageCode header) {
+	protected void handleRequestFailed(IResponse response, AlertType alertType, ICode title, ICode header) {
 		if (!response.hasFailed())
 			return;
 
@@ -129,7 +129,7 @@ public abstract class PresenterBase {
 	 * @param header    The message code associated to the header of the alert box.
 	 * @param runnable  The runnable to execute if the request has failed.
 	 */
-	protected void handleRequestFailed(IResponse response, AlertType alertType, IMessageCode title, IMessageCode header, Runnable runnable) {
+	protected void handleRequestFailed(IResponse response, AlertType alertType, ICode title, ICode header, Runnable runnable) {
 		if (!response.hasFailed())
 			return;
 

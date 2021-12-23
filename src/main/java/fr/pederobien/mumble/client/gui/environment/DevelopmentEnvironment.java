@@ -19,7 +19,7 @@ public class DevelopmentEnvironment extends AbstractEnvironment implements IEnvi
 
 	@Override
 	public void registerDictionary(String dictionaryName) throws FileNotFoundException {
-		getGuiConfiguration().registerDictionary(dictionaryParser.parse(Paths.get(getDictionaryPath(dictionaryName))));
+		getGuiConfiguration().getDictionaryContext().register(dictionaryParser.parse(Paths.get(getDictionaryPath(dictionaryName))));
 	}
 
 	@Override

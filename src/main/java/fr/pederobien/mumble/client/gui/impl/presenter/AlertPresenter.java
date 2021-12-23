@@ -1,6 +1,6 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
-import fr.pederobien.dictionary.interfaces.IMessageCode;
+import fr.pederobien.mumble.client.gui.interfaces.ICode;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
@@ -19,7 +19,7 @@ public class AlertPresenter extends PresenterBase {
 	 * 
 	 * @return This presenter.
 	 */
-	public AlertPresenter title(IMessageCode title, Object... args) {
+	public AlertPresenter title(ICode title, Object... args) {
 		alert.titleProperty().bind(getPropertyHelper().languageProperty(title, args));
 		return this;
 	}
@@ -32,7 +32,7 @@ public class AlertPresenter extends PresenterBase {
 	 * 
 	 * @return This presenter.
 	 */
-	public AlertPresenter header(IMessageCode header, Object... args) {
+	public AlertPresenter header(ICode header, Object... args) {
 		alert.headerTextProperty().bind(getPropertyHelper().languageProperty(header, args));
 		return this;
 	}
@@ -45,7 +45,7 @@ public class AlertPresenter extends PresenterBase {
 	 * 
 	 * @return This presenter.
 	 */
-	public AlertPresenter content(IMessageCode content, Object... args) {
+	public AlertPresenter content(ICode content, Object... args) {
 		alert.contentTextProperty().bind(getPropertyHelper().languageProperty(content, args));
 		return this;
 	}
