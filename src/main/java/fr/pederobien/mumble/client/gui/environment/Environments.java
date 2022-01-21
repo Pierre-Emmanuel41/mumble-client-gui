@@ -1,6 +1,5 @@
 package fr.pederobien.mumble.client.gui.environment;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import fr.pederobien.mumble.client.gui.interfaces.IEnvironment;
@@ -33,7 +32,7 @@ public class Environments {
 		for (String dictionaryName : DICTIONARIES_LIST)
 			try {
 				current.registerDictionary(dictionaryName);
-			} catch (FileNotFoundException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 	}

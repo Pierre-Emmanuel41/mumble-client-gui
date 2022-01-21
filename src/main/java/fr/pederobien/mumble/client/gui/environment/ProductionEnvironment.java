@@ -1,6 +1,5 @@
 package fr.pederobien.mumble.client.gui.environment;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -22,8 +21,8 @@ public class ProductionEnvironment extends AbstractEnvironment implements IEnvir
 	}
 
 	@Override
-	public void registerDictionary(String dictionaryName) throws FileNotFoundException {
-		getGuiConfiguration().getDictionaryContext().register(dictionaryParser.parse(Paths.get(getDictionaryPath(dictionaryName))));
+	public void registerDictionary(String dictionaryName) throws Exception {
+		getGuiConfiguration().getDictionaryContext().register(dictionaryParser.parse(getDictionaryPath(dictionaryName)));
 	}
 
 	@Override
@@ -33,5 +32,4 @@ public class ProductionEnvironment extends AbstractEnvironment implements IEnvir
 		jarFile.close();
 		return image;
 	}
-
 }

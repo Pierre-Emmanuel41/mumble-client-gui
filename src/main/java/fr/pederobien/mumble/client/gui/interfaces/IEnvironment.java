@@ -17,7 +17,7 @@ public interface IEnvironment {
 	 * 
 	 * @throws FileNotFoundException if there is no file associated to the given dictionary name.
 	 */
-	void registerDictionary(String dictionaryName) throws FileNotFoundException;
+	void registerDictionary(String dictionaryName) throws Exception;
 
 	/**
 	 * Try to find the file associated to given image name. If found, then the file is parsed and an image is returned.

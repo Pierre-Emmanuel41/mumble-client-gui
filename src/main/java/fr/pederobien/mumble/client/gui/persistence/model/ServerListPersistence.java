@@ -31,20 +31,24 @@ public class ServerListPersistence {
 
 	/**
 	 * Save the server list at the following path: <code>%appdata%/.mumble/serverList.xml</code>.
-	 * 
-	 * @return True if the save went well.
 	 */
-	public boolean serialize() {
-		return persistence.serialize(serverList, IPersistence.LATEST, Variables.MUMBLE_FOLDER.getPath().resolve(Variables.SERVER_LIST.getFileName()).toString());
+	public void serialize() {
+		try {
+			persistence.serialize(serverList, IPersistence.LATEST, Variables.MUMBLE_FOLDER.getPath().resolve(Variables.SERVER_LIST.getFileName()).toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
 	 * Load the server list at the following path: <code>%appdata%/.mumble/serverList.xml</code>.
-	 * 
-	 * @return True if the load went well.
 	 */
-	public boolean deserialize() {
-		return persistence.deserialize(serverList, Variables.MUMBLE_FOLDER.getPath().resolve(Variables.SERVER_LIST.getFileName()).toString());
+	public void deserialize() {
+		try {
+			persistence.deserialize(serverList, Variables.MUMBLE_FOLDER.getPath().resolve(Variables.SERVER_LIST.getFileName()).toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

@@ -32,21 +32,24 @@ public class GuiConfigurationPersistence {
 
 	/**
 	 * Save the gui configuration at the following path: <code>%appdata%/.mumble/GuiConfiguration.xml</code>.
-	 * 
-	 * @return True if the save went well.
 	 */
-	public boolean serialize() {
-		return persistence.serialize(guiConfiguration, IPersistence.LATEST,
-				Variables.MUMBLE_FOLDER.getPath().resolve(Variables.GUI_CONFIGURATION.getFileName()).toString());
+	public void serialize() {
+		try {
+			persistence.serialize(guiConfiguration, IPersistence.LATEST, Variables.MUMBLE_FOLDER.getPath().resolve(Variables.GUI_CONFIGURATION.getFileName()).toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
 	 * Load the gui configuration at the following path: <code>%appdata%/.mumble/serverList.xml</code>.
-	 * 
-	 * @return True if the load went well.
 	 */
-	public boolean deserialize() {
-		return persistence.deserialize(guiConfiguration, Variables.MUMBLE_FOLDER.getPath().resolve(Variables.GUI_CONFIGURATION.getFileName()).toString());
+	public void deserialize() {
+		try {
+			persistence.deserialize(guiConfiguration, Variables.MUMBLE_FOLDER.getPath().resolve(Variables.GUI_CONFIGURATION.getFileName()).toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

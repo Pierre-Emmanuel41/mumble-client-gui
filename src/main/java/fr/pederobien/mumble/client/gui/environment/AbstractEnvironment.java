@@ -1,6 +1,5 @@
 package fr.pederobien.mumble.client.gui.environment;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import fr.pederobien.mumble.client.gui.interfaces.IEnvironment;
@@ -19,7 +18,7 @@ public abstract class AbstractEnvironment implements IEnvironment {
 	}
 
 	@Override
-	public void registerDictionary(String dictionaryName) throws FileNotFoundException {
+	public void registerDictionary(String dictionaryName) throws Exception {
 		throw new UnsupportedOperationException();
 	}
 

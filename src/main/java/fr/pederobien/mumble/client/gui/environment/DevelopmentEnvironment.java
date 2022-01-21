@@ -1,8 +1,7 @@
 package fr.pederobien.mumble.client.gui.environment;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.nio.file.Paths;
+import java.io.IOException;
 
 import fr.pederobien.dictionary.impl.XmlDictionaryParser;
 import fr.pederobien.mumble.client.gui.interfaces.IEnvironment;
@@ -18,12 +17,12 @@ public class DevelopmentEnvironment extends AbstractEnvironment implements IEnvi
 	}
 
 	@Override
-	public void registerDictionary(String dictionaryName) throws FileNotFoundException {
-		getGuiConfiguration().getDictionaryContext().register(dictionaryParser.parse(Paths.get(getDictionaryPath(dictionaryName))));
+	public void registerDictionary(String dictionaryName) throws Exception {
+		getGuiConfiguration().getDictionaryContext().register(dictionaryParser.parse(getDictionaryPath(dictionaryName)));
 	}
 
 	@Override
-	public Image loadImage(String imageName) throws FileNotFoundException {
+	public Image loadImage(String imageName) throws IOException {
 		return new Image(new FileInputStream(getImagePath(imageName)));
 	}
 }
