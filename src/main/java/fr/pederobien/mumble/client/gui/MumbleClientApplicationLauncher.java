@@ -10,6 +10,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import fr.pederobien.communication.event.ConnectionEvent;
+import fr.pederobien.dictionary.event.DictionaryEvent;
 import fr.pederobien.mumble.client.event.PlayerSpeakEvent;
 import fr.pederobien.mumble.client.gui.environment.Variables;
 import fr.pederobien.sound.event.SoundEvent;
@@ -24,7 +25,8 @@ public class MumbleClientApplicationLauncher {
 	 * @param args the command line arguments passed to the application.
 	 */
 	public static void main(String[] args) {
-		EventLogger.instance().ignore(SoundEvent.class).ignore(ConnectionEvent.class).ignore(PlayerSpeakEvent.class).register();
+		EventLogger.instance().newLine(true).timeStamp(true).ignore(DictionaryEvent.class).ignore(SoundEvent.class);
+		EventLogger.instance().ignore(ConnectionEvent.class).ignore(PlayerSpeakEvent.class).register();
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> saveLog()));
 		MumbleClientApplication.main(args);
 	}
