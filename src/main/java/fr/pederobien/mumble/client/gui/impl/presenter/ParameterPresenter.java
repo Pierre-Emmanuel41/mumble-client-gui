@@ -1,13 +1,13 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
-import fr.pederobien.mumble.client.event.ParameterValueChangePostEvent;
+import fr.pederobien.messenger.interfaces.IResponse;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.event.ParameterValueChangeRequestEvent;
 import fr.pederobien.mumble.client.gui.impl.generic.OkCancelPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleTooltipProperty;
-import fr.pederobien.mumble.client.impl.RangeParameter;
-import fr.pederobien.mumble.client.interfaces.IParameter;
-import fr.pederobien.mumble.client.interfaces.IResponse;
+import fr.pederobien.mumble.client.player.event.MumbleParameterValueChangePostEvent;
+import fr.pederobien.mumble.client.player.impl.RangeParameter;
+import fr.pederobien.mumble.client.player.interfaces.IParameter;
 import fr.pederobien.mumble.common.impl.ParameterType;
 import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
@@ -88,8 +88,8 @@ public class ParameterPresenter extends OkCancelPresenter implements IEventListe
 	/**
 	 * @return The code associated to the type of this parameter.
 	 */
-	public int getParameterTypeCode() {
-		return parameter.getType().getCode();
+	public boolean isBooleanParameter() {
+		return parameter.getType() == ParameterType.BOOLEAN;
 	}
 
 	/**
@@ -131,7 +131,7 @@ public class ParameterPresenter extends OkCancelPresenter implements IEventListe
 	}
 
 	@EventHandler
-	private void onParameterValueChange(ParameterValueChangePostEvent event) {
+	private void onParameterValueChange(MumbleParameterValueChangePostEvent event) {
 		if (!event.getParameter().equals(parameter))
 			return;
 
@@ -151,7 +151,7 @@ public class ParameterPresenter extends OkCancelPresenter implements IEventListe
 
 		try {
 			// Particular case
-			if (getParameterTypeCode() == ParameterType.CHAR_CODE && value.length() != 1)
+			if (parameter.getType().getCode() == ParameterType.CHAR_CODE && value.length() != 1)
 				throw new Exception();
 
 			newValue = parameter.getType().getValue(value);

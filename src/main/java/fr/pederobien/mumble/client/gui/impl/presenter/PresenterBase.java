@@ -2,18 +2,13 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import fr.pederobien.mumble.client.gui.MumbleClientApplication;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
-import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
 import fr.pederobien.mumble.client.gui.impl.properties.PropertyHelper;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
-import fr.pederobien.mumble.client.gui.interfaces.ICode;
-import fr.pederobien.mumble.client.interfaces.IResponse;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
@@ -32,30 +27,16 @@ public abstract class PresenterBase {
 	}
 
 	/**
-	 * Called when the application is about to be closed. This method should be overridden if additional treatment should be
-	 * performed.
-	 */
-	public void onCloseRequest() {
-	}
-
-	/**
-	 * @return The font property used for each view.
-	 */
-	public ObjectProperty<Font> fontProperty() {
-		return FONT_PROPERTY;
-	}
-
-	/**
 	 * @return The primary stage of the application.
 	 */
-	protected Stage getPrimaryStage() {
+	public static Stage getPrimaryStage() {
 		return MumbleClientApplication.getStage();
 	}
 
 	/**
 	 * @return The helper that creates properties.
 	 */
-	protected PropertyHelper getPropertyHelper() {
+	public static PropertyHelper getPropertyHelper() {
 		return MumbleClientApplication.getPropertyHelper();
 	}
 
@@ -85,7 +66,7 @@ public abstract class PresenterBase {
 	 *
 	 * @throws IllegalStateException if the FX runtime has not been initialized
 	 */
-	protected void dispatch(Runnable runnable) {
+	public static void dispatch(Runnable runnable) {
 		Platform.runLater(runnable);
 	}
 
@@ -95,71 +76,21 @@ public abstract class PresenterBase {
 	 * @param code The code associated to the message to display.
 	 * @param args The message arguments if the message needs arguments.
 	 */
-	protected void setPrimaryStageTitle(EMessageCode code, Object... args) {
+	public static void setPrimaryStageTitle(EMessageCode code, Object... args) {
 		getPrimaryStage().titleProperty().bind(getPropertyHelper().languageProperty(code, args));
 	}
 
 	/**
-	 * Display an alert box if and only if the request failed.
-	 * 
-	 * @param response  The response returned by the server.
-	 * @param alertType The type of alert.
-	 * @param title     The message code associated to the title of the alert box.
-	 * @param header    The message code associated to the header of the alert box.
+	 * Called when the application is about to be closed. This method should be overridden if additional treatment should be
+	 * performed.
 	 */
-	protected void handleRequestFailed(IResponse response, AlertType alertType, ICode title, ICode header) {
-		if (!response.hasFailed())
-			return;
-
-		dispatch(() -> {
-			AlertPresenter alertPresenter = new AlertPresenter(alertType);
-			alertPresenter.title(title);
-			alertPresenter.header(header);
-			alertPresenter.content(ErrorCodeWrapper.getByErrorCode(response.getErrorCode()).getMessageCode());
-			alertPresenter.getAlert().show();
-		});
+	public void onCloseRequest() {
 	}
 
 	/**
-	 * Display an alert box if and only if the request failed.
-	 * 
-	 * @param response  The response returned by the server.
-	 * @param alertType The type of alert.
-	 * @param title     The message code associated to the title of the alert box.
-	 * @param header    The message code associated to the header of the alert box.
-	 * @param runnable  The runnable to execute if the request has failed.
+	 * @return The font property used for each view.
 	 */
-	protected void handleRequestFailed(IResponse response, AlertType alertType, ICode title, ICode header, Runnable runnable) {
-		if (!response.hasFailed())
-			return;
-
-		dispatch(() -> {
-			AlertPresenter alertPresenter = new AlertPresenter(alertType);
-			alertPresenter.title(title);
-			alertPresenter.header(header);
-			alertPresenter.content(ErrorCodeWrapper.getByErrorCode(response.getErrorCode()).getMessageCode());
-			alertPresenter.getAlert().show();
-		});
-
-		runnable.run();
-	}
-
-	/**
-	 * Display an alert box if and only if the request failed.
-	 * 
-	 * @param response  The response returned by the server.
-	 * @param alertType The type of alert.
-	 * @param consumer  The consumer that set the title and the header message code of the alert box.
-	 */
-	protected void handleRequestFailed(IResponse response, AlertType alertType, Consumer<AlertPresenter> consumer) {
-		if (!response.hasFailed())
-			return;
-
-		dispatch(() -> {
-			AlertPresenter alertPresenter = new AlertPresenter(alertType);
-			consumer.accept(alertPresenter);
-			alertPresenter.content(ErrorCodeWrapper.getByErrorCode(response.getErrorCode()).getMessageCode());
-			alertPresenter.getAlert().show();
-		});
+	public ObjectProperty<Font> fontProperty() {
+		return FONT_PROPERTY;
 	}
 }

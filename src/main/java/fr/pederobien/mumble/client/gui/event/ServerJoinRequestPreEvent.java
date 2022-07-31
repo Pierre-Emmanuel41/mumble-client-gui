@@ -2,7 +2,8 @@ package fr.pederobien.mumble.client.gui.event;
 
 import java.util.StringJoiner;
 
-import fr.pederobien.mumble.client.interfaces.IMumbleServer;
+import fr.pederobien.mumble.client.player.event.MumbleServerEvent;
+import fr.pederobien.mumble.client.player.interfaces.IPlayerMumbleServer;
 import fr.pederobien.utils.ICancellable;
 
 public class ServerJoinRequestPreEvent extends MumbleServerEvent implements ICancellable {
@@ -13,7 +14,7 @@ public class ServerJoinRequestPreEvent extends MumbleServerEvent implements ICan
 	 * 
 	 * @param mumbleServer The server that is about to be joined by the user.
 	 */
-	public ServerJoinRequestPreEvent(IMumbleServer mumbleServer) {
+	public ServerJoinRequestPreEvent(IPlayerMumbleServer mumbleServer) {
 		super(mumbleServer);
 	}
 
@@ -30,7 +31,7 @@ public class ServerJoinRequestPreEvent extends MumbleServerEvent implements ICan
 	@Override
 	public String toString() {
 		StringJoiner joiner = new StringJoiner(",", "{", "}");
-		joiner.add("server=" + getMumbleServer());
+		joiner.add("server=" + getServer());
 		return String.format("%s_%s", getName(), joiner);
 	}
 }

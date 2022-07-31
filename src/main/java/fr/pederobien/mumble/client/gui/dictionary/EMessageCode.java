@@ -95,11 +95,14 @@ public enum EMessageCode implements ICode {
 	// PLAYER CONNECTION TO A CHANNEL CODE
 	// -----------------------------------------------------------------------------
 
-	// Code for the title of the alert when player try to connect to a channel but is not connected in game.
-	PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL_TITLE,
+	// Code for the title of the alert when player try to connect to a channel.
+	FAIL_TO_JOIN_A_CHANNEL_TITLE,
 
-	// Code when try to connect to a channel but is not connected in game.
-	PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL,
+	// Code for the HEADER of the alert when player try to connect to a channel.
+	FAIL_TO_JOIN_A_CHANNEL_HEADER,
+
+	// Code when the player is not connected in game.
+	PLAYER_NOT_CONNECTED_IN_GAME,
 
 	// Code for the mute button tooltip.
 	MUTE_TOOLTIP,
@@ -107,11 +110,23 @@ public enum EMessageCode implements ICode {
 	// Code for the unmute button tooltip.
 	UNMUTE_TOOLTIP,
 
+	// Code for the title of the alert box when updating the mute status of a player.
+	MUTE_FAILED_TITLE,
+
+	// Code for the header of the alert box when updating the mute status of a player.
+	MUTE_FAILED_HEADER,
+
 	// Code for the deafen button tooltip.
 	DEAFEN_TOOLTIP,
 
 	// Code for the undeafen button tooltip.
 	UNDEAFEN_TOOLTIP,
+
+	// Code for the title of the alert box when updating the deafen status of a player.
+	DEAFEN_FAILED_TITLE,
+
+	// Code for the header of the alert box when updating the deafen status of a player.
+	DEAFEN_FAILED_HEADER,
 
 	// Code for the hang up button tooltip.
 	HANG_UP_TOOLTIP,

@@ -1,11 +1,12 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
+import fr.pederobien.messenger.interfaces.IResponse;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter.ErrorPresenterBuilder;
 import fr.pederobien.mumble.client.gui.impl.generic.OkCancelPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.SelectableSoundModifierView;
-import fr.pederobien.mumble.client.interfaces.IChannel;
-import fr.pederobien.mumble.client.interfaces.IResponse;
+import fr.pederobien.mumble.client.player.interfaces.IChannel;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Alert.AlertType;
@@ -21,7 +22,7 @@ public class SoundModifierPresenter extends OkCancelPresenter {
 	public SoundModifierPresenter(IChannel channel) {
 		this.channel = channel;
 
-		selectableSoundModifierPresenter = new SelectableSoundModifierPresenter(channel.getMumbleServer().getSoundModifierList(), channel.getSoundModifier());
+		selectableSoundModifierPresenter = new SelectableSoundModifierPresenter(channel.getServer().getSoundModifiers(), channel.getSoundModifier());
 		selectableSoundModifierView = new SelectableSoundModifierView(selectableSoundModifierPresenter);
 		titleTextProperty = getPropertyHelper().languageProperty(EMessageCode.SOUND_MODIFIER_TITLE, channel.getName());
 	}
@@ -39,7 +40,7 @@ public class SoundModifierPresenter extends OkCancelPresenter {
 		if (!selectableSoundModifierPresenter.onOkButtonClicked())
 			return false;
 
-		channel.setSoundModifier(selectableSoundModifierPresenter.getSelectedSoundModifier(), response -> soundModifierResponse(response));
+		channel.setSoundModifier(selectableSoundModifierPresenter.getSelectedSoundModifier(), response -> handleSetChannelSoundModifierResponse(response));
 		return true;
 	}
 
@@ -60,8 +61,11 @@ public class SoundModifierPresenter extends OkCancelPresenter {
 		return selectableSoundModifierView;
 	}
 
-	private void soundModifierResponse(IResponse response) {
-		handleRequestFailed(response, AlertType.ERROR, p -> p.title(EMessageCode.SOUND_MODIFIER_TITLE, channel.getName())
-				.header(EMessageCode.SOUND_MODIFIER_NAME_RESPONSE, selectableSoundModifierPresenter.getSelectedSoundModifier().getName(), channel.getName()));
+	private void handleSetChannelSoundModifierResponse(IResponse response) {
+		ErrorPresenterBuilder builder = ErrorPresenterBuilder.of(AlertType.ERROR);
+		builder.title(EMessageCode.SOUND_MODIFIER_TITLE, channel.getName());
+		builder.header(EMessageCode.SOUND_MODIFIER_NAME_RESPONSE, selectableSoundModifierPresenter.getSelectedSoundModifier().getName(), channel.getName());
+		builder.error(response);
+		builder.showAndWait();
 	}
 }

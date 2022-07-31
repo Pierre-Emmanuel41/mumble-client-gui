@@ -1,14 +1,13 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
-import fr.pederobien.mumble.client.event.ServerIpAddressChangePostEvent;
-import fr.pederobien.mumble.client.event.ServerJoinPostEvent;
-import fr.pederobien.mumble.client.event.ServerNameChangePostEvent;
-import fr.pederobien.mumble.client.event.ServerPortNumberChangePostEvent;
-import fr.pederobien.mumble.client.event.ServerReachableChangeEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.interfaces.ICode;
-import fr.pederobien.mumble.client.interfaces.IMumbleServer;
+import fr.pederobien.mumble.client.player.event.MumbleServerAddressChangePostEvent;
+import fr.pederobien.mumble.client.player.event.MumbleServerJoinPostEvent;
+import fr.pederobien.mumble.client.player.event.MumbleServerNameChangePostEvent;
+import fr.pederobien.mumble.client.player.event.MumbleServerReachableStatusChangeEvent;
+import fr.pederobien.mumble.client.player.interfaces.IPlayerMumbleServer;
 import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
 import fr.pederobien.utils.event.IEventListener;
@@ -20,16 +19,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 public class ServerPresenter extends PresenterBase implements IEventListener {
-	private IMumbleServer server;
+	private IPlayerMumbleServer server;
 	private StringProperty serverNameProperty, serverIpAddressProperty;
 	private SimpleLanguageProperty serverReachableStatusProperty;
 	private ObjectProperty<Paint> textFillProperty;
 
-	public ServerPresenter(IMumbleServer server) {
+	public ServerPresenter(IPlayerMumbleServer server) {
 		this.server = server;
 
 		serverNameProperty = new SimpleStringProperty(server.getName());
-		serverIpAddressProperty = new SimpleStringProperty(server.getAddress() + ":" + server.getPort());
+		serverIpAddressProperty = new SimpleStringProperty(server.getAddress().getAddress().getHostAddress() + ":" + server.getAddress().getPort());
 		serverReachableStatusProperty = getPropertyHelper().languageProperty(getServerStateCode());
 		textFillProperty = new SimpleObjectProperty<Paint>(getServerReachableStatusColor());
 
@@ -38,7 +37,7 @@ public class ServerPresenter extends PresenterBase implements IEventListener {
 
 	@Override
 	public void onCloseRequest() {
-		server.dispose();
+		server.close();
 	}
 
 	/**
@@ -70,7 +69,7 @@ public class ServerPresenter extends PresenterBase implements IEventListener {
 	}
 
 	@EventHandler
-	private void onNameChanged(ServerNameChangePostEvent event) {
+	private void onNameChanged(MumbleServerNameChangePostEvent event) {
 		if (!event.getServer().equals(server))
 			return;
 
@@ -78,23 +77,15 @@ public class ServerPresenter extends PresenterBase implements IEventListener {
 	}
 
 	@EventHandler
-	private void onIpAddressChanged(ServerIpAddressChangePostEvent event) {
+	private void onIpAddressChanged(MumbleServerAddressChangePostEvent event) {
 		if (!event.getServer().equals(server))
 			return;
 
-		serverIpAddressProperty.setValue(event.getServer().getAddress() + ":" + server.getPort());
+		serverIpAddressProperty.setValue(event.getServer().getAddress().getAddress().getHostAddress() + ":" + server.getAddress().getPort());
 	}
 
 	@EventHandler
-	private void onPortChanged(ServerPortNumberChangePostEvent event) {
-		if (!event.getServer().equals(server))
-			return;
-
-		serverIpAddressProperty.setValue(server.getAddress() + ":" + event.getServer().getPort());
-	}
-
-	@EventHandler
-	private void onReachableStatusChanged(ServerReachableChangeEvent event) {
+	private void onReachableStatusChanged(MumbleServerReachableStatusChangeEvent event) {
 		if (!event.getServer().equals(server))
 			return;
 
@@ -105,7 +96,7 @@ public class ServerPresenter extends PresenterBase implements IEventListener {
 	}
 
 	@EventHandler
-	private void onServerJoin(ServerJoinPostEvent event) {
+	private void onServerJoin(MumbleServerJoinPostEvent event) {
 		EventManager.unregisterListener(this);
 	}
 

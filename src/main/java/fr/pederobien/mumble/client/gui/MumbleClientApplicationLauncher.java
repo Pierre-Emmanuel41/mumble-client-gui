@@ -11,11 +11,15 @@ import java.util.zip.ZipOutputStream;
 
 import fr.pederobien.communication.event.ConnectionEvent;
 import fr.pederobien.dictionary.event.DictionaryEvent;
-import fr.pederobien.mumble.client.event.PlayerSpeakEvent;
+import fr.pederobien.mumble.client.external.event.PlayerPositionChangePostEvent;
+import fr.pederobien.mumble.client.external.event.PlayerPositionChangePreEvent;
 import fr.pederobien.mumble.client.gui.environment.Variables;
-import fr.pederobien.sound.event.SoundEvent;
+import fr.pederobien.mumble.client.player.event.MumblePlayerPositionChangePostEvent;
+import fr.pederobien.sound.event.ProjectSoundEvent;
 import fr.pederobien.utils.event.EventCalledEvent;
 import fr.pederobien.utils.event.EventLogger;
+import fr.pederobien.vocal.client.event.VocalPlayerSpeakPostEvent;
+import fr.pederobien.vocal.client.event.VocalPlayerSpeakPreEvent;
 
 public class MumbleClientApplicationLauncher {
 
@@ -25,10 +29,19 @@ public class MumbleClientApplicationLauncher {
 	 * @param args the command line arguments passed to the application.
 	 */
 	public static void main(String[] args) {
-		EventLogger.instance().newLine(true).timeStamp(true).ignore(DictionaryEvent.class).ignore(SoundEvent.class);
-		EventLogger.instance().ignore(ConnectionEvent.class).ignore(PlayerSpeakEvent.class).register();
+		EventLogger.instance().newLine(true).timeStamp(true).register();
+
+		EventLogger.instance().ignore(DictionaryEvent.class);
+		EventLogger.instance().ignore(ConnectionEvent.class);
+		EventLogger.instance().ignore(ProjectSoundEvent.class);
+		EventLogger.instance().ignore(VocalPlayerSpeakPreEvent.class);
+		EventLogger.instance().ignore(VocalPlayerSpeakPostEvent.class);
+		EventLogger.instance().ignore(PlayerPositionChangePreEvent.class);
+		EventLogger.instance().ignore(PlayerPositionChangePostEvent.class);
+		EventLogger.instance().ignore(MumblePlayerPositionChangePostEvent.class);
+
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> saveLog()));
-		MumbleClientApplication.main(args);
+		MumbleClientApplication.startMumbleClientApplication(args);
 	}
 
 	private static void saveLog() {

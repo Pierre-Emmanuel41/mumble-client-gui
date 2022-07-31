@@ -2,7 +2,7 @@ package fr.pederobien.mumble.client.gui.event;
 
 import fr.pederobien.mumble.client.gui.model.ServerList;
 
-public class ServerListEvent extends MumbleGuiEvent {
+public class ServerListEvent extends ProjectMumbleClientGuiEvent {
 	private ServerList serverList;
 
 	/**

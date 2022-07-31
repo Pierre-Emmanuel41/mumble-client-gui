@@ -2,11 +2,11 @@ package fr.pederobien.mumble.client.gui.event;
 
 import java.util.StringJoiner;
 
-import fr.pederobien.mumble.client.event.ParameterEvent;
-import fr.pederobien.mumble.client.interfaces.IParameter;
+import fr.pederobien.mumble.client.player.event.MumbleParameterEvent;
+import fr.pederobien.mumble.client.player.interfaces.IParameter;
 import fr.pederobien.utils.ICancellable;
 
-public class ParameterValueChangeRequestEvent extends ParameterEvent implements ICancellable {
+public class ParameterValueChangeRequestEvent extends MumbleParameterEvent implements ICancellable {
 	private boolean isCancelled;
 	private Object value;
 
@@ -43,7 +43,7 @@ public class ParameterValueChangeRequestEvent extends ParameterEvent implements 
 		StringJoiner joiner = new StringJoiner(",", "{", "}");
 		joiner.add("parameter=" + getParameter().getName());
 		joiner.add("currentValue=" + getParameter().getValue());
-		joiner.add("newValue=" + (getValue() == null ? null : getValue().toString()));
+		joiner.add("newValue=" + getValue().toString());
 		return String.format("%s_%s", getName(), joiner);
 	}
 }

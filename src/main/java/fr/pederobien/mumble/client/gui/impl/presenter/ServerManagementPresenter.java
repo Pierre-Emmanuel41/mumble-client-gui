@@ -1,16 +1,21 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
-import fr.pederobien.mumble.client.event.ServerJoinPostEvent;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
+
+import fr.pederobien.messenger.interfaces.IResponse;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.event.SelectServerPostEvent;
 import fr.pederobien.mumble.client.gui.event.ServerJoinRequestPostEvent;
 import fr.pederobien.mumble.client.gui.event.ServerJoinRequestPreEvent;
+import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.ServerChannelsView;
 import fr.pederobien.mumble.client.gui.impl.view.ServerInfoView;
 import fr.pederobien.mumble.client.gui.model.ServerList;
-import fr.pederobien.mumble.client.interfaces.IMumbleServer;
-import fr.pederobien.mumble.client.interfaces.IResponse;
+import fr.pederobien.mumble.client.player.event.MumbleServerJoinPostEvent;
+import fr.pederobien.mumble.client.player.interfaces.IPlayerMumbleServer;
 import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
 import fr.pederobien.utils.event.IEventListener;
@@ -122,7 +127,7 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 	public void onAdd() {
 		new ServerInfoView(new ServerInfoPresenter(serverList, ServerList.createNewDefaultServer()) {
 			@Override
-			protected void onOkButtonClicked(IMumbleServer server, String name, String address, int port) {
+			protected void onOkButtonClicked(IPlayerMumbleServer server, String name, String address, int port) {
 				performChangesOnServer(server, name, address, port);
 				serverList.add(server);
 			}
@@ -136,7 +141,7 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 		serverList.getSelectedServer().close();
 		new ServerInfoView(new ServerInfoPresenter(serverList, serverList.getSelectedServer()) {
 			@Override
-			protected void onOkButtonClicked(IMumbleServer server, String name, String address, int port) {
+			protected void onOkButtonClicked(IPlayerMumbleServer server, String name, String address, int port) {
 				performChangesOnServer(server, name, address, port);
 				// Server is closed but parameter are the same
 				if (!server.isReachable())
@@ -155,20 +160,20 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 	 * Dispose the selected server and removes it from the server list.
 	 */
 	public void onDelete() {
-		serverList.getSelectedServer().dispose();
+		serverList.getSelectedServer().close();
 		serverList.remove(serverList.getSelectedServer());
 	}
 
 	@EventHandler
 	private void onServerJoinRequestEvent(ServerJoinRequestPreEvent event) {
-		if (!event.getMumbleServer().isReachable())
+		if (!event.getServer().isReachable())
 			return;
 
-		event.getMumbleServer().join(response -> joinServerResponse(response));
+		event.getServer().join(response -> handleJoinServerResponse(response));
 	}
 
 	@EventHandler
-	private void onServerJoin(ServerJoinPostEvent event) {
+	private void onServerJoin(MumbleServerJoinPostEvent event) {
 		if (!event.getServer().equals(serverList.getSelectedServer()))
 			return;
 
@@ -189,14 +194,17 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 		deleteServerDisableProperty.setValue(serverList.getSelectedServer() == null);
 	}
 
-	private void performChangesOnServer(IMumbleServer server, String name, String address, int port) {
+	private void performChangesOnServer(IPlayerMumbleServer server, String name, String address, int port) {
 		server.setName(name);
-		server.setAddress(address);
-		server.setPort(port);
+		try {
+			server.setAddress(new InetSocketAddress(InetAddress.getByName(address), port));
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
 	}
 
-	private void joinServerResponse(IResponse response) {
-		handleRequestFailed(response, AlertType.ERROR, EMessageCode.SERVER_JOIN_FAILED_TITLE, EMessageCode.SERVER_JOIN_FAILED_HEADER);
+	private void handleJoinServerResponse(IResponse response) {
+		ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.SERVER_JOIN_FAILED_TITLE, EMessageCode.SERVER_JOIN_FAILED_HEADER, response);
 		if (!response.hasFailed())
 			EventManager.callEvent(new ServerJoinRequestPostEvent(serverList.getSelectedServer()));
 	}

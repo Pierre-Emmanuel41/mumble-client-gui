@@ -2,22 +2,23 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import java.io.IOException;
 
-import fr.pederobien.mumble.client.event.OtherPlayerDeafenPostEvent;
-import fr.pederobien.mumble.client.event.OtherPlayerMutePostEvent;
-import fr.pederobien.mumble.client.event.PlayerAdminStatusChangePostEvent;
-import fr.pederobien.mumble.client.event.PlayerSpeakEvent;
-import fr.pederobien.mumble.client.event.ServerLeavePostEvent;
+import fr.pederobien.messenger.interfaces.IResponse;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.environment.Environments;
 import fr.pederobien.mumble.client.gui.environment.Variables;
 import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
+import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter.ErrorPresenterBuilder;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
-import fr.pederobien.mumble.client.interfaces.IMumbleServer;
-import fr.pederobien.mumble.client.interfaces.IOtherPlayer;
-import fr.pederobien.mumble.client.interfaces.IResponse;
+import fr.pederobien.mumble.client.player.event.MumblePlayerAdminChangePostEvent;
+import fr.pederobien.mumble.client.player.event.MumbleServerLeavePostEvent;
+import fr.pederobien.mumble.client.player.interfaces.IPlayer;
+import fr.pederobien.mumble.client.player.interfaces.IPlayerMumbleServer;
 import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
 import fr.pederobien.utils.event.IEventListener;
+import fr.pederobien.vocal.client.event.VocalPlayerDeafenStatusChangePostEvent;
+import fr.pederobien.vocal.client.event.VocalPlayerMuteStatusChangePostEvent;
+import fr.pederobien.vocal.client.event.VocalPlayerSpeakPostEvent;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -26,8 +27,8 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 
 public class PlayerChannelPresenter extends PresenterBase implements IEventListener {
-	private IMumbleServer mumbleServer;
-	private IOtherPlayer otherPlayer;
+	private IPlayerMumbleServer mumbleServer;
+	private IPlayer player;
 	private StringProperty playerNameProperty;
 	private BooleanProperty isPlayerMute, isPlayerDeafen;
 	private Image muteImage, deafenImage;
@@ -38,13 +39,13 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 	private SimpleLanguageProperty kickPlayerTextProperty;
 	private BooleanProperty kickPlayerVisiblity;
 
-	public PlayerChannelPresenter(IMumbleServer mumbleServer, IOtherPlayer otherPlayer) {
+	public PlayerChannelPresenter(IPlayerMumbleServer mumbleServer, IPlayer player) {
 		this.mumbleServer = mumbleServer;
-		this.otherPlayer = otherPlayer;
+		this.player = player;
 
-		playerNameProperty = new SimpleStringProperty(otherPlayer.getName());
-		isPlayerMute = new SimpleBooleanProperty(otherPlayer.isMute());
-		isPlayerDeafen = new SimpleBooleanProperty(otherPlayer.isDeafen());
+		playerNameProperty = new SimpleStringProperty(player.getName());
+		isPlayerMute = new SimpleBooleanProperty(player.isMute());
+		isPlayerDeafen = new SimpleBooleanProperty(player.isDeafen());
 
 		try {
 			muteImage = Environments.loadImage(Variables.MICROPHONE_OFF.getFileName());
@@ -58,8 +59,8 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 		muteOrUnmuteTextProperty = getPropertyHelper().languageProperty(EMessageCode.MUTE_TOOLTIP);
 		muteOrUnmuteVisibleProperty = new SimpleBooleanProperty(!isMainPlayer());
 
-		kickPlayerTextProperty = getPropertyHelper().languageProperty(EMessageCode.KICK_PLAYER, otherPlayer.getName());
-		kickPlayerVisiblity = new SimpleBooleanProperty(!isMainPlayer() && mumbleServer.getPlayer().isAdmin());
+		kickPlayerTextProperty = getPropertyHelper().languageProperty(EMessageCode.KICK_PLAYER, player.getName());
+		kickPlayerVisiblity = new SimpleBooleanProperty(!isMainPlayer() && mumbleServer.getMainPlayer().isAdmin());
 	}
 
 	/**
@@ -120,7 +121,7 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 	 * displayed if the request fails.
 	 */
 	public void onMuteOrUnmute() {
-		otherPlayer.setMute(!otherPlayer.isMute(), response -> onPlayerMuteOrUnmuteResponse(response));
+		player.setMute(!player.isMute(), response -> onPlayerMuteOrUnmuteResponse(response));
 	}
 
 	/**
@@ -144,66 +145,69 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 	 * the request fails.
 	 */
 	public void onKickPlayer() {
-		otherPlayer.kick(response -> onKickPlayerResponse(response));
+		player.kick(response -> handleKickPlayerResponse(response));
 	}
 
 	private void onPlayerMuteOrUnmuteResponse(IResponse response) {
 		if (response.hasFailed())
 			dispatch(() -> {
 				AlertPresenter alertPresenter = new AlertPresenter(AlertType.ERROR);
-				alertPresenter.title(EMessageCode.CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE_TITLE, otherPlayer.getName());
-				alertPresenter.header(EMessageCode.CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE, otherPlayer.getName());
+				alertPresenter.title(EMessageCode.CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE_TITLE, player.getName());
+				alertPresenter.header(EMessageCode.CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE, player.getName());
 				alertPresenter.content(ErrorCodeWrapper.getByErrorCode(response.getErrorCode()).getMessageCode());
 				alertPresenter.getAlert().showAndWait();
 			});
 		else
-			muteOrUnmuteTextProperty.setCode(otherPlayer.isMute() ? EMessageCode.UNMUTE_TOOLTIP : EMessageCode.MUTE_TOOLTIP);
+			muteOrUnmuteTextProperty.setCode(player.isMute() ? EMessageCode.UNMUTE_TOOLTIP : EMessageCode.MUTE_TOOLTIP);
 	}
 
 	@EventHandler
-	private void onAdminStatusChanged(PlayerAdminStatusChangePostEvent event) {
-		if (!event.getPlayer().equals(mumbleServer.getPlayer()))
+	private void onAdminStatusChanged(MumblePlayerAdminChangePostEvent event) {
+		if (!event.getPlayer().equals(mumbleServer.getMainPlayer()))
 			return;
 
-		dispatch(() -> kickPlayerVisiblity.set(!isMainPlayer() && mumbleServer.getPlayer().isAdmin()));
+		dispatch(() -> kickPlayerVisiblity.set(!isMainPlayer() && mumbleServer.getMainPlayer().isAdmin()));
 	}
 
 	@EventHandler
-	private void onMuteChanged(OtherPlayerMutePostEvent event) {
-		if (!event.getPlayer().equals(otherPlayer))
+	private void onMuteChanged(VocalPlayerMuteStatusChangePostEvent event) {
+		if (!event.getPlayer().getName().equals(player.getName()))
 			return;
 
-		dispatch(() -> isPlayerMute.set(event.isMute()));
+		dispatch(() -> isPlayerMute.set(event.getPlayer().isMute()));
 	}
 
 	@EventHandler
-	private void onDeafenChanged(OtherPlayerDeafenPostEvent event) {
-		if (!event.getPlayer().equals(otherPlayer))
+	private void onDeafenChanged(VocalPlayerDeafenStatusChangePostEvent event) {
+		if (!event.getPlayer().getName().equals(player.getName()))
 			return;
 
-		dispatch(() -> isPlayerDeafen.set(event.isDeafen()));
+		dispatch(() -> isPlayerDeafen.set(event.getPlayer().isDeafen()));
 	}
 
 	@EventHandler
-	private void onPlayerSpeak(PlayerSpeakEvent event) {
-		if (!event.getPlayer().equals(otherPlayer))
+	private void onPlayerSpeak(VocalPlayerSpeakPostEvent event) {
+		if (!event.getPlayer().getName().equals(player.getName()))
 			return;
 	}
 
 	@EventHandler
-	private void onServerLeave(ServerLeavePostEvent event) {
+	private void onServerLeave(MumbleServerLeavePostEvent event) {
 		if (!event.getServer().equals(mumbleServer))
 			return;
 
 		EventManager.unregisterListener(this);
 	}
 
-	private void onKickPlayerResponse(IResponse response) {
-		handleRequestFailed(response, AlertType.ERROR, p -> p.title(EMessageCode.CANNOT_KICK_PLAYER_RESPONSE_TITLE, otherPlayer.getName())
-				.header(EMessageCode.CANNOT_KICK_PLAYER_RESPONSE, otherPlayer.getName()));
+	private void handleKickPlayerResponse(IResponse response) {
+		ErrorPresenterBuilder builder = ErrorPresenterBuilder.of(AlertType.ERROR);
+		builder.title(EMessageCode.CANNOT_KICK_PLAYER_RESPONSE_TITLE, player.getName());
+		builder.header(EMessageCode.CANNOT_KICK_PLAYER_RESPONSE, player.getName());
+		builder.error(response);
+		builder.showAndWait();
 	}
 
 	private boolean isMainPlayer() {
-		return mumbleServer.getPlayer().getName().equals(otherPlayer.getName());
+		return mumbleServer.getMainPlayer().getName().equals(player.getName());
 	}
 }

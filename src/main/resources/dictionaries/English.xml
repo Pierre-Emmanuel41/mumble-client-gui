@@ -56,20 +56,48 @@
 			<value>The idc and the oid are incompatibles.</value>
 		</message>
 		<message>
-			<code>IDC_UNKNOWN</code>
-			<value>There is no treatment associated to the given idc.</value>
+			<code>REQUEST_MALFORMED</code>
+			<value>The request is malformed.</value>
+		</message>
+		<message>
+			<code>INCOMPATIBLE_VERSION</code>
+			<value>The protocol version is not supported.</value>
+		</message>
+		<message>
+			<code>IDENTIFIER_UNKNOWN</code>
+			<value>There is no treatment associated to the given identifier.</value>
+		</message>
+		<message>
+			<code>REQUEST_CANCELLED</code>
+			<value>The request has been cancelled by the server.</value>
+		</message>
+		<message>
+			<code>SERVER_ALREADY_JOINED</code>
+			<value>The client has already joined the server.</value>
 		</message>
 		<message>
 			<code>CHANNEL_ALREADY_EXISTS</code>
 			<value>The channel already exists.</value>
 		</message>
 		<message>
-			<code>CHANNEL_DOES_NOT_EXISTS</code>
+			<code>CHANNEL_NOT_FOUND</code>
 			<value>The channel does not exists.</value>
 		</message>
 		<message>
-			<code>PLAYER_NOT_RECOGNIZED</code>
-			<value>The player is not recognized.</value>
+			<code>PLAYER_NOT_FOUND</code>
+			<value>The player does not exist.</value>
+		</message>
+		<message>
+			<code>PLAYER_DOES_NOT_MATCH</code>
+			<value>The player involved in the request does not match with the player hosted by the client.</value>
+		</message>
+		<message>
+			<code>PLAYER_CLIENT_NOT_JOINED</code>
+			<value>The client of the player has not joined the server yet.</value>
+		</message>
+		<message>
+			<code>PLAYER_ALREADY_EXISTS</code>
+			<value>The player already exist.</value>
 		</message>
 		<message>
 			<code>PLAYER_ALREADY_REGISTERED</code>
@@ -84,12 +112,24 @@
 			<value>The player is not registered in a channel.</value>
 		</message>
 		<message>
-			<code>SOUND_MODIFIER_DOES_NOT_EXIST</code>
-			<value>The sound modifier does not exist.</value>
+			<code>PARAMETER_NOT_FOUND</code>
+			<value>The parameter does not exist.</value>
 		</message>
 		<message>
-			<code>PARAMETER_DOES_NOT_EXIST</code>
-			<value>The parameter does not exist.</value>
+			<code>PARAMETER_WITHOUT_MIN</code>
+			<value>The parameter has no defined minimum.</value>
+		</message>
+		<message>
+			<code>PARAMETER_WITHOUT_MAX</code>
+			<value>The parameter has no defined maximum.</value>
+		</message>
+		<message>
+			<code>PARAMETER_VALUE_OUT_OF_RANGE</code>
+			<value>The new parameter value is out of range.</value>
+		</message>
+		<message>
+			<code>SOUND_MODIFIER_DOES_NOT_EXIST</code>
+			<value>The sound modifier does not exist.</value>
 		</message>
 		<message>
 			<code>UNKNOWN</code>
@@ -173,8 +213,16 @@
 			<value>Cannot join the selected server for the following reason :</value>
 		</message>
 		<message>
-			<code>PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL_TITLE</code>
-			<value>Cannot connect to channel</value>
+			<code>FAIL_TO_JOIN_A_CHANNEL_TITLE</code>
+			<value>Cannot join a channel</value>
+		</message>
+		<message>
+			<code>FAIL_TO_JOIN_A_CHANNEL_HEADER</code>
+			<value>You cannot join the channel for the following reason:</value>
+		</message>
+		<message>
+			<code>PLAYER_NOT_CONNECTED_IN_GAME</code>
+			<value>The player is not connected in game</value>
 		</message>
 		<message>
 			<code>MUTE_TOOLTIP</code>
@@ -203,10 +251,6 @@
 		<message>
 			<code>HANG_UP_FAILED_HEADER</code>
 			<value>Cannot hang up for the following reason :</value>
-		</message>
-		<message>
-			<code>PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL</code>
-			<value>You cannot join a channel, you should be connected in game first.</value>
 		</message>
 		<message>
 			<code>DISCONNECT_FROM_SERVER</code>

@@ -3,7 +3,6 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 import java.util.HashMap;
 import java.util.Map;
 
-import fr.pederobien.mumble.client.event.ServerJoinPostEvent;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.event.SelectServerPostEvent;
 import fr.pederobien.mumble.client.gui.event.SelectServerPreEvent;
@@ -14,7 +13,8 @@ import fr.pederobien.mumble.client.gui.impl.properties.ListCellView;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.ServerView;
 import fr.pederobien.mumble.client.gui.model.ServerList;
-import fr.pederobien.mumble.client.interfaces.IMumbleServer;
+import fr.pederobien.mumble.client.player.event.MumbleServerJoinPostEvent;
+import fr.pederobien.mumble.client.player.interfaces.IPlayerMumbleServer;
 import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
 import fr.pederobien.utils.event.EventPriority;
@@ -34,7 +34,7 @@ import javafx.util.Callback;
 public class ServerListPresenter extends PresenterBase implements IEventListener {
 	private ServerList serverList;
 	private ObservableList<Object> servers;
-	private Map<IMumbleServer, ServerView> serverViews;
+	private Map<IPlayerMumbleServer, ServerView> serverViews;
 	private BooleanProperty emptyServersListVisibilityProperty;
 	private SimpleLanguageProperty emptyServerTextProperty;
 
@@ -42,7 +42,7 @@ public class ServerListPresenter extends PresenterBase implements IEventListener
 		this.serverList = serverList;
 		EventManager.registerListener(this);
 		servers = FXCollections.observableArrayList(serverList.getServers());
-		serverViews = new HashMap<IMumbleServer, ServerView>();
+		serverViews = new HashMap<IPlayerMumbleServer, ServerView>();
 
 		emptyServersListVisibilityProperty = new SimpleBooleanProperty(serverList.getServers().isEmpty());
 		emptyServerTextProperty = getPropertyHelper().languageProperty(EMessageCode.EMPTY_SERVER_LIST);
@@ -73,8 +73,8 @@ public class ServerListPresenter extends PresenterBase implements IEventListener
 		return listView -> getPropertyHelper().cellView(item -> {
 			ServerView view = serverViews.get(item);
 			if (view == null) {
-				view = new ServerView(new ServerPresenter((IMumbleServer) item));
-				serverViews.put((IMumbleServer) item, view);
+				view = new ServerView(new ServerPresenter((IPlayerMumbleServer) item));
+				serverViews.put((IPlayerMumbleServer) item, view);
 			}
 			return view.getRoot();
 		}, enteredColor);
@@ -87,7 +87,7 @@ public class ServerListPresenter extends PresenterBase implements IEventListener
 	 * @param newServer The new selected server.
 	 */
 	public void onServerSelectedChanged(Object oldServer, Object newServer) {
-		EventManager.callEvent(new SelectServerPreEvent(serverList, (IMumbleServer) oldServer, (IMumbleServer) newServer));
+		EventManager.callEvent(new SelectServerPreEvent(serverList, (IPlayerMumbleServer) oldServer, (IPlayerMumbleServer) newServer));
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class ServerListPresenter extends PresenterBase implements IEventListener
 	}
 
 	@EventHandler
-	private void onServerJoin(ServerJoinPostEvent event) {
+	private void onServerJoin(MumbleServerJoinPostEvent event) {
 		EventManager.unregisterListener(this);
 	}
 

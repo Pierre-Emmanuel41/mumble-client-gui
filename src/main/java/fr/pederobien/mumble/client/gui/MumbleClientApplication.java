@@ -21,7 +21,7 @@ public class MumbleClientApplication extends Application {
 	private static Stage primaryStage;
 	private static ApplicationLock lock;
 
-	public static void main(String[] args) {
+	public static void startMumbleClientApplication(String[] args) {
 		lock = new ApplicationLock(Variables.LOCK_FILE.getFileName(), Variables.MUMBLE_FOLDER.getPath());
 		launch(args);
 	}

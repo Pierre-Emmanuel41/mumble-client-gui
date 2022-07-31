@@ -3,17 +3,17 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 import java.util.HashMap;
 import java.util.Map;
 
-import fr.pederobien.mumble.client.event.ChannelAddPostEvent;
-import fr.pederobien.mumble.client.event.ChannelRemovePostEvent;
-import fr.pederobien.mumble.client.event.ServerLeavePostEvent;
-import fr.pederobien.mumble.client.event.ServerReachableChangeEvent;
+import fr.pederobien.messenger.interfaces.IResponse;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.event.ChannelJoinRequestPostEvent;
+import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter;
 import fr.pederobien.mumble.client.gui.impl.view.ChannelView;
-import fr.pederobien.mumble.client.interfaces.IChannel;
-import fr.pederobien.mumble.client.interfaces.IChannelList;
-import fr.pederobien.mumble.client.interfaces.IMumbleServer;
-import fr.pederobien.mumble.client.interfaces.IResponse;
+import fr.pederobien.mumble.client.player.event.MumbleChannelListChannelAddPostEvent;
+import fr.pederobien.mumble.client.player.event.MumbleChannelListChannelRemovePostEvent;
+import fr.pederobien.mumble.client.player.event.MumbleServerLeavePostEvent;
+import fr.pederobien.mumble.client.player.interfaces.IChannel;
+import fr.pederobien.mumble.client.player.interfaces.IChannelList;
+import fr.pederobien.mumble.client.player.interfaces.IPlayerMumbleServer;
 import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
 import fr.pederobien.utils.event.IEventListener;
@@ -26,19 +26,19 @@ import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
 public class ChannelListPresenter extends PresenterBase implements IEventListener {
-	private IMumbleServer mumbleServer;
+	private IPlayerMumbleServer mumbleServer;
 	private IChannelList channelList;
 	private ObservableList<Object> channels;
 	private Map<IChannel, ChannelView> channelViews;
 
-	public ChannelListPresenter(IMumbleServer mumbleServer) {
+	public ChannelListPresenter(IPlayerMumbleServer mumbleServer) {
 		this.mumbleServer = mumbleServer;
 		channels = FXCollections.observableArrayList();
 		channelViews = new HashMap<IChannel, ChannelView>();
-		channelList = mumbleServer.getChannelList();
+		channelList = mumbleServer.getChannels();
 
-		for (Map.Entry<String, IChannel> entry : channelList)
-			channels.add(entry.getValue());
+		for (IChannel channel : channelList)
+			channels.add(channel);
 
 		EventManager.registerListener(this);
 	}
@@ -72,16 +72,16 @@ public class ChannelListPresenter extends PresenterBase implements IEventListene
 	}
 
 	@EventHandler
-	private void onChannelAdded(ChannelAddPostEvent event) {
-		if (!event.getChannelList().equals(channelList))
+	private void onChannelAdded(MumbleChannelListChannelAddPostEvent event) {
+		if (!event.getList().equals(channelList))
 			return;
 
 		dispatch(() -> channels.add(event.getChannel()));
 	}
 
 	@EventHandler
-	private void onChannelRemoved(ChannelRemovePostEvent event) {
-		if (!event.getChannelList().equals(channelList))
+	private void onChannelRemoved(MumbleChannelListChannelRemovePostEvent event) {
+		if (!event.getList().equals(channelList))
 			return;
 
 		dispatch(() -> channels.remove(event.getChannel()));
@@ -89,42 +89,25 @@ public class ChannelListPresenter extends PresenterBase implements IEventListene
 
 	@EventHandler
 	public void onJoinChannel(ChannelJoinRequestPostEvent event) {
-		if (mumbleServer.getPlayer().getChannel() != null)
-			mumbleServer.getPlayer().getChannel().removePlayer(response -> removePlayer(response));
-		event.getCurrentChannel().addPlayer(r -> addPlayer(r));
+		if (mumbleServer.getMainPlayer().getChannel() != null)
+			mumbleServer.getMainPlayer().getChannel().getPlayers().leave(response -> handleRemovePlayerResponse(response));
+
+		event.getCurrentChannel().getPlayers().join(response -> handleAddPlayerResponse(response));
 	}
 
 	@EventHandler
-	private void onReachableStatusChanged(ServerReachableChangeEvent event) {
-		if (!event.getServer().equals(mumbleServer))
-			return;
-
-		if (event.isReachable()) {
-			event.getServer().join(response -> manageJoinResponse(response));
-			channelList = event.getServer().getChannelList();
-		} else {
-			dispatch(() -> channels.clear());
-		}
-	}
-
-	@EventHandler
-	private void onServerLeave(ServerLeavePostEvent event) {
+	private void onServerLeave(MumbleServerLeavePostEvent event) {
 		if (!event.getServer().equals(mumbleServer))
 			return;
 
 		EventManager.unregisterListener(this);
 	}
 
-	private void manageJoinResponse(IResponse response) {
-		handleRequestFailed(response, AlertType.ERROR, EMessageCode.SERVER_JOIN_FAILED_TITLE, EMessageCode.SERVER_JOIN_FAILED_HEADER);
+	private void handleRemovePlayerResponse(IResponse response) {
+		ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.HANG_UP_FAILED_TITLE, EMessageCode.HANG_UP_FAILED_HEADER, response);
 	}
 
-	private void removePlayer(IResponse response) {
-		handleRequestFailed(response, AlertType.ERROR, EMessageCode.HANG_UP_FAILED_TITLE, EMessageCode.HANG_UP_FAILED_HEADER);
-	}
-
-	private void addPlayer(IResponse response) {
-		handleRequestFailed(response, AlertType.INFORMATION, EMessageCode.PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL_TITLE,
-				EMessageCode.PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL);
+	private void handleAddPlayerResponse(IResponse response) {
+		ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.FAIL_TO_JOIN_A_CHANNEL_TITLE, EMessageCode.FAIL_TO_JOIN_A_CHANNEL_HEADER, response);
 	}
 }

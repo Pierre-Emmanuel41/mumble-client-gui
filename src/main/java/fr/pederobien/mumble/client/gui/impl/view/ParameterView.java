@@ -4,7 +4,6 @@ import fr.pederobien.mumble.client.gui.MumbleClientApplication;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.presenter.ParameterPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
-import fr.pederobien.mumble.common.impl.ParameterType;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
@@ -33,7 +32,7 @@ public class ParameterView extends ViewBase<ParameterPresenter, HBox> {
 		parameterName.textProperty().bind(getPresenter().parameterNameProperty());
 		getRoot().getChildren().add(parameterName);
 
-		valueView = getPresenter().getParameterTypeCode() == ParameterType.BOOLEAN_CODE ? createBooleanView() : createDefaultView();
+		valueView = getPresenter().isBooleanParameter() ? createBooleanView() : createDefaultView();
 		getRoot().getChildren().add(valueView);
 		HBox.setMargin(valueView, new Insets(0, 0, 0, marginBetweenLabelAndTextField));
 	}

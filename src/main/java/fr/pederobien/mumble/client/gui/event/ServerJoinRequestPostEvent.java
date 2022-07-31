@@ -2,7 +2,8 @@ package fr.pederobien.mumble.client.gui.event;
 
 import java.util.StringJoiner;
 
-import fr.pederobien.mumble.client.interfaces.IMumbleServer;
+import fr.pederobien.mumble.client.player.event.MumbleServerEvent;
+import fr.pederobien.mumble.client.player.interfaces.IPlayerMumbleServer;
 
 public class ServerJoinRequestPostEvent extends MumbleServerEvent {
 
@@ -11,14 +12,14 @@ public class ServerJoinRequestPostEvent extends MumbleServerEvent {
 	 * 
 	 * @param mumbleServer The server the user request to join.
 	 */
-	public ServerJoinRequestPostEvent(IMumbleServer mumbleServer) {
+	public ServerJoinRequestPostEvent(IPlayerMumbleServer mumbleServer) {
 		super(mumbleServer);
 	}
 
 	@Override
 	public String toString() {
 		StringJoiner joiner = new StringJoiner(",", "{", "}");
-		joiner.add("server=" + getMumbleServer());
+		joiner.add("server=" + getServer());
 		return String.format("%s_%s", getName(), joiner);
 	}
 }

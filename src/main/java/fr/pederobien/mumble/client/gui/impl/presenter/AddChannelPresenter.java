@@ -1,14 +1,15 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
+import fr.pederobien.messenger.interfaces.IResponse;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.event.ParameterValueChangeRequestEvent;
+import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter;
 import fr.pederobien.mumble.client.gui.impl.generic.OkCancelPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleTooltipProperty;
 import fr.pederobien.mumble.client.gui.impl.view.SelectableSoundModifierView;
-import fr.pederobien.mumble.client.interfaces.IChannelList;
-import fr.pederobien.mumble.client.interfaces.IResponse;
-import fr.pederobien.mumble.client.interfaces.ISoundModifierList;
+import fr.pederobien.mumble.client.player.interfaces.IChannelList;
+import fr.pederobien.mumble.client.player.interfaces.ISoundModifierList;
 import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
 import fr.pederobien.utils.event.EventPriority;
@@ -58,7 +59,7 @@ public class AddChannelPresenter extends OkCancelPresenter implements IEventList
 		channelNamePromptProperty = getPropertyHelper().languageProperty(EMessageCode.ADD_CHANNEL_NAME_PROMPT);
 		channelNameTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.CHANNEL_NAME_TOOLTIP);
 
-		ISoundModifierList soundModifierList = channelList.getMumbleServer().getSoundModifierList();
+		ISoundModifierList soundModifierList = channelList.getServer().getSoundModifiers();
 		selectableSoundModifierPresenter = new SelectableSoundModifierPresenter(soundModifierList, soundModifierList.getDefaultSoundModifier());
 		selectableSoundModifierView = new SelectableSoundModifierView(selectableSoundModifierPresenter);
 
@@ -80,7 +81,7 @@ public class AddChannelPresenter extends OkCancelPresenter implements IEventList
 		if (!selectableSoundModifierPresenter.onOkButtonClicked())
 			return false;
 
-		channelList.addChannel(channelNameProperty.get(), selectableSoundModifierPresenter.getSelectedSoundModifier(), response -> channelNameResponse(response));
+		channelList.add(channelNameProperty.get(), selectableSoundModifierPresenter.getSelectedSoundModifier(), response -> handleAddChannelResponse(response));
 		return true;
 	}
 
@@ -145,7 +146,7 @@ public class AddChannelPresenter extends OkCancelPresenter implements IEventList
 		boolean isChannelNameWithoutSpaces = !channelName.contains(" ");
 		boolean isChannelNameUnique = true;
 
-		if (channelList.getChannels().get(channelName) != null)
+		if (channelList.get(channelName) != null)
 			isChannelNameUnique = false;
 
 		if (isChannelNameLengthOk && isChannelNameUnique && isChannelNameWithoutSpaces) {
@@ -163,8 +164,8 @@ public class AddChannelPresenter extends OkCancelPresenter implements IEventList
 		updateOkDisable();
 	}
 
-	private void channelNameResponse(IResponse response) {
-		handleRequestFailed(response, AlertType.ERROR, EMessageCode.ADD_CHANNEL_TITLE, EMessageCode.ADD_CHANNEL_NAME_RESPONSE);
+	private void handleAddChannelResponse(IResponse response) {
+		ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.ADD_CHANNEL_TITLE, EMessageCode.ADD_CHANNEL_NAME_RESPONSE, response);
 	}
 
 	private void updateOkDisable() {

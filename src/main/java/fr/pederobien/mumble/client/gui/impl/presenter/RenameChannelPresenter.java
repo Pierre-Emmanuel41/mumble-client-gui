@@ -1,12 +1,13 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
+import fr.pederobien.messenger.interfaces.IResponse;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter.ErrorPresenterBuilder;
 import fr.pederobien.mumble.client.gui.impl.generic.OkCancelPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleTooltipProperty;
-import fr.pederobien.mumble.client.interfaces.IChannel;
-import fr.pederobien.mumble.client.interfaces.IChannelList;
-import fr.pederobien.mumble.client.interfaces.IResponse;
+import fr.pederobien.mumble.client.player.interfaces.IChannel;
+import fr.pederobien.mumble.client.player.interfaces.IChannelList;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -59,7 +60,7 @@ public class RenameChannelPresenter extends OkCancelPresenter {
 	public boolean onOkButtonClicked() {
 		if (okDisableProperty.get())
 			return false;
-		channel.setName(channelNameProperty.get(), response -> channelNameResponse(response));
+		channel.setName(channelNameProperty.get(), response -> hqndleRenameChannelResponse(response));
 		return true;
 	}
 
@@ -108,7 +109,7 @@ public class RenameChannelPresenter extends OkCancelPresenter {
 		boolean isChannelNameChanged = !channel.getName().equals(channelNameProperty.get());
 		boolean isChannelNameUnique = true;
 
-		if (channelList.getChannels().get(channelName) != null)
+		if (channelList.get(channelName) != null)
 			isChannelNameUnique = false;
 
 		if (!isChannelNameChanged) {
@@ -125,8 +126,11 @@ public class RenameChannelPresenter extends OkCancelPresenter {
 		}
 	}
 
-	private void channelNameResponse(IResponse response) {
-		handleRequestFailed(response, AlertType.ERROR, p -> p.title(EMessageCode.RENAME_CHANNEL_TITLE, channel.getName())
-				.header(EMessageCode.RENAME_CHANNEL_NAME_RESPONSE, channel.getName(), channelNameProperty.get()));
+	private void hqndleRenameChannelResponse(IResponse response) {
+		ErrorPresenterBuilder builder = ErrorPresenterBuilder.of(AlertType.ERROR);
+		builder.title(EMessageCode.RENAME_CHANNEL_TITLE, channel.getName());
+		builder.header(EMessageCode.RENAME_CHANNEL_NAME_RESPONSE, channel.getName(), channelNameProperty.get());
+		builder.error(response);
+		builder.showAndWait();
 	}
 }

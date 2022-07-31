@@ -3,12 +3,12 @@ package fr.pederobien.mumble.client.gui.event;
 import java.util.StringJoiner;
 
 import fr.pederobien.mumble.client.gui.model.ServerList;
-import fr.pederobien.mumble.client.interfaces.IMumbleServer;
+import fr.pederobien.mumble.client.player.interfaces.IPlayerMumbleServer;
 import fr.pederobien.utils.ICancellable;
 
 public class SelectServerPreEvent extends ServerListEvent implements ICancellable {
 	private boolean isCancelled;
-	private IMumbleServer currentServer, futureServer;
+	private IPlayerMumbleServer currentServer, futureServer;
 
 	/**
 	 * Creates an event thrown the selected server in user interface is about to change.
@@ -17,7 +17,7 @@ public class SelectServerPreEvent extends ServerListEvent implements ICancellabl
 	 * @param currentServer The server currently selected in the user interface.
 	 * @param futurServer   The server that is about to be selected.
 	 */
-	public SelectServerPreEvent(ServerList serverList, IMumbleServer currentServer, IMumbleServer futureServer) {
+	public SelectServerPreEvent(ServerList serverList, IPlayerMumbleServer currentServer, IPlayerMumbleServer futureServer) {
 		super(serverList);
 		this.currentServer = currentServer;
 		this.futureServer = futureServer;
@@ -36,14 +36,14 @@ public class SelectServerPreEvent extends ServerListEvent implements ICancellabl
 	/**
 	 * @return The current selected server.
 	 */
-	public IMumbleServer getCurrentServer() {
+	public IPlayerMumbleServer getCurrentServer() {
 		return currentServer;
 	}
 
 	/**
 	 * @return The server that is about to be selected.
 	 */
-	public IMumbleServer getFutureServer() {
+	public IPlayerMumbleServer getFutureServer() {
 		return futureServer;
 	}
 
@@ -51,8 +51,8 @@ public class SelectServerPreEvent extends ServerListEvent implements ICancellabl
 	public String toString() {
 		StringJoiner joiner = new StringJoiner(",", "{", "}");
 		joiner.add("serverList=" + getServerList().hashCode());
-		joiner.add("currentServer=" + (getCurrentServer() == null ? null : getCurrentServer().getName()));
-		joiner.add("futureServer=" + (getFutureServer() == null ? null : getFutureServer().getName()));
+		joiner.add("currentServer=" + (getCurrentServer() == null ? null : getCurrentServer()));
+		joiner.add("futureServer=" + (getFutureServer() == null ? null : getFutureServer()));
 		return super.toString();
 	}
 }

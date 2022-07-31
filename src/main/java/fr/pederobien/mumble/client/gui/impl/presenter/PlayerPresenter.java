@@ -2,25 +2,28 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import java.io.IOException;
 
-import fr.pederobien.mumble.client.event.PlayerChannelChangePostEvent;
-import fr.pederobien.mumble.client.event.PlayerDeafenChangePostEvent;
-import fr.pederobien.mumble.client.event.PlayerMuteChangePostEvent;
-import fr.pederobien.mumble.client.event.PlayerOnlineStatusChangeEvent;
-import fr.pederobien.mumble.client.event.PlayerSpeakEvent;
-import fr.pederobien.mumble.client.event.ServerLeavePostEvent;
+import fr.pederobien.messenger.interfaces.IResponse;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.environment.Environments;
 import fr.pederobien.mumble.client.gui.environment.Variables;
+import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleTooltipProperty;
 import fr.pederobien.mumble.client.gui.impl.view.MainView;
 import fr.pederobien.mumble.client.gui.interfaces.ICode;
-import fr.pederobien.mumble.client.interfaces.IMumbleServer;
-import fr.pederobien.mumble.client.interfaces.IPlayer;
-import fr.pederobien.mumble.client.interfaces.IResponse;
+import fr.pederobien.mumble.client.player.event.MumbleChannelPlayerListPlayerAddPostEvent;
+import fr.pederobien.mumble.client.player.event.MumbleChannelPlayerListPlayerRemovePostEvent;
+import fr.pederobien.mumble.client.player.event.MumblePlayerOnlineChangePostEvent;
+import fr.pederobien.mumble.client.player.event.MumbleServerLeavePostEvent;
+import fr.pederobien.mumble.client.player.interfaces.IMainPlayer;
+import fr.pederobien.mumble.client.player.interfaces.IPlayer;
+import fr.pederobien.mumble.client.player.interfaces.IPlayerMumbleServer;
 import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
 import fr.pederobien.utils.event.IEventListener;
+import fr.pederobien.vocal.client.event.VocalPlayerDeafenStatusChangePostEvent;
+import fr.pederobien.vocal.client.event.VocalPlayerMuteStatusChangePostEvent;
+import fr.pederobien.vocal.client.event.VocalPlayerSpeakPostEvent;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -34,8 +37,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class PlayerPresenter extends PresenterBase implements IEventListener {
-	private IMumbleServer server;
-	private IPlayer player;
+	private IPlayerMumbleServer server;
+	private IMainPlayer player;
 
 	private StringProperty playerNameProperty;
 	private SimpleLanguageProperty playerStatusProperty;
@@ -53,12 +56,12 @@ public class PlayerPresenter extends PresenterBase implements IEventListener {
 	private ObjectProperty<Node> deafenOrUndeafenGraphicProperty;
 	private ObjectProperty<Node> hangupGraphicProperty;
 
-	public PlayerPresenter(IMumbleServer server) {
+	public PlayerPresenter(IPlayerMumbleServer server) {
 		this.server = server;
 
 		EventManager.registerListener(this);
 
-		player = server.getPlayer();
+		player = server.getMainPlayer();
 
 		playerNameProperty = new SimpleStringProperty("");
 		playerStatusProperty = getPropertyHelper().languageProperty(EMessageCode.PLAYER_OFFLINE);
@@ -138,7 +141,7 @@ public class PlayerPresenter extends PresenterBase implements IEventListener {
 	 * previously unmute then calling this method mute it.
 	 */
 	public void onMuteOrUnmute() {
-		player.setMute(!player.isMute());
+		player.setMute(!player.isMute(), response -> handlePlayerMuteStatusChangeResponse(response));
 	}
 
 	/**
@@ -162,7 +165,7 @@ public class PlayerPresenter extends PresenterBase implements IEventListener {
 	 * was previously undeafen then calling this method deafen it.
 	 */
 	public void onDeafenOrUndeafen() {
-		player.setDeafen(!player.isDeafen());
+		player.setDeafen(!player.isDeafen(), response -> handlePlayerDeafenStatusChangeResponse(response));
 	}
 
 	/**
@@ -190,7 +193,7 @@ public class PlayerPresenter extends PresenterBase implements IEventListener {
 	 * Disconnect the player from its channel.
 	 */
 	public void disconnectFromChannel() {
-		player.getChannel().removePlayer(response -> removePlayer(response));
+		player.getChannel().getPlayers().leave(response -> handleRemovePlayerResponse(response));
 	}
 
 	/**
@@ -222,45 +225,53 @@ public class PlayerPresenter extends PresenterBase implements IEventListener {
 	}
 
 	@EventHandler
-	private void onPlayerOnlineStatusChange(PlayerOnlineStatusChangeEvent event) {
+	private void onPlayerOnlineStatusChange(MumblePlayerOnlineChangePostEvent event) {
 		if (!event.getPlayer().equals(player))
 			return;
 
-		updatePlayerProperties(event.isOnline());
+		updatePlayerProperties(event.getPlayer().isOnline());
 	}
 
 	@EventHandler
-	private void onChannelChanged(PlayerChannelChangePostEvent event) {
+	private void onChannelPlayerRemove(MumbleChannelPlayerListPlayerAddPostEvent event) {
 		if (!event.getPlayer().equals(player))
 			return;
 
-		playerCanDisconnectFromChannel.setValue(event.getPlayer().getChannel() != null);
+		playerCanDisconnectFromChannel.setValue(true);
 	}
 
 	@EventHandler
-	private void onMuteChanged(PlayerMuteChangePostEvent event) {
+	private void onChannelPlayerAdd(MumbleChannelPlayerListPlayerRemovePostEvent event) {
 		if (!event.getPlayer().equals(player))
+			return;
+
+		playerCanDisconnectFromChannel.setValue(false);
+	}
+
+	@EventHandler
+	private void onMuteChanged(VocalPlayerMuteStatusChangePostEvent event) {
+		if (!event.getPlayer().getName().equals(player.getName()))
 			return;
 
 		updateMuteOrUnmute();
 	}
 
 	@EventHandler
-	private void onDeafenChanged(PlayerDeafenChangePostEvent event) {
-		if (!event.getPlayer().equals(player))
+	private void onDeafenChanged(VocalPlayerDeafenStatusChangePostEvent event) {
+		if (!event.getPlayer().getName().equals(player.getName()))
 			return;
 
 		updateDeafenOrUndeafen();
 	}
 
 	@EventHandler
-	private void onPlayerSpeak(PlayerSpeakEvent event) {
+	private void onPlayerSpeak(VocalPlayerSpeakPostEvent event) {
 		if (!event.getPlayer().getName().equals(player.getName()))
 			return;
 	}
 
 	@EventHandler
-	private void onServerLeave(ServerLeavePostEvent event) {
+	private void onServerLeave(MumbleServerLeavePostEvent event) {
 		if (!event.getServer().equals(server))
 			return;
 
@@ -272,8 +283,16 @@ public class PlayerPresenter extends PresenterBase implements IEventListener {
 		return player.isOnline() ? EMessageCode.PLAYER_ONLINE : EMessageCode.PLAYER_OFFLINE;
 	}
 
-	private void removePlayer(IResponse response) {
-		handleRequestFailed(response, AlertType.ERROR, EMessageCode.HANG_UP_FAILED_TITLE, EMessageCode.HANG_UP_FAILED_HEADER);
+	private void handleRemovePlayerResponse(IResponse response) {
+		ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.HANG_UP_FAILED_TITLE, EMessageCode.HANG_UP_FAILED_HEADER, response);
+	}
+
+	private void handlePlayerMuteStatusChangeResponse(IResponse response) {
+		ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.MUTE_FAILED_TITLE, EMessageCode.MUTE_FAILED_HEADER, response);
+	}
+
+	private void handlePlayerDeafenStatusChangeResponse(IResponse response) {
+		ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.DEAFEN_FAILED_TITLE, EMessageCode.DEAFEN_FAILED_HEADER, response);
 	}
 
 	private void updateMuteOrUnmute() {
@@ -307,6 +326,6 @@ public class PlayerPresenter extends PresenterBase implements IEventListener {
 	}
 
 	private void manageServerLeaveResponse(IResponse response) {
-		handleRequestFailed(response, AlertType.ERROR, p -> p.title(EMessageCode.CANNOT_LEAVE_SERVER_RESPONSE_TITLE).header(EMessageCode.CANNOT_LEAVE_SERVER_RESPONSE));
+		ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.CANNOT_LEAVE_SERVER_RESPONSE_TITLE, EMessageCode.CANNOT_LEAVE_SERVER_RESPONSE, response);
 	}
 }

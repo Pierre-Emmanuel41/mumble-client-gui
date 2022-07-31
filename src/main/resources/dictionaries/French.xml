@@ -20,7 +20,7 @@
 			<code>MUMBLE_WINDOW_TITLE</code>
 			<value>Mumble Client</value>
 		</message>
-				<message>
+		<message>
 			<code>SERVER_WINDOW_TITLE</code>
 			<value>%s@%s:%s</value>
 		</message>
@@ -39,7 +39,7 @@
 		</message>
 		<message>
 			<code>TIMEOUT</code>
-			<value>Le requête a eu un time out.</value>
+			<value>La requête a eu un time out.</value>
 		</message>
 		<message>
 			<code>PERMISSION_REFUSED</code>
@@ -50,24 +50,48 @@
 			<value>Une erreur inattendue s'est produite.</value>
 		</message>
 		<message>
-			<code>INCOMPATIBLE_IDC_OID</code>
-			<value>L'Idc et l'Oid sont incompatibles.</value>
+			<code>REQUEST_MALFORMED</code>
+			<value>La requête n'est pas bien structurée.</value>
 		</message>
 		<message>
-			<code>IDC_UNKNOWN</code>
-			<value>Il n'y a pas de traitement associé à l'Idc.</value>
+			<code>INCOMPATIBLE_VERSION</code>
+			<value>La version du protocol n'est pas supportée.</value>
+		</message>
+		<message>
+			<code>IDENTIFIER_UNKNOWN</code>
+			<value>Il n'y a pas de traitement associé à l'identifiant.</value>
+		</message>
+		<message>
+			<code>REQUEST_CANCELLED</code>
+			<value>La requête a été annulée par le serveur.</value>
+		</message>
+		<message>
+			<code>SERVER_ALREADY_JOINED</code>
+			<value>Le client a déjà rejoint le serveur.</value>
 		</message>
 		<message>
 			<code>CHANNEL_ALREADY_EXISTS</code>
 			<value>Le channel existe déjà.</value>
 		</message>
 		<message>
-			<code>CHANNEL_DOES_NOT_EXISTS</code>
+			<code>CHANNEL_NOT_FOUND</code>
 			<value>Le channel n'existe pas.</value>
 		</message>
 		<message>
-			<code>PLAYER_NOT_RECOGNIZED</code>
-			<value>Le joueur n'est pas reconnu.</value>
+			<code>PLAYER_NOT_FOUND</code>
+			<value>Le joueur n'existe pas.</value>
+		</message>
+		<message>
+			<code>PLAYER_DOES_NOT_MATCH</code>
+			<value>The player involved in the request does not match with the player hosted by the client.</value>
+		</message>
+		<message>
+			<code>PLAYER_CLIENT_NOT_JOINED</code>
+			<value>The client of the player has not joined the server yet.</value>
+		</message>
+		<message>
+			<code>PLAYER_ALREADY_EXISTS</code>
+			<value>The player already exist.</value>
 		</message>
 		<message>
 			<code>PLAYER_ALREADY_REGISTERED</code>
@@ -82,12 +106,24 @@
 			<value>Le joueur n'est pas enregistré dans un channel.</value>
 		</message>
 		<message>
-			<code>SOUND_MODIFIER_DOES_NOT_EXIST</code>
-			<value>Le modifieur de son n'existe pas.</value>
+			<code>PARAMETER_NOT_FOUND</code>
+			<value>Le paramètre n'existe pas.</value>
 		</message>
 		<message>
-			<code>PARAMETER_DOES_NOT_EXIST</code>
-			<value>Le paramètre n'existe pas.</value>
+			<code>PARAMETER_WITHOUT_MIN</code>
+			<value>Le paramètre n'a pas de minimum défini.</value>
+		</message>
+		<message>
+			<code>PARAMETER_WITHOUT_MAX</code>
+			<value>Le paramètre n'a pas de maximum défini.</value>
+		</message>
+		<message>
+			<code>PARAMETER_VALUE_OUT_OF_RANGE</code>
+			<value>La nouvelle valeur du paramètre est en dehors de son intervalle [min, max].</value>
+		</message>
+		<message>
+			<code>SOUND_MODIFIER_DOES_NOT_EXIST</code>
+			<value>Le modifieur de son n'existe pas.</value>
 		</message>
 		<message>
 			<code>UNKNOWN</code>
@@ -171,12 +207,16 @@
 			<value>Impossible de rejoindre le serveur selectionné pour la raison suivante :</value>
 		</message>
 		<message>
-			<code>PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL_TITLE</code>
-			<value>Impossible de se connecter au channel</value>
+			<code>FAIL_TO_JOIN_A_CHANNEL_TITLE</code>
+			<value>Impossible de rejoindre le channel</value>
 		</message>
 		<message>
-			<code>PLAYER_SHOULD_BE_CONNECTED_BEFORE_CONNECTION_TO_A_CHANNEL</code>
-			<value>Vous ne pouvez pas rejoindre le channel, vous devez d'abord être connecté dans le jeu.</value>
+			<code>FAIL_TO_JOIN_A_CHANNEL_HEADER</code>
+			<value>Vous ne pouvez pas rejoindre le channel pour la raison suivante :</value>
+		</message>
+		<message>
+			<code>PLAYER_NOT_CONNECTED_IN_GAME</code>
+			<value>Le joueur n'est pas connecté dans le jeu</value>
 		</message>
 		<message>
 			<code>MUTE_TOOLTIP</code>

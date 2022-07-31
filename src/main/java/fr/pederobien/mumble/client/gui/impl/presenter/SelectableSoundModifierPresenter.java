@@ -10,8 +10,8 @@ import fr.pederobien.mumble.client.gui.event.ParameterValueChangeRequestEvent;
 import fr.pederobien.mumble.client.gui.impl.generic.OkCancelPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.ParameterListView;
-import fr.pederobien.mumble.client.interfaces.ISoundModifier;
-import fr.pederobien.mumble.client.interfaces.ISoundModifierList;
+import fr.pederobien.mumble.client.player.interfaces.ISoundModifier;
+import fr.pederobien.mumble.client.player.interfaces.ISoundModifierList;
 import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
 import fr.pederobien.utils.event.EventPriority;
@@ -81,8 +81,7 @@ public class SelectableSoundModifierPresenter extends OkCancelPresenter implemen
 	 * @return An observable list that contains the name of the sound modifiers registered on the server.
 	 */
 	public ObservableList<String> modifierNames() {
-		return soundModifierList.getSoundModifiers().values().stream().map(modifier -> modifier.getName())
-				.collect(Collectors.toCollection(() -> FXCollections.observableArrayList()));
+		return soundModifierList.stream().map(modifier -> modifier.getName()).collect(Collectors.toCollection(() -> FXCollections.observableArrayList()));
 	}
 
 	/**
@@ -129,7 +128,7 @@ public class SelectableSoundModifierPresenter extends OkCancelPresenter implemen
 	}
 
 	private void onSelectedSoundModifierChange(String oldValue, String newValue) {
-		Optional<ISoundModifier> optModifier = soundModifierList.getByName(newValue);
+		Optional<ISoundModifier> optModifier = soundModifierList.get(newValue);
 		if (!optModifier.isPresent()) {
 			dispatch(() -> selectedSoundModifierNameProperty.set(oldValue));
 			return;

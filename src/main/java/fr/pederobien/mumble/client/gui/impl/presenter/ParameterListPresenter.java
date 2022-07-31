@@ -1,12 +1,10 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
-import java.util.Map;
-
 import fr.pederobien.mumble.client.gui.event.ParameterValueChangeRequestEvent;
 import fr.pederobien.mumble.client.gui.impl.generic.OkCancelPresenter;
 import fr.pederobien.mumble.client.gui.impl.view.ParameterView;
-import fr.pederobien.mumble.client.interfaces.IParameter;
-import fr.pederobien.mumble.client.interfaces.IParameterList;
+import fr.pederobien.mumble.client.player.interfaces.IParameter;
+import fr.pederobien.mumble.client.player.interfaces.IParameterList;
 import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
 import fr.pederobien.utils.event.EventPriority;
@@ -28,8 +26,8 @@ public class ParameterListPresenter extends OkCancelPresenter implements IEventL
 		this.parameterList = parameterList;
 
 		parameterViews = FXCollections.observableArrayList();
-		for (Map.Entry<String, IParameter<?>> entry : parameterList)
-			parameterViews.add(new ParameterView(new ParameterPresenter(entry.getValue())));
+		for (IParameter<?> parameter : parameterList)
+			parameterViews.add(new ParameterView(new ParameterPresenter(parameter)));
 
 		// OK button not disabled if there are no parameter
 		okDisableProperty = new SimpleBooleanProperty(parameterList.size() != 0);
@@ -108,7 +106,7 @@ public class ParameterListPresenter extends OkCancelPresenter implements IEventL
 	 */
 	@EventHandler(priority = EventPriority.NORMAL)
 	private void onParameterValueChange(ParameterValueChangeRequestEvent event) {
-		if (!parameterList.getParameters().containsValue(event.getParameter()))
+		if (!parameterList.get(event.getParameter().getName()).isPresent())
 			return;
 
 		isNotValid = false;

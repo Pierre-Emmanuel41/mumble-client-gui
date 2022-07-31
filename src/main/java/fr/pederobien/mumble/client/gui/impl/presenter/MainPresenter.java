@@ -5,7 +5,7 @@ import fr.pederobien.mumble.client.gui.impl.view.ServerListView;
 import fr.pederobien.mumble.client.gui.impl.view.ServerManagementView;
 import fr.pederobien.mumble.client.gui.persistence.configuration.GuiConfigurationPersistence;
 import fr.pederobien.mumble.client.gui.persistence.model.ServerListPersistence;
-import fr.pederobien.mumble.client.interfaces.IMumbleServer;
+import fr.pederobien.mumble.client.player.interfaces.IPlayerMumbleServer;
 import fr.pederobien.utils.event.EventLogger;
 
 public class MainPresenter extends PresenterBase {
@@ -15,7 +15,7 @@ public class MainPresenter extends PresenterBase {
 	public MainPresenter() {
 		setPrimaryStageTitle(EMessageCode.MUMBLE_WINDOW_TITLE);
 
-		for (IMumbleServer server : ServerListPersistence.getInstance().getServerList().getServers())
+		for (IPlayerMumbleServer server : ServerListPersistence.getInstance().getServerList().getServers())
 			server.open();
 
 		serverListView = new ServerListView(new ServerListPresenter(ServerListPersistence.getInstance().getServerList()));
