@@ -20,8 +20,8 @@ import fr.pederobien.utils.event.IEventListener;
 
 public class ServerList implements IEventListener {
 	public static final String DEFAULT_SERVER_NAME = "Unknown";
-	public static final String DEFAULT_SERVER_ADDRESS = "127.0.0.1";
-	public static final int DEFAULT_SERVER_PORT = 28000;
+	public static final String DEFAULT_SERVER_ADDRESS = "0.0.0.0";
+	public static final int DEFAULT_SERVER_PORT = 0;
 
 	private List<IPlayerMumbleServer> servers;
 	private IPlayerMumbleServer selectedServer;
