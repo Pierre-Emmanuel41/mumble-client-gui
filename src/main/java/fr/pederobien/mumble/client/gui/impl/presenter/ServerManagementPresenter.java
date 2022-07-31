@@ -138,20 +138,10 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 	 * Creates a new window in which the user can edit a mumble server.
 	 */
 	public void onEdit() {
-		serverList.getSelectedServer().close();
 		new ServerInfoView(new ServerInfoPresenter(serverList, serverList.getSelectedServer()) {
 			@Override
 			protected void onOkButtonClicked(IPlayerMumbleServer server, String name, String address, int port) {
 				performChangesOnServer(server, name, address, port);
-				// Server is closed but parameter are the same
-				if (!server.isReachable())
-					server.open();
-			}
-
-			@Override
-			public boolean onCancelButtonClicked() {
-				serverList.getSelectedServer().open();
-				return super.onCancelButtonClicked();
 			}
 		});
 	}

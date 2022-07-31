@@ -59,6 +59,7 @@ public abstract class ServerInfoPresenter extends OkCancelPresenter {
 		this.serverList = serverList;
 		this.server = server;
 
+		server.close();
 		titleTextProperty = getPropertyHelper().languageProperty(EMessageCode.ADD_NEW_SERVER_TITLE);
 
 		serverNameProperty = new SimpleStringProperty(server.getName().equals(ServerList.DEFAULT_SERVER_NAME) ? null : server.getName());
@@ -110,7 +111,9 @@ public abstract class ServerInfoPresenter extends OkCancelPresenter {
 	public boolean onOkButtonClicked() {
 		if (okDisableProperty.get())
 			return false;
+
 		onOkButtonClicked(server, serverNameProperty().get(), serverIpAddressProperty().get(), Integer.parseInt(serverPortProperty().get()));
+		server.open();
 		return true;
 	}
 
