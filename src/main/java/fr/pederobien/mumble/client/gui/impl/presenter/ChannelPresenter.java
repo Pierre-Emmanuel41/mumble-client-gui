@@ -1,5 +1,8 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import fr.pederobien.messenger.interfaces.IResponse;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.event.ChannelJoinRequestPostEvent;
@@ -46,8 +49,8 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 	private IPlayerMumbleServer mumbleServer;
 	private IChannelList channelList;
 	private IChannel channel;
-
 	private ObservableList<Object> players;
+	private Map<String, PlayerChannelView> playersViews;
 	private StringProperty channelNameProperty;
 
 	// Context Menu ----------------------------------------------------------------------------------------------------------------
@@ -71,6 +74,8 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 		EventManager.registerListener(this);
 
 		players = FXCollections.observableArrayList(channel.getPlayers().toList());
+		playersViews = new HashMap<String, PlayerChannelView>();
+
 		channelNameProperty = new SimpleStringProperty(channel.getName());
 
 		addChannelTextProperty = getPropertyHelper().languageProperty(EMessageCode.ADD_CHANNEL);
@@ -111,7 +116,14 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 	 * @throws ClassCastException If the type of object used as model to create its view is not IOtherPlayer.
 	 */
 	public <T> Callback<ListView<T>, ListCell<T>> playerViewFactory(Color enteredColor) {
-		return listView -> getPropertyHelper().cellView(item -> new PlayerChannelView(new PlayerChannelPresenter(mumbleServer, (IPlayer) item)).getRoot(), enteredColor);
+		return listView -> getPropertyHelper().cellView(item -> {
+			PlayerChannelView view = playersViews.get(((IPlayer) item).getName());
+			if (view == null) {
+				view = new PlayerChannelView(new PlayerChannelPresenter(mumbleServer, (IPlayer) item));
+				playersViews.put(((IPlayer) item).getName(), view);
+			}
+			return view.getRoot();
+		}, enteredColor);
 	}
 
 	/**
@@ -283,7 +295,8 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 			return;
 
 		if (!event.getServer().getMainPlayer().isOnline())
-			ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.FAIL_TO_JOIN_A_CHANNEL_TITLE, EMessageCode.FAIL_TO_JOIN_A_CHANNEL_HEADER, EMessageCode.PLAYER_NOT_CONNECTED_IN_GAME);
+			ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.FAIL_TO_JOIN_A_CHANNEL_TITLE, EMessageCode.FAIL_TO_JOIN_A_CHANNEL_HEADER,
+					EMessageCode.PLAYER_NOT_CONNECTED_IN_GAME);
 		else
 			EventManager.callEvent(new ChannelJoinRequestPostEvent(mumbleServer, mumbleServer.getMainPlayer().getChannel(), channel));
 	}
