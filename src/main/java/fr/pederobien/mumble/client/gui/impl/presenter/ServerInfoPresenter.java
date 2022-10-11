@@ -117,6 +117,12 @@ public abstract class ServerInfoPresenter extends OkCancelPresenter {
 		return true;
 	}
 
+	@Override
+	public boolean onCancelButtonClicked() {
+		server.open();
+		return true;
+	}
+
 	// Server name
 	// -------------------------------------------------------------------------------------------------------------------
 
