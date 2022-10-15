@@ -22,6 +22,7 @@ import fr.pederobien.vocal.client.event.VocalPlayerSpeakPostEvent;
 import fr.pederobien.vocal.client.event.VocalPlayerSpeakPreEvent;
 
 public class MumbleClientApplicationLauncher {
+	private static MumbleClientApplication application;
 
 	/**
 	 * Fake main in order to run the application from a jar file.
@@ -41,7 +42,8 @@ public class MumbleClientApplicationLauncher {
 		EventLogger.instance().ignore(MumblePlayerPositionChangePostEvent.class);
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> saveLog()));
-		MumbleClientApplication.startMumbleClientApplication(args);
+		application = new MumbleClientApplication();
+		application.run(args);
 	}
 
 	private static void saveLog() {

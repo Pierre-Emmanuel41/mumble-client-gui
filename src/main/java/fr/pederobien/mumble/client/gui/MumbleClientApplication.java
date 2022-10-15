@@ -9,20 +9,33 @@ import fr.pederobien.mumble.client.gui.impl.properties.PropertyHelper;
 import fr.pederobien.mumble.client.gui.impl.view.MainView;
 import fr.pederobien.mumble.client.gui.persistence.configuration.GuiConfigurationPersistence;
 import fr.pederobien.mumble.client.gui.persistence.model.ServerListPersistence;
+import fr.pederobien.mumble.client.player.event.MumbleGamePortCheckPostEvent;
 import fr.pederobien.utils.ApplicationLock;
+import fr.pederobien.utils.event.EventHandler;
+import fr.pederobien.utils.event.EventManager;
+import fr.pederobien.utils.event.IEventListener;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
-public class MumbleClientApplication extends Application {
+public class MumbleClientApplication extends Application implements IEventListener {
 	private static PropertyHelper propertyHelper;
 	private static Stage primaryStage;
 	private static ApplicationLock lock;
 
-	public static void startMumbleClientApplication(String[] args) {
+	/**
+	 * Run the main application.
+	 * 
+	 * @param args The command line arguments passed to the application.
+	 */
+	public void run(String[] args) {
 		lock = new ApplicationLock(Variables.LOCK_FILE.getFileName(), Variables.MUMBLE_FOLDER.getPath());
+
+		if (args.length > 0 && args[0].equalsIgnoreCase("true"))
+			EventManager.registerListener(this);
+
 		launch(args);
 	}
 
@@ -64,5 +77,10 @@ public class MumbleClientApplication extends Application {
 	 */
 	public static Stage getStage() {
 		return primaryStage;
+	}
+
+	@EventHandler
+	private void onGamePortCheck(MumbleGamePortCheckPostEvent event) {
+		event.setUsed(true);
 	}
 }
