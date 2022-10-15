@@ -43,7 +43,7 @@ public class ParameterValueChangeRequestEvent extends MumbleParameterEvent imple
 		StringJoiner joiner = new StringJoiner(",", "{", "}");
 		joiner.add("parameter=" + getParameter().getName());
 		joiner.add("currentValue=" + getParameter().getValue());
-		joiner.add("newValue=" + getValue().toString());
+		joiner.add("newValue=" + (getValue() == null ? "?" : getValue().toString()));
 		return String.format("%s_%s", getName(), joiner);
 	}
 }
