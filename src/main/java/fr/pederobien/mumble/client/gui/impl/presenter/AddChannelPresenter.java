@@ -146,7 +146,7 @@ public class AddChannelPresenter extends OkCancelPresenter implements IEventList
 		boolean isChannelNameWithoutSpaces = !channelName.contains(" ");
 		boolean isChannelNameUnique = true;
 
-		if (channelList.get(channelName) != null)
+		if (channelList.get(channelName).isPresent())
 			isChannelNameUnique = false;
 
 		if (isChannelNameLengthOk && isChannelNameUnique && isChannelNameWithoutSpaces) {
