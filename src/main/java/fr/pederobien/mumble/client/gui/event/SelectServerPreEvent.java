@@ -52,7 +52,7 @@ public class SelectServerPreEvent extends ServerListEvent implements ICancellabl
 		StringJoiner joiner = new StringJoiner(",", "{", "}");
 		joiner.add("serverList=" + getServerList().hashCode());
 		joiner.add("currentServer=" + (getCurrentServer() == null ? null : getCurrentServer()));
-		joiner.add("futureServer=" + (getFutureServer() == null ? null : getFutureServer()));
-		return super.toString();
+		joiner.add("newServer=" + (getFutureServer() == null ? null : getFutureServer()));
+		return String.format("%s_%s", getName(), joiner);
 	}
 }

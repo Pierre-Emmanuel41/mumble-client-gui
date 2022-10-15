@@ -39,8 +39,8 @@ public class SelectServerPostEvent extends ServerListEvent {
 	public String toString() {
 		StringJoiner joiner = new StringJoiner(",", "{", "}");
 		joiner.add("serverList=" + getServerList().hashCode());
-		joiner.add("previousServer=" + (getPreviousServer() == null ? null : getPreviousServer()));
 		joiner.add("currentServer=" + (getCurrentServer() == null ? null : getCurrentServer()));
-		return super.toString();
+		joiner.add("oldServer=" + (getPreviousServer() == null ? null : getPreviousServer()));
+		return String.format("%s_%s", getName(), joiner);
 	}
 }
