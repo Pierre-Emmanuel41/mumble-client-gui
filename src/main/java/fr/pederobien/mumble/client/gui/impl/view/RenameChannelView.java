@@ -27,8 +27,8 @@ public class RenameChannelView extends ViewBase<RenameChannelPresenter, FlowPane
 		channelNameTextField = new TextField();
 		channelNameTextField.fontProperty().bind(getPresenter().fontProperty());
 		channelNameTextField.textProperty().bindBidirectional(getPresenter().channelNameProperty());
-		channelNameTextField.borderProperty().bind(getPresenter().channelNameBorderProperty());
 		channelNameTextField.textProperty().addListener((obs, oldValue, newValue) -> getPresenter().validateChannelName());
+		channelNameTextField.borderProperty().bind(getPresenter().channelNameBorderProperty());
 		channelNameTextField.tooltipProperty().bind(getPresenter().channelNameTooltipProperty());
 
 		getRoot().getChildren().add(channelNameTextField);

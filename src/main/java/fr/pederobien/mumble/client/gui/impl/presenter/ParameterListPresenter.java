@@ -76,13 +76,12 @@ public class ParameterListPresenter extends OkCancelPresenter implements IEventL
 	 * @return True at least one parameter has not a valid value. Please see {@link ParameterPresenter#isNotValid()} for more details.
 	 */
 	public boolean isNotValid(boolean recheck) {
-		if (!recheck)
-			return isNotValid;
-
-		isNotValid = false;
-		for (ParameterView view : parameterViews)
-			isNotValid |= view.getPresenter().isNotValid();
-		return isNotValid;
+		/*
+		 * if (!recheck) return isNotValid;
+		 * 
+		 * isNotValid = false; for (ParameterView view : parameterViews) isNotValid |= view.getPresenter().isNotValid();
+		 */
+		return false;
 	}
 
 	/**
@@ -109,13 +108,11 @@ public class ParameterListPresenter extends OkCancelPresenter implements IEventL
 		if (!parameterList.get(event.getParameter().getName()).isPresent())
 			return;
 
-		isNotValid = false;
-		isIdentical = true;
-		for (ParameterView view : parameterViews) {
-			isNotValid |= view.getPresenter().isNotValid();
-			isIdentical &= view.getPresenter().isIdentical();
-		}
-
-		okDisableProperty.set(isNotValid || isIdentical);
+		/*
+		 * isNotValid = false; isIdentical = true; for (ParameterView view : parameterViews) { isNotValid |=
+		 * view.getPresenter().isNotValid(); isIdentical &= view.getPresenter().isIdentical(); }
+		 * 
+		 * okDisableProperty.set(isNotValid || isIdentical);
+		 */
 	}
 }

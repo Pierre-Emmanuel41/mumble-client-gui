@@ -8,7 +8,7 @@ import fr.pederobien.mumble.client.player.interfaces.IPlayerMumbleServer;
 public class ServerJoinRequestPostEvent extends MumbleServerEvent {
 
 	/**
-	 * Creates an event thrown when a the user request to join a server.
+	 * Creates an event thrown when a the user requests to join a server.
 	 * 
 	 * @param mumbleServer The server the user request to join.
 	 */
@@ -18,7 +18,7 @@ public class ServerJoinRequestPostEvent extends MumbleServerEvent {
 
 	@Override
 	public String toString() {
-		StringJoiner joiner = new StringJoiner(",", "{", "}");
+		StringJoiner joiner = new StringJoiner(", ", "{", "}");
 		joiner.add("server=" + getServer());
 		return String.format("%s_%s", getName(), joiner);
 	}

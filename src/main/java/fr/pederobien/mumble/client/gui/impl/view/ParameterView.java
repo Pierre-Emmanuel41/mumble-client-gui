@@ -32,7 +32,7 @@ public class ParameterView extends ViewBase<ParameterPresenter, HBox> {
 		parameterName.textProperty().bind(getPresenter().parameterNameProperty());
 		getRoot().getChildren().add(parameterName);
 
-		valueView = getPresenter().isBooleanParameter() ? createBooleanView() : createDefaultView();
+		valueView = getPresenter().isBooleanParameter() ? createBooleanView() : getPresenter().isRangeParameter() ? createRangeView() : createDefaultView();
 		getRoot().getChildren().add(valueView);
 		HBox.setMargin(valueView, new Insets(0, 0, 0, marginBetweenLabelAndTextField));
 	}
@@ -51,6 +51,15 @@ public class ParameterView extends ViewBase<ParameterPresenter, HBox> {
 		return valueView;
 	}
 
+	private TextField createDefaultView() {
+		TextField textfield = new TextField();
+		textfield.fontProperty().bind(getPresenter().fontProperty());
+		textfield.textProperty().bindBidirectional(getPresenter().valueProperty());
+		textfield.borderProperty().bind(getPresenter().valueBorderProperty());
+		textfield.tooltipProperty().bind(getPresenter().tooltipProperty());
+		return textfield;
+	}
+
 	private ToggleButton createBooleanView() {
 		boolean value = Boolean.parseBoolean(getPresenter().valueProperty().getValue());
 		booleanTextProperty = MumbleClientApplication.getPropertyHelper().languageProperty(value ? EMessageCode.ENABLE : EMessageCode.DISABLE);
@@ -64,13 +73,25 @@ public class ParameterView extends ViewBase<ParameterPresenter, HBox> {
 		return button;
 	}
 
-	private TextField createDefaultView() {
-		TextField textfield = new TextField();
-		textfield.fontProperty().bind(getPresenter().fontProperty());
-		textfield.textProperty().bindBidirectional(getPresenter().valueProperty());
-		textfield.borderProperty().bind(getPresenter().borderProperty());
-		textfield.tooltipProperty().bind(getPresenter().tooltipProperty());
-		return textfield;
+	private HBox createRangeView() {
+		HBox horizontalBox = new HBox();
+
+		horizontalBox.getChildren().add(createDefaultView());
+
+		TextField minTextField = new TextField();
+		minTextField.fontProperty().bind(getPresenter().fontProperty());
+		minTextField.textProperty().bindBidirectional(getPresenter().minValueProperty());
+		minTextField.borderProperty().bind(getPresenter().minValueBorderProperty());
+		minTextField.tooltipProperty().bind(getPresenter().tooltipProperty());
+		horizontalBox.getChildren().add(minTextField);
+
+		TextField maxTextField = new TextField();
+		maxTextField.fontProperty().bind(getPresenter().fontProperty());
+		maxTextField.textProperty().bindBidirectional(getPresenter().maxValueProperty());
+		maxTextField.borderProperty().bind(getPresenter().maxValueBorderProperty());
+		maxTextField.tooltipProperty().bind(getPresenter().tooltipProperty());
+		horizontalBox.getChildren().add(maxTextField);
+		return horizontalBox;
 	}
 
 	private void onToggleButtonClicked(Boolean newValue) {

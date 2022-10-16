@@ -9,19 +9,19 @@ import fr.pederobien.utils.ICancellable;
 
 public class ChannelJoinRequestPostEvent extends MumbleServerEvent implements ICancellable {
 	private boolean isCancelled;
-	private IChannel previousChannel, currentChannel;
+	private IChannel currentChannel, oldChannel;
 
 	/**
 	 * Creates an event thrown when the selected channel in the user interface has changed.
 	 * 
-	 * @param server          The server that contains both previous and current selected channel.
-	 * @param previousChannel The channel previously selected in the user interface.
-	 * @param previousChannel The channel currently selected in the user interface.
+	 * @param server         The server that contains both previous and current selected channel.
+	 * @param currentChannel The channel currently selected in the user interface.
+	 * @param oldChannel     The old selected channel.
 	 */
-	public ChannelJoinRequestPostEvent(IPlayerMumbleServer server, IChannel previousChannel, IChannel currentChannel) {
+	public ChannelJoinRequestPostEvent(IPlayerMumbleServer server, IChannel currentChannel, IChannel oldChannel) {
 		super(server);
-		this.previousChannel = previousChannel;
 		this.currentChannel = currentChannel;
+		this.oldChannel = oldChannel;
 	}
 
 	@Override
@@ -35,25 +35,25 @@ public class ChannelJoinRequestPostEvent extends MumbleServerEvent implements IC
 	}
 
 	/**
-	 * @return The current selected channel.
-	 */
-	public IChannel getPreviousChannel() {
-		return previousChannel;
-	}
-
-	/**
-	 * @return The channel that is about to be selected.
+	 * @return The channel currently selected.
 	 */
 	public IChannel getCurrentChannel() {
 		return currentChannel;
 	}
 
+	/**
+	 * @return The old selected channel.
+	 */
+	public IChannel getOldChannel() {
+		return oldChannel;
+	}
+
 	@Override
 	public String toString() {
-		StringJoiner joiner = new StringJoiner(",", "{", "}");
+		StringJoiner joiner = new StringJoiner(", ", "{", "}");
 		joiner.add("server=" + getServer());
-		joiner.add("previousChannel=" + (getPreviousChannel() == null ? null : getPreviousChannel().getName()));
 		joiner.add("currentChannel=" + (getCurrentChannel() == null ? null : getCurrentChannel().getName()));
+		joiner.add("oldChannel=" + (getOldChannel() == null ? null : getOldChannel().getName()));
 		return String.format("%s_%s", getName(), joiner);
 	}
 }

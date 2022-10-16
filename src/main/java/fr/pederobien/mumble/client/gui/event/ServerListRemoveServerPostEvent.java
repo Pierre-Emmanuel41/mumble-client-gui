@@ -28,7 +28,7 @@ public class ServerListRemoveServerPostEvent extends ServerListEvent {
 
 	@Override
 	public String toString() {
-		StringJoiner joiner = new StringJoiner(",", "{", "}");
+		StringJoiner joiner = new StringJoiner(", ", "{", "}");
 		joiner.add("serverList=" + getServerList().hashCode());
 		joiner.add("server=" + getServer());
 		return String.format("%s_%s", getName(), joiner);

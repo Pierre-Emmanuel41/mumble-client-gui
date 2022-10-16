@@ -7,7 +7,6 @@ import fr.pederobien.messenger.interfaces.IResponse;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.event.ChannelJoinRequestPostEvent;
 import fr.pederobien.mumble.client.gui.event.ChannelJoinRequestPreEvent;
-import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter;
 import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter.ErrorPresenterBuilder;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.AddChannelView;
@@ -28,7 +27,6 @@ import fr.pederobien.mumble.client.player.interfaces.IPlayer;
 import fr.pederobien.mumble.client.player.interfaces.IPlayerMumbleServer;
 import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
-import fr.pederobien.utils.event.EventPriority;
 import fr.pederobien.utils.event.IEventListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -136,7 +134,9 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 		if (event.getButton() != MouseButton.PRIMARY)
 			return;
 
-		EventManager.callEvent(new ChannelJoinRequestPreEvent(mumbleServer, mumbleServer.getMainPlayer().getChannel(), channel));
+		ChannelJoinRequestPreEvent preEvent = new ChannelJoinRequestPreEvent(mumbleServer, mumbleServer.getMainPlayer().getChannel(), channel);
+		ChannelJoinRequestPostEvent postEvent = new ChannelJoinRequestPostEvent(mumbleServer, channel, mumbleServer.getMainPlayer().getChannel());
+		EventManager.callEvent(preEvent, postEvent);
 	}
 
 	/**
@@ -289,17 +289,16 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 		soundModifierVisibility.set(event.getPlayer().isAdmin());
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
-	private void onChannelClicked(ChannelJoinRequestPreEvent event) {
-		if (!event.getFutureChannel().equals(channel))
-			return;
-
-		if (!event.getServer().getMainPlayer().isOnline())
-			ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.FAIL_TO_JOIN_A_CHANNEL_TITLE, EMessageCode.FAIL_TO_JOIN_A_CHANNEL_HEADER,
-					EMessageCode.PLAYER_NOT_CONNECTED_IN_GAME);
-		else
-			EventManager.callEvent(new ChannelJoinRequestPostEvent(mumbleServer, mumbleServer.getMainPlayer().getChannel(), channel));
-	}
+	/*
+	 * @EventHandler(priority = EventPriority.HIGHEST) private void onChannelClicked(ChannelJoinRequestPreEvent event) { if
+	 * (!event.getFutureChannel().equals(channel)) return;
+	 * 
+	 * if (!event.getServer().getMainPlayer().isOnline()) ErrorPresenter.showAndWait(AlertType.ERROR,
+	 * EMessageCode.FAIL_TO_JOIN_A_CHANNEL_TITLE, EMessageCode.FAIL_TO_JOIN_A_CHANNEL_HEADER,
+	 * EMessageCode.PLAYER_NOT_CONNECTED_IN_GAME); else EventManager.callEvent(new ChannelJoinRequestPostEvent(mumbleServer,
+	 * mumbleServer.getMainPlayer().getChannel(), channel)); }
+	 * 
+	 */
 
 	@EventHandler
 	private void onServerLeave(MumbleServerLeavePostEvent event) {

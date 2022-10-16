@@ -11,6 +11,7 @@ import fr.pederobien.mumble.client.gui.impl.view.ChannelView;
 import fr.pederobien.mumble.client.player.event.MumbleChannelListChannelAddPostEvent;
 import fr.pederobien.mumble.client.player.event.MumbleChannelListChannelRemovePostEvent;
 import fr.pederobien.mumble.client.player.event.MumbleServerLeavePostEvent;
+import fr.pederobien.mumble.client.player.exceptions.PlayerNotOnlineException;
 import fr.pederobien.mumble.client.player.interfaces.IChannel;
 import fr.pederobien.mumble.client.player.interfaces.IChannelList;
 import fr.pederobien.mumble.client.player.interfaces.IPlayerMumbleServer;
@@ -92,7 +93,12 @@ public class ChannelListPresenter extends PresenterBase implements IEventListene
 		if (mumbleServer.getMainPlayer().getChannel() != null)
 			mumbleServer.getMainPlayer().getChannel().getPlayers().leave(response -> handleRemovePlayerResponse(response));
 
-		event.getCurrentChannel().getPlayers().join(response -> handleAddPlayerResponse(response));
+		try {
+			event.getCurrentChannel().getPlayers().join(response -> handleAddPlayerResponse(response));
+		} catch (PlayerNotOnlineException e) {
+			ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.FAIL_TO_JOIN_A_CHANNEL_TITLE, EMessageCode.FAIL_TO_JOIN_A_CHANNEL_HEADER,
+					EMessageCode.PLAYER_NOT_CONNECTED_IN_GAME);
+		}
 	}
 
 	@EventHandler

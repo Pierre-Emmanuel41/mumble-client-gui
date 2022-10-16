@@ -11,7 +11,7 @@ public class ParameterValueChangeRequestEvent extends MumbleParameterEvent imple
 	private Object value;
 
 	/**
-	 * Creates an event thrown when the request in order to change the value of the parameter is about to be thrown.
+	 * Creates an event thrown when the user requests a new value for a parameter.
 	 * 
 	 * @param parameter The parameter involved in this event.
 	 * @param value     The future new parameter value.
@@ -32,18 +32,25 @@ public class ParameterValueChangeRequestEvent extends MumbleParameterEvent imple
 	}
 
 	/**
-	 * @return The future new parameter value.
+	 * @return The current parameter value.
 	 */
-	public Object getValue() {
+	public Object getCurrentValue() {
+		return getParameter().getValue();
+	}
+
+	/**
+	 * @return The new parameter value.
+	 */
+	public Object getNewValue() {
 		return value;
 	}
 
 	@Override
 	public String toString() {
-		StringJoiner joiner = new StringJoiner(",", "{", "}");
+		StringJoiner joiner = new StringJoiner(", ", "{", "}");
 		joiner.add("parameter=" + getParameter().getName());
-		joiner.add("currentValue=" + getParameter().getValue());
-		joiner.add("newValue=" + (getValue() == null ? "?" : getValue().toString()));
+		joiner.add("currentValue=" + getCurrentValue());
+		joiner.add("newValue=" + (getNewValue() == null ? "?" : getNewValue().toString()));
 		return String.format("%s_%s", getName(), joiner);
 	}
 }

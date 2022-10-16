@@ -9,19 +9,19 @@ import fr.pederobien.utils.ICancellable;
 
 public class ChannelJoinRequestPreEvent extends MumbleServerEvent implements ICancellable {
 	private boolean isCancelled;
-	private IChannel currentChannel, futureChannel;
+	private IChannel currentChannel, newChannel;
 
 	/**
 	 * Creates an event thrown when the selected channel in the user interface is about to change.
 	 * 
 	 * @param server         The server that contains both current and future selected channel.
 	 * @param currentChannel The channel currently selected in the user interface.
-	 * @param futureChannel  The channel that is about to be selected in the user interface.
+	 * @param newChannel     The channel that is about to be selected in the user interface.
 	 */
-	public ChannelJoinRequestPreEvent(IPlayerMumbleServer server, IChannel currentChannel, IChannel futureChannel) {
+	public ChannelJoinRequestPreEvent(IPlayerMumbleServer server, IChannel currentChannel, IChannel newChannel) {
 		super(server);
 		this.currentChannel = currentChannel;
-		this.futureChannel = futureChannel;
+		this.newChannel = newChannel;
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class ChannelJoinRequestPreEvent extends MumbleServerEvent implements ICa
 	}
 
 	/**
-	 * @return The current selected channel.
+	 * @return The channel currently selected.
 	 */
 	public IChannel getCurrentChannel() {
 		return currentChannel;
@@ -44,16 +44,16 @@ public class ChannelJoinRequestPreEvent extends MumbleServerEvent implements ICa
 	/**
 	 * @return The channel that is about to be selected.
 	 */
-	public IChannel getFutureChannel() {
-		return futureChannel;
+	public IChannel getNewChannel() {
+		return newChannel;
 	}
 
 	@Override
 	public String toString() {
-		StringJoiner joiner = new StringJoiner(",", "{", "}");
+		StringJoiner joiner = new StringJoiner(", ", "{", "}");
 		joiner.add("server=" + getServer());
 		joiner.add("currentChannel=" + (getCurrentChannel() == null ? null : getCurrentChannel().getName()));
-		joiner.add("futureChannel=" + (getFutureChannel() == null ? null : getFutureChannel().getName()));
+		joiner.add("futureChannel=" + (getNewChannel() == null ? null : getNewChannel().getName()));
 		return String.format("%s_%s", getName(), joiner);
 	}
 }
