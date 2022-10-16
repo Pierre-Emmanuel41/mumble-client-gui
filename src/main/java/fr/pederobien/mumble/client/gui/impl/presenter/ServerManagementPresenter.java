@@ -6,7 +6,7 @@ import java.net.UnknownHostException;
 
 import fr.pederobien.messenger.interfaces.IResponse;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
-import fr.pederobien.mumble.client.gui.event.SelectServerPostEvent;
+import fr.pederobien.mumble.client.gui.event.SelectedServerChangePostEvent;
 import fr.pederobien.mumble.client.gui.event.ServerJoinRequestPostEvent;
 import fr.pederobien.mumble.client.gui.event.ServerJoinRequestPreEvent;
 import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter;
@@ -118,7 +118,12 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 	 * Send a request to the server in order to join the selected server and update the user interface.
 	 */
 	public void onJoin() {
-		EventManager.callEvent(new ServerJoinRequestPreEvent(serverList.getSelectedServer()));
+		if (!serverList.getSelectedServer().isReachable())
+			return;
+
+		ServerJoinRequestPreEvent preEvent = new ServerJoinRequestPreEvent(serverList.getSelectedServer());
+		ServerJoinRequestPostEvent postEvent = new ServerJoinRequestPostEvent(serverList.getSelectedServer());
+		EventManager.callEvent(preEvent, postEvent);
 	}
 
 	/**
@@ -155,7 +160,7 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 	}
 
 	@EventHandler
-	private void onServerJoinRequestEvent(ServerJoinRequestPreEvent event) {
+	private void onServerJoinRequestEvent(ServerJoinRequestPostEvent event) {
 		if (!event.getServer().isReachable())
 			return;
 
@@ -178,7 +183,7 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 	}
 
 	@EventHandler
-	private void onSelectedServerChange(SelectServerPostEvent event) {
+	private void onSelectedServerChange(SelectedServerChangePostEvent event) {
 		joinServerDisableProperty.setValue(serverList.getSelectedServer() == null || !serverList.getSelectedServer().isReachable());
 		editServerDisableProperty.setValue(serverList.getSelectedServer() == null);
 		deleteServerDisableProperty.setValue(serverList.getSelectedServer() == null);
@@ -195,7 +200,5 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 
 	private void handleJoinServerResponse(IResponse response) {
 		ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.SERVER_JOIN_FAILED_TITLE, EMessageCode.SERVER_JOIN_FAILED_HEADER, response);
-		if (!response.hasFailed())
-			EventManager.callEvent(new ServerJoinRequestPostEvent(serverList.getSelectedServer()));
 	}
 }

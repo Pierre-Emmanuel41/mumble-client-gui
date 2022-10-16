@@ -6,21 +6,21 @@ import fr.pederobien.mumble.client.gui.model.ServerList;
 import fr.pederobien.mumble.client.player.interfaces.IPlayerMumbleServer;
 import fr.pederobien.utils.ICancellable;
 
-public class SelectServerPreEvent extends ServerListEvent implements ICancellable {
+public class SelectedServerChangePreEvent extends ServerListEvent implements ICancellable {
 	private boolean isCancelled;
-	private IPlayerMumbleServer currentServer, futureServer;
+	private IPlayerMumbleServer currentServer, newServer;
 
 	/**
 	 * Creates an event thrown the selected server in user interface is about to change.
 	 * 
 	 * @param serverList    The server list that contains both current and future selected server.
 	 * @param currentServer The server currently selected in the user interface.
-	 * @param futurServer   The server that is about to be selected.
+	 * @param newServer     The server that is about to be selected.
 	 */
-	public SelectServerPreEvent(ServerList serverList, IPlayerMumbleServer currentServer, IPlayerMumbleServer futureServer) {
+	public SelectedServerChangePreEvent(ServerList serverList, IPlayerMumbleServer currentServer, IPlayerMumbleServer newServer) {
 		super(serverList);
 		this.currentServer = currentServer;
-		this.futureServer = futureServer;
+		this.newServer = newServer;
 	}
 
 	@Override
@@ -34,7 +34,7 @@ public class SelectServerPreEvent extends ServerListEvent implements ICancellabl
 	}
 
 	/**
-	 * @return The current selected server.
+	 * @return The server currently selected.
 	 */
 	public IPlayerMumbleServer getCurrentServer() {
 		return currentServer;
@@ -43,16 +43,16 @@ public class SelectServerPreEvent extends ServerListEvent implements ICancellabl
 	/**
 	 * @return The server that is about to be selected.
 	 */
-	public IPlayerMumbleServer getFutureServer() {
-		return futureServer;
+	public IPlayerMumbleServer getNewServer() {
+		return newServer;
 	}
 
 	@Override
 	public String toString() {
-		StringJoiner joiner = new StringJoiner(",", "{", "}");
+		StringJoiner joiner = new StringJoiner(", ", "{", "}");
 		joiner.add("serverList=" + getServerList().hashCode());
 		joiner.add("currentServer=" + (getCurrentServer() == null ? null : getCurrentServer()));
-		joiner.add("newServer=" + (getFutureServer() == null ? null : getFutureServer()));
+		joiner.add("newServer=" + (getNewServer() == null ? null : getNewServer()));
 		return String.format("%s_%s", getName(), joiner);
 	}
 }
