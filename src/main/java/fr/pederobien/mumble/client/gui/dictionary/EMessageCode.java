@@ -236,6 +236,12 @@ public enum EMessageCode implements ICode {
 	// Code for a range parameter value tooltip (text field)
 	RANGE_PARAMETER_TOOLTIP,
 
+	// Code for the minimum value of a range parameter
+	MUMBLE_CLIENT_GUI__MIN_VALUE_TOOLTIP,
+
+	// Code for the maximum value of a range parameter
+	MUMBLE_CLIENT_GUI__MAX_VALUE_TOOLTIP,
+
 	// PLAYER STATUS CODE
 	// -----------------------------------------------------------------------------
 

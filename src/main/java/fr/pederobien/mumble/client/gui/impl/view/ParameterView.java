@@ -55,8 +55,9 @@ public class ParameterView extends ViewBase<ParameterPresenter, HBox> {
 		TextField textfield = new TextField();
 		textfield.fontProperty().bind(getPresenter().fontProperty());
 		textfield.textProperty().bindBidirectional(getPresenter().valueProperty());
+		textfield.textProperty().addListener((obs, oldValue, newValue) -> getPresenter().validateParameterValue(newValue));
 		textfield.borderProperty().bind(getPresenter().valueBorderProperty());
-		textfield.tooltipProperty().bind(getPresenter().tooltipProperty());
+		textfield.tooltipProperty().bind(getPresenter().valueTooltipProperty());
 		return textfield;
 	}
 
@@ -74,22 +75,24 @@ public class ParameterView extends ViewBase<ParameterPresenter, HBox> {
 	}
 
 	private HBox createRangeView() {
-		HBox horizontalBox = new HBox();
+		HBox horizontalBox = new HBox(5);
 
 		horizontalBox.getChildren().add(createDefaultView());
 
 		TextField minTextField = new TextField();
 		minTextField.fontProperty().bind(getPresenter().fontProperty());
 		minTextField.textProperty().bindBidirectional(getPresenter().minValueProperty());
+		minTextField.textProperty().addListener((obs, oldValue, newValue) -> getPresenter().validateParameterMinValue(newValue));
 		minTextField.borderProperty().bind(getPresenter().minValueBorderProperty());
-		minTextField.tooltipProperty().bind(getPresenter().tooltipProperty());
+		minTextField.tooltipProperty().bind(getPresenter().minValueTooltipProperty());
 		horizontalBox.getChildren().add(minTextField);
 
 		TextField maxTextField = new TextField();
 		maxTextField.fontProperty().bind(getPresenter().fontProperty());
 		maxTextField.textProperty().bindBidirectional(getPresenter().maxValueProperty());
+		maxTextField.textProperty().addListener((obs, oldValue, newValue) -> getPresenter().validateParameterMaxValue(newValue));
 		maxTextField.borderProperty().bind(getPresenter().maxValueBorderProperty());
-		maxTextField.tooltipProperty().bind(getPresenter().tooltipProperty());
+		maxTextField.tooltipProperty().bind(getPresenter().maxValueTooltipProperty());
 		horizontalBox.getChildren().add(maxTextField);
 		return horizontalBox;
 	}

@@ -35,8 +35,8 @@ public class ParameterPresenter extends PresenterBase implements IEventListener 
 	private Object value, minValue, maxValue;
 	private StringProperty parameterNameProperty, valueProperty, minValueProperty, maxValueProperty;
 	private ObjectProperty<Border> valueBorderProperty, minValueBorderProperty, maxValueBorderProperty;
-	private SimpleTooltipProperty tooltipProperty;
-	private boolean valueValid, minValueValid, maxValueValid;
+	private SimpleTooltipProperty valueTooltipProperty, minValueTooltipProperty, maxValueTooltipProperty;
+	private boolean isValueValid, isMinValueValid, isMaxValueValid;
 
 	/**
 	 * Creates a presenter in order to update the value of a parameter. If the parameter is a associated to a range, then it is
@@ -56,19 +56,21 @@ public class ParameterPresenter extends PresenterBase implements IEventListener 
 
 		if (rangeParameter != null) {
 			minValue = rangeParameter.getMin();
+			maxValue = rangeParameter.getMax();
+
 			minValueProperty = new SimpleStringProperty(minValue.toString());
 			minValueBorderProperty = new SimpleObjectProperty<Border>(null);
+			minValueTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.MUMBLE_CLIENT_GUI__MIN_VALUE_TOOLTIP, rangeParameter.getType(), maxValue);
 
-			maxValue = rangeParameter.getMax();
 			maxValueProperty = new SimpleStringProperty(maxValue.toString());
 			maxValueBorderProperty = new SimpleObjectProperty<Border>(null);
+			maxValueTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.MUMBLE_CLIENT_GUI__MAX_VALUE_TOOLTIP, rangeParameter.getType(), minValue);
 
-			tooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.RANGE_PARAMETER_TOOLTIP, rangeParameter.getType(), rangeParameter.getMin(),
-					rangeParameter.getMax());
+			valueTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.RANGE_PARAMETER_TOOLTIP, rangeParameter.getType(), minValue, maxValue);
 		} else
-			tooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.PARAMETER_TOOLTIP, parameter.getType());
+			valueTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.PARAMETER_TOOLTIP, parameter.getType());
 
-		valueValid = minValueValid = maxValueValid = true;
+		isValueValid = isMinValueValid = isMaxValueValid = true;
 
 		EventManager.registerListener(this);
 	}
@@ -148,7 +150,7 @@ public class ParameterPresenter extends PresenterBase implements IEventListener 
 	 *         and the maximum value are checked.
 	 */
 	public boolean isValid() {
-		return valueValid && minValueValid && maxValueValid;
+		return isValueValid && isMinValueValid && isMaxValueValid;
 	}
 
 	/**
@@ -189,8 +191,24 @@ public class ParameterPresenter extends PresenterBase implements IEventListener 
 	 * @return The property that contains the tooltip of the component in which the parameter value is written. This tooltip contains
 	 *         a description of constraints for the parameter value.
 	 */
-	public ObjectProperty<Tooltip> tooltipProperty() {
-		return tooltipProperty;
+	public ObjectProperty<Tooltip> valueTooltipProperty() {
+		return valueTooltipProperty;
+	}
+
+	/**
+	 * @return The property that contains the tooltip of the component in which the minimum value of the parameter is written. This
+	 *         tooltip contains a description of constraints for the minimum value of the parameter.
+	 */
+	public ObjectProperty<Tooltip> minValueTooltipProperty() {
+		return minValueTooltipProperty;
+	}
+
+	/**
+	 * @return The property that contains the tooltip of the component in which the maximum value of the parameter is written. This
+	 *         tooltip contains a description of constraints for the maximum value of the parameter.
+	 */
+	public ObjectProperty<Tooltip> maxValueTooltipProperty() {
+		return maxValueTooltipProperty;
 	}
 
 	/**
@@ -199,21 +217,8 @@ public class ParameterPresenter extends PresenterBase implements IEventListener 
 	 * @param value The new value of the parameter.
 	 */
 	public void validateParameterValue(Object value) {
-		if (value == null) {
-			valueValid = false;
-			valueBorderProperty.set(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));
-			return;
-		}
-
-		try {
-			this.value = parameter.getType().getValue(value.toString());
-		} catch (Exception e) {
-			// When the given value cannot be parsed in parameter's type
-			valueValid = false;
-			valueBorderProperty.set(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));
-		}
-
-		valueValid = true;
+		this.value = value;
+		validateParameterValues();
 		EventManager.callEvent(new ParameterValueChangeRequestEvent(parameter, this.value));
 	}
 
@@ -223,22 +228,9 @@ public class ParameterPresenter extends PresenterBase implements IEventListener 
 	 * @param value The new minimum value of the parameter.
 	 */
 	public void validateParameterMinValue(Object minValue) {
-		if (minValue == null) {
-			minValueValid = false;
-			minValueBorderProperty.set(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));
-			return;
-		}
-
-		try {
-			this.value = parameter.getType().getValue(value.toString());
-		} catch (Exception e) {
-			// When the given value cannot be parsed in parameter's type
-			minValueValid = false;
-			minValueBorderProperty.set(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));
-		}
-
-		minValueValid = true;
-		EventManager.callEvent(new ParameterMinValueChangeRequestEvent(rangeParameter, this.value));
+		this.minValue = minValue;
+		validateParameterValues();
+		EventManager.callEvent(new ParameterMinValueChangeRequestEvent(rangeParameter, this.minValue));
 	}
 
 	/**
@@ -247,22 +239,9 @@ public class ParameterPresenter extends PresenterBase implements IEventListener 
 	 * @param value The new maximum value of the parameter.
 	 */
 	public void validateParameterMaxValue(Object maxValue) {
-		if (maxValue == null) {
-			maxValueValid = false;
-			maxValueBorderProperty.set(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));
-			return;
-		}
-
-		try {
-			this.value = parameter.getType().getValue(value.toString());
-		} catch (Exception e) {
-			// When the given value cannot be parsed in parameter's type
-			maxValueValid = false;
-			maxValueBorderProperty.set(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));
-		}
-
-		maxValueValid = true;
-		EventManager.callEvent(new ParameterMaxValueChangeRequestEvent(rangeParameter, this.value));
+		this.maxValue = maxValue;
+		validateParameterValues();
+		EventManager.callEvent(new ParameterMaxValueChangeRequestEvent(rangeParameter, this.maxValue));
 	}
 
 	@EventHandler
@@ -291,5 +270,90 @@ public class ParameterPresenter extends PresenterBase implements IEventListener 
 
 	private void handleResponse(IResponse response) {
 		ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.ADD_CHANNEL_TITLE, EMessageCode.ADD_CHANNEL_NAME_RESPONSE, response);
+	}
+
+	private void validateParameterValues() {
+		isValueValid = true;
+		if (value == null || value.equals("")) {
+			isValueValid = false;
+			valueBorderProperty.set(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));
+		}
+
+		if (isValueValid)
+			try {
+				value = parameter.getType().getValue(value.toString());
+				if (rangeParameter == null)
+					valueBorderProperty.set(null);
+			} catch (Exception e) {
+				// Parameter value cannot be parsed
+				isValueValid = false;
+				valueBorderProperty.set(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));
+			}
+
+		if (rangeParameter != null) {
+			isMinValueValid = true;
+
+			if (minValue == null || minValue.equals("")) {
+				isMinValueValid = false;
+				minValueBorderProperty.set(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));
+			}
+
+			if (isMinValueValid)
+				try {
+					minValue = parameter.getType().getValue(minValue.toString());
+				} catch (Exception e) {
+					// When parameter minimum value cannot be parsed
+					isMinValueValid = false;
+					minValueBorderProperty.set(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));
+				}
+
+			isMaxValueValid = true;
+			if (maxValue == null || maxValue.equals("")) {
+				isMaxValueValid = false;
+				maxValueBorderProperty.set(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));
+			}
+
+			if (isMaxValueValid)
+				try {
+					maxValue = parameter.getType().getValue(maxValue.toString());
+				} catch (Exception e) {
+					// When parameter minimum value cannot be parsed
+					isMaxValueValid = false;
+					maxValueBorderProperty.set(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));
+				}
+
+			if (isMinValueValid && isMaxValueValid) {
+				try {
+					rangeParameter.check(minValue, maxValue, "The minimum value must be less than the maximimum value");
+					minValueBorderProperty.set(null);
+					minValueTooltipProperty.setMessageCode(EMessageCode.MUMBLE_CLIENT_GUI__MIN_VALUE_TOOLTIP, rangeParameter.getType(), minValue);
+				} catch (Exception e) {
+					// When the minimum value is strictly greater than the maximum value
+					isMinValueValid = false;
+					minValueBorderProperty.set(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));
+				}
+
+				try {
+					rangeParameter.check(minValue, maxValue, "The maximum value must be greater than the minimum value");
+					maxValueBorderProperty.set(null);
+					maxValueTooltipProperty.setMessageCode(EMessageCode.MUMBLE_CLIENT_GUI__MAX_VALUE_TOOLTIP, rangeParameter.getType(), minValue);
+				} catch (Exception e) {
+					// When the maximum value is strictly less than the minimum value
+					isMaxValueValid = false;
+					maxValueBorderProperty.set(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));
+				}
+			}
+
+			if (isValid())
+				try {
+					rangeParameter.checkRange(minValue, value, maxValue);
+					isValueValid = true;
+					valueBorderProperty.set(null);
+					valueTooltipProperty.setMessageCode(EMessageCode.RANGE_PARAMETER_TOOLTIP, rangeParameter.getType(), minValue, maxValue);
+				} catch (IllegalArgumentException e) {
+					isValueValid = false;
+					valueBorderProperty.set(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));
+				}
+		}
 	}
 }

@@ -370,7 +370,15 @@
 		</message>
 		<message>
 			<code>RANGE_PARAMETER_TOOLTIP</code>
-			<value>The parameter must be a %s and should be in range [%s,%s]</value>
+			<value>The value of the parameter must be a %s and should be in range [%s,%s]</value>
+		</message>
+		<message>
+			<code>MUMBLE_CLIENT_GUI__MIN_VALUE_TOOLTIP</code>
+			<value>The minimum value of the parameter must be a %s and should be less than %s</value>
+		</message>
+		<message>
+			<code>MUMBLE_CLIENT_GUI__MAX_VALUE_TOOLTIP</code>
+			<value>The maximum value of the parameter must be a %s and should be greater than %s</value>
 		</message>
 		<message>
 			<code>CANNOT_LEAVE_SERVER_RESPONSE</code>

@@ -368,7 +368,15 @@
 		</message>
 		<message>
 			<code>RANGE_PARAMETER_TOOLTIP</code>
-			<value>Le paramètre doit être un %s et être compris dans l'intervalle [%s,%s]</value>
+			<value>La valeur du paramètre doit être un %s et être compris dans l'intervalle [%s,%s]</value>
+		</message>
+		<message>
+			<code>MUMBLE_CLIENT_GUI__MIN_VALUE_TOOLTIP</code>
+			<value>La valeur minimum du paramètre doit être un %s et doit être plus petite que %s</value>
+		</message>
+		<message>
+			<code>MUMBLE_CLIENT_GUI__MAX_VALUE_TOOLTIP</code>
+			<value>La valeur maximum du paramètre doit être un %s et doit être plus grande que %s</value>
 		</message>
 		<message>
 			<code>PLAYER_ONLINE</code>
