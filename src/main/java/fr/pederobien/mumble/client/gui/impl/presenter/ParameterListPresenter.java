@@ -1,66 +1,51 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
-import fr.pederobien.mumble.client.gui.event.ParameterValueChangeRequestEvent;
-import fr.pederobien.mumble.client.gui.impl.generic.OkCancelPresenter;
 import fr.pederobien.mumble.client.gui.impl.view.ParameterView;
 import fr.pederobien.mumble.client.player.interfaces.IParameter;
 import fr.pederobien.mumble.client.player.interfaces.IParameterList;
-import fr.pederobien.utils.event.EventHandler;
-import fr.pederobien.utils.event.EventManager;
-import fr.pederobien.utils.event.EventPriority;
-import fr.pederobien.utils.event.IEventListener;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class ParameterListPresenter extends OkCancelPresenter implements IEventListener {
+public class ParameterListPresenter extends PresenterBase {
 	private IParameterList parameterList;
-	private BooleanProperty okDisableProperty;
 	private ObservableList<ParameterView> parameterViews;
 
-	private boolean isNotValid, isIdentical;
-
+	/**
+	 * Creates a presenter in order to display each parameter contained in the given list.
+	 * 
+	 * @param parameterList The list that contains parameter to display.
+	 */
 	public ParameterListPresenter(IParameterList parameterList) {
 		this.parameterList = parameterList;
 
 		parameterViews = FXCollections.observableArrayList();
 		for (IParameter<?> parameter : parameterList)
 			parameterViews.add(new ParameterView(new ParameterPresenter(parameter)));
-
-		// OK button not disabled if there are no parameter
-		okDisableProperty = new SimpleBooleanProperty(parameterList.size() != 0);
-		EventManager.registerListener(this);
 	}
 
-	@Override
-	public StringProperty titleTextProperty() {
-		return null;
-	}
-
-	@Override
-	public boolean onOkButtonClicked() {
-		if (okDisableProperty.get())
-			return false;
+	/**
+	 * Update the current value of each parameter registered in the underlying parameters list. If a parameter is associated to a
+	 * range, then the minimum/maximum value of the range is also updated.
+	 * 
+	 * @return True if all parameters have been successfully updated, false otherwise.
+	 */
+	public boolean apply() {
+		if (parameterList.size() == 0)
+			return true;
 
 		// Result initialized to true if there are no parameter
-		boolean result = parameterList.size() == 0;
+		boolean result = true;
 		for (ParameterView view : parameterViews)
-			result |= view.getPresenter().onOkButtonClicked();
+			result &= view.getPresenter().apply();
 
 		return result;
 	}
 
-	@Override
+	/**
+	 * Unregister the presenter of each parameter for event handling.
+	 */
 	public void onClosing() {
 		getParameterViews().forEach(view -> view.getPresenter().onClosing());
-		EventManager.unregisterListener(this);
-	}
-
-	@Override
-	public BooleanProperty okDisableProperty() {
-		return okDisableProperty;
 	}
 
 	/**
@@ -71,48 +56,25 @@ public class ParameterListPresenter extends OkCancelPresenter implements IEventL
 	}
 
 	/**
-	 * @param recheck True if an iteration over the registered parameter should be done, false otherwise.
-	 * 
-	 * @return True at least one parameter has not a valid value. Please see {@link ParameterPresenter#isNotValid()} for more details.
+	 * @return True if each value of parameters is valid, false otherwise.
 	 */
-	public boolean isNotValid(boolean recheck) {
-		/*
-		 * if (!recheck) return isNotValid;
-		 * 
-		 * isNotValid = false; for (ParameterView view : parameterViews) isNotValid |= view.getPresenter().isNotValid();
-		 */
-		return false;
+	public boolean isValid() {
+		boolean isValid = true;
+		for (ParameterView view : parameterViews)
+			isValid &= view.getPresenter().isValid();
+
+		return isValid;
 	}
 
 	/**
-	 * @param recheck True if an iteration over the registered parameter should be done, false otherwise.
-	 * 
-	 * @return True at least one parameter value is different. Please see {@link ParameterPresenter#isIdentical()} for more details.
+	 * @return True if the new value (resp. minimum and maximum) of a parameter is identical to its current value (resp. minimim and
+	 *         maximum).
 	 */
-	public boolean isIdentical(boolean recheck) {
-		if (!recheck)
-			return isIdentical;
-
-		isIdentical = true;
+	public boolean isIdentical() {
+		boolean isIdentical = true;
 		for (ParameterView view : parameterViews)
 			isIdentical &= view.getPresenter().isIdentical();
+
 		return isIdentical;
-	}
-
-	/**
-	 * Check value of {@link ParameterPresenter#isValid()} and {@link ParameterPresenter#isIdentique()} of each registered parameter
-	 * presenter in order to update the {@link #okDisableProperty} property.
-	 */
-	@EventHandler(priority = EventPriority.NORMAL)
-	private void onParameterValueChange(ParameterValueChangeRequestEvent event) {
-		if (!parameterList.get(event.getParameter().getName()).isPresent())
-			return;
-
-		/*
-		 * isNotValid = false; isIdentical = true; for (ParameterView view : parameterViews) { isNotValid |=
-		 * view.getPresenter().isNotValid(); isIdentical &= view.getPresenter().isIdentical(); }
-		 * 
-		 * okDisableProperty.set(isNotValid || isIdentical);
-		 */
 	}
 }

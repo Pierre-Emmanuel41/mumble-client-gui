@@ -6,35 +6,32 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
-import fr.pederobien.mumble.client.gui.event.ParameterValueChangeRequestEvent;
-import fr.pederobien.mumble.client.gui.impl.generic.OkCancelPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.ParameterListView;
 import fr.pederobien.mumble.client.player.interfaces.ISoundModifier;
 import fr.pederobien.mumble.client.player.interfaces.ISoundModifierList;
-import fr.pederobien.utils.event.EventHandler;
-import fr.pederobien.utils.event.EventManager;
-import fr.pederobien.utils.event.EventPriority;
-import fr.pederobien.utils.event.IEventListener;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class SelectableSoundModifierPresenter extends OkCancelPresenter implements IEventListener {
+public class SelectableSoundModifierPresenter extends PresenterBase {
 	private ISoundModifierList soundModifierList;
 	private ISoundModifier initialSoundModifier, selectedSoundModifier;
 
 	private SimpleLanguageProperty modifierNameTextProperty;
 	private StringProperty selectedSoundModifierNameProperty;
 	private ObjectProperty<ParameterListView> selectedParameterListViewProperty;
-	private BooleanProperty okDisableProperty;
 	private Map<ISoundModifier, ParameterListView> parameterListViews;
 
+	/**
+	 * Creates a presenter in order to let the user selecting a sound modifier from the given list.
+	 * 
+	 * @param soundModifierList    The list that contains all the sound modifier available for selection.
+	 * @param initialSoundModifier The sound modifier initially selected.
+	 */
 	public SelectableSoundModifierPresenter(ISoundModifierList soundModifierList, ISoundModifier initialSoundModifier) {
 		this.soundModifierList = soundModifierList;
 		this.selectedSoundModifier = this.initialSoundModifier = initialSoundModifier;
@@ -47,34 +44,38 @@ public class SelectableSoundModifierPresenter extends OkCancelPresenter implemen
 		modifierNameTextProperty = getPropertyHelper().languageProperty(EMessageCode.SOUND_MODIFIER_NAME);
 		selectedSoundModifierNameProperty = new SimpleStringProperty(selectedSoundModifier.getName());
 		selectedSoundModifierNameProperty.addListener((obs, oldValue, newValue) -> onSelectedSoundModifierChange(oldValue, newValue));
-
-		okDisableProperty = new SimpleBooleanProperty(true);
-		EventManager.registerListener(this);
 	}
 
-	@Override
-	public StringProperty titleTextProperty() {
-		return null;
+	/**
+	 * Update the current value of each parameter of the selected sound modifier. If a parameter is associated to a range, then the
+	 * minimum/maximum value of the range is also updated.
+	 * 
+	 * @return True if each parameter has been successfully updated, false otherwise.
+	 */
+	public boolean apply() {
+		return selectedParameterListViewProperty.get().getPresenter().apply();
 	}
 
-	@Override
-	public boolean onOkButtonClicked() {
-		if (okDisableProperty.get())
-			return false;
-
-		selectedParameterListViewProperty.get().getPresenter().onOkButtonClicked();
-		return true;
-	}
-
-	@Override
+	/**
+	 * Unregister the presenter of each parameter for event handling.
+	 */
 	public void onClosing() {
 		parameterListViews.values().forEach(view -> view.getPresenter().onClosing());
-		EventManager.unregisterListener(this);
 	}
 
-	@Override
-	public BooleanProperty okDisableProperty() {
-		return okDisableProperty;
+	/**
+	 * @return True if the new parameter's value (resp. minimum/maximum value) is valid.
+	 */
+	public boolean isValid() {
+		return selectedParameterListViewProperty.get().getPresenter().isValid();
+	}
+
+	/**
+	 * @return True if the new parameter's value (resp. minimum/maximum value) equals the current parameter's value (resp.
+	 *         minimum/maximum value).
+	 */
+	public boolean isIdentical() {
+		return initialSoundModifier.equals(selectedSoundModifier) && selectedParameterListViewProperty.get().getPresenter().isIdentical();
 	}
 
 	/**
@@ -119,14 +120,6 @@ public class SelectableSoundModifierPresenter extends OkCancelPresenter implemen
 		return selectedParameterListViewProperty;
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
-	private void onParameterValueChange(ParameterValueChangeRequestEvent event) {
-		boolean identicalSoundModifier = selectedSoundModifier.equals(initialSoundModifier);
-		boolean isNotValid = selectedParameterListViewProperty.get().getPresenter().isNotValid(false);
-		boolean isIdentical = selectedParameterListViewProperty.get().getPresenter().isIdentical(false);
-		okDisableProperty.set(identicalSoundModifier ? isNotValid || isIdentical : isNotValid);
-	}
-
 	private void onSelectedSoundModifierChange(String oldValue, String newValue) {
 		Optional<ISoundModifier> optModifier = soundModifierList.get(newValue);
 		if (!optModifier.isPresent()) {
@@ -135,12 +128,12 @@ public class SelectableSoundModifierPresenter extends OkCancelPresenter implemen
 		}
 
 		selectedSoundModifier = optModifier.get();
+		selectedSoundModifier = selectedSoundModifier.getName().equals(initialSoundModifier.getName()) ? initialSoundModifier : selectedSoundModifier;
 		ParameterListView selectedParameterListView = parameterListViews.get(selectedSoundModifier);
 		if (selectedParameterListView == null) {
 			selectedParameterListView = new ParameterListView(new ParameterListPresenter(selectedSoundModifier.getParameters()));
 			parameterListViews.put(selectedSoundModifier, selectedParameterListView);
 		}
 		selectedParameterListViewProperty.set(selectedParameterListView);
-		onParameterValueChange(null);
 	}
 }

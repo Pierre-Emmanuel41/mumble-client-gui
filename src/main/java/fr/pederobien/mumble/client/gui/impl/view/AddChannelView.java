@@ -47,6 +47,6 @@ public class AddChannelView extends ViewBase<AddChannelPresenter, BorderPane> im
 	@Override
 	public void onPostShown() {
 		channelNameTextField.setPrefWidth(getRoot().getWidth() - 2 * marginBetweenRootAndChildren - channelNameLabel.getWidth() - marginBetweenLabelAndTextField);
-		getPresenter().selectableSoundModifierView().onPostShown();
+		getPresenter().selectableSoundModifierView().computeWidth();
 	}
 }

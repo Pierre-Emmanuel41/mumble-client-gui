@@ -2,19 +2,28 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import fr.pederobien.messenger.interfaces.IResponse;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
+import fr.pederobien.mumble.client.gui.event.ParameterMaxValueChangeRequestEvent;
+import fr.pederobien.mumble.client.gui.event.ParameterMinValueChangeRequestEvent;
+import fr.pederobien.mumble.client.gui.event.ParameterValueChangeRequestEvent;
 import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter.ErrorPresenterBuilder;
 import fr.pederobien.mumble.client.gui.impl.generic.OkCancelPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.SelectableSoundModifierView;
 import fr.pederobien.mumble.client.player.interfaces.IChannel;
+import fr.pederobien.utils.event.EventHandler;
+import fr.pederobien.utils.event.EventManager;
+import fr.pederobien.utils.event.EventPriority;
+import fr.pederobien.utils.event.IEventListener;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Alert.AlertType;
 
-public class SoundModifierPresenter extends OkCancelPresenter {
+public class SoundModifierPresenter extends OkCancelPresenter implements IEventListener {
 	private IChannel channel;
 
 	private SimpleLanguageProperty titleTextProperty;
+	private SimpleBooleanProperty okDisableProperty;
 
 	private SelectableSoundModifierPresenter selectableSoundModifierPresenter;
 	private SelectableSoundModifierView selectableSoundModifierView;
@@ -25,6 +34,9 @@ public class SoundModifierPresenter extends OkCancelPresenter {
 		selectableSoundModifierPresenter = new SelectableSoundModifierPresenter(channel.getServer().getSoundModifiers(), channel.getSoundModifier());
 		selectableSoundModifierView = new SelectableSoundModifierView(selectableSoundModifierPresenter);
 		titleTextProperty = getPropertyHelper().languageProperty(EMessageCode.SOUND_MODIFIER_TITLE, channel.getName());
+
+		okDisableProperty = new SimpleBooleanProperty(true);
+		EventManager.registerListener(this);
 	}
 
 	@Override
@@ -37,7 +49,7 @@ public class SoundModifierPresenter extends OkCancelPresenter {
 		if (okDisableProperty().get())
 			return false;
 
-		if (!selectableSoundModifierPresenter.onOkButtonClicked())
+		if (!selectableSoundModifierPresenter.apply())
 			return false;
 
 		channel.setSoundModifier(selectableSoundModifierPresenter.getSelectedSoundModifier(), response -> handleSetChannelSoundModifierResponse(response));
@@ -46,12 +58,13 @@ public class SoundModifierPresenter extends OkCancelPresenter {
 
 	@Override
 	public BooleanProperty okDisableProperty() {
-		return selectableSoundModifierPresenter.okDisableProperty();
+		return okDisableProperty;
 	}
 
 	@Override
 	public void onClosing() {
 		selectableSoundModifierPresenter.onClosing();
+		EventManager.unregisterListener(this);
 	}
 
 	/**
@@ -61,11 +74,30 @@ public class SoundModifierPresenter extends OkCancelPresenter {
 		return selectableSoundModifierView;
 	}
 
+	@EventHandler(priority = EventPriority.HIGHEST)
+	private void onParameterValueChange(ParameterValueChangeRequestEvent event) {
+		updateOkDisable();
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	private void onParameterMinValueChange(ParameterMinValueChangeRequestEvent event) {
+		updateOkDisable();
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	private void onParameterMaxValueChange(ParameterMaxValueChangeRequestEvent event) {
+		updateOkDisable();
+	}
+
 	private void handleSetChannelSoundModifierResponse(IResponse response) {
 		ErrorPresenterBuilder builder = ErrorPresenterBuilder.of(AlertType.ERROR);
 		builder.title(EMessageCode.SOUND_MODIFIER_TITLE, channel.getName());
 		builder.header(EMessageCode.SOUND_MODIFIER_NAME_RESPONSE, selectableSoundModifierPresenter.getSelectedSoundModifier().getName(), channel.getName());
 		builder.error(response);
 		builder.showAndWait();
+	}
+
+	private void updateOkDisable() {
+		okDisableProperty.set(selectableSoundModifierPresenter.isIdentical() || !selectableSoundModifierPresenter.isValid());
 	}
 }

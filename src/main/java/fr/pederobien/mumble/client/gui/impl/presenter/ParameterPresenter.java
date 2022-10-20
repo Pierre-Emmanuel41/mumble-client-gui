@@ -1,11 +1,13 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import fr.pederobien.messenger.interfaces.IResponse;
+import fr.pederobien.mumble.client.gui.MumbleClientApplication;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.event.ParameterMaxValueChangeRequestEvent;
 import fr.pederobien.mumble.client.gui.event.ParameterMinValueChangeRequestEvent;
 import fr.pederobien.mumble.client.gui.event.ParameterValueChangeRequestEvent;
 import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter;
+import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleTooltipProperty;
 import fr.pederobien.mumble.client.player.event.MumbleParameterMaxValueChangePostEvent;
 import fr.pederobien.mumble.client.player.event.MumbleParameterMinValueChangePostEvent;
@@ -17,6 +19,7 @@ import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
 import fr.pederobien.utils.event.IEventListener;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -34,7 +37,9 @@ public class ParameterPresenter extends PresenterBase implements IEventListener 
 	private IRangeParameter<?> rangeParameter;
 	private Object value, minValue, maxValue;
 	private StringProperty parameterNameProperty, valueProperty, minValueProperty, maxValueProperty;
+	private SimpleLanguageProperty booleanTextProperty, minTextProperty, maxTextProperty;
 	private ObjectProperty<Border> valueBorderProperty, minValueBorderProperty, maxValueBorderProperty;
+	private SimpleBooleanProperty booleanValueProperty;
 	private SimpleTooltipProperty valueTooltipProperty, minValueTooltipProperty, maxValueTooltipProperty;
 	private boolean isValueValid, isMinValueValid, isMaxValueValid;
 
@@ -53,17 +58,28 @@ public class ParameterPresenter extends PresenterBase implements IEventListener 
 
 		value = parameter.getValue();
 		valueProperty = new SimpleStringProperty(value.toString());
+		valueProperty.addListener((obs, oldValue, newValue) -> validateParameterValue(newValue));
+
+		if (parameter.getType() == ParameterType.BOOLEAN) {
+			booleanTextProperty = MumbleClientApplication.getPropertyHelper().languageProperty((Boolean) value ? EMessageCode.ENABLE : EMessageCode.DISABLE);
+			booleanValueProperty = new SimpleBooleanProperty((Boolean) value);
+			booleanValueProperty.addListener((obs, oldValue, newValue) -> validateParameterValue(newValue));
+		}
 
 		if (rangeParameter != null) {
 			minValue = rangeParameter.getMin();
 			maxValue = rangeParameter.getMax();
 
 			minValueProperty = new SimpleStringProperty(minValue.toString());
+			minValueProperty.addListener((obs, oldValue, newValue) -> validateParameterMinValue(newValue));
 			minValueBorderProperty = new SimpleObjectProperty<Border>(null);
+			minTextProperty = getPropertyHelper().languageProperty(EMessageCode.MUMBLE_CLIENT_GUI__MIN_VALUE);
 			minValueTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.MUMBLE_CLIENT_GUI__MIN_VALUE_TOOLTIP, rangeParameter.getType(), maxValue);
 
 			maxValueProperty = new SimpleStringProperty(maxValue.toString());
+			maxValueProperty.addListener((obs, oldValue, newValue) -> validateParameterMaxValue(newValue));
 			maxValueBorderProperty = new SimpleObjectProperty<Border>(null);
+			maxTextProperty = getPropertyHelper().languageProperty(EMessageCode.MUMBLE_CLIENT_GUI__MAX_VALUE);
 			maxValueTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.MUMBLE_CLIENT_GUI__MAX_VALUE_TOOLTIP, rangeParameter.getType(), minValue);
 
 			valueTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.RANGE_PARAMETER_TOOLTIP, rangeParameter.getType(), minValue, maxValue);
@@ -75,24 +91,42 @@ public class ParameterPresenter extends PresenterBase implements IEventListener 
 		EventManager.registerListener(this);
 	}
 
-	public boolean onOkButtonClicked() {
+	/**
+	 * Update the current value of the underlying parameter. If it is associated to a range, then update also the minimum/maximum
+	 * value of the parameter.
+	 * 
+	 * @return True if values have been applied successfully, false otherwise.
+	 */
+	public boolean apply() {
 		if (rangeParameter != null) {
 			try {
-				rangeParameter.setMin(minValue, response -> handleResponse(response));
-				rangeParameter.setMax(maxValue, response -> handleResponse(response));
+				rangeParameter.setMin(minValue, respMin -> {
+					handleResponse(respMin);
+					if (!respMin.hasFailed())
+						rangeParameter.setMax(maxValue, respMax -> {
+							handleResponse(respMax);
+							if (!respMax.hasFailed())
+								parameter.setValue(value, respValue -> handleResponse(respValue));
+						});
+				});
 			} catch (IllegalArgumentException e) {
 				// When the new minimum is greater than the old maximum
 				try {
-					rangeParameter.setMax(maxValue, response -> handleResponse(response));
-					rangeParameter.setMin(minValue, response -> handleResponse(response));
-				} catch (IllegalStateException e1) {
+					rangeParameter.setMax(maxValue, respMax -> {
+						handleResponse(respMax);
+						if (!respMax.hasFailed())
+							rangeParameter.setMin(minValue, respMin -> {
+								handleResponse(respMin);
+								if (!respMin.hasFailed())
+									parameter.setValue(value, respValue -> handleResponse(respValue));
+							});
+					});
+				} catch (IllegalArgumentException e1) {
 					// When the new maximum is less than the old minimum
 					return false;
 				}
 			}
 		}
-
-		parameter.setValue(value, response -> handleResponse(response));
 		return true;
 	}
 
@@ -129,6 +163,34 @@ public class ParameterPresenter extends PresenterBase implements IEventListener 
 	 */
 	public StringProperty valueProperty() {
 		return valueProperty;
+	}
+
+	/**
+	 * @return The property that display enable/disable
+	 */
+	public StringProperty booleanTextProperty() {
+		return booleanTextProperty;
+	}
+
+	/**
+	 * @return The property that display "Min:"
+	 */
+	public StringProperty minTextProperty() {
+		return minTextProperty;
+	}
+
+	/**
+	 * @return The property that display "Max:"
+	 */
+	public StringProperty maxTextProperty() {
+		return maxTextProperty;
+	}
+
+	/**
+	 * @return The property that contains the new parameter value with boolean data type.
+	 */
+	public SimpleBooleanProperty booleanValueProperty() {
+		return booleanValueProperty;
 	}
 
 	/**
@@ -211,39 +273,6 @@ public class ParameterPresenter extends PresenterBase implements IEventListener 
 		return maxValueTooltipProperty;
 	}
 
-	/**
-	 * Validate or invalidate the new value of the parameter.
-	 * 
-	 * @param value The new value of the parameter.
-	 */
-	public void validateParameterValue(Object value) {
-		this.value = value;
-		validateParameterValues();
-		EventManager.callEvent(new ParameterValueChangeRequestEvent(parameter, this.value));
-	}
-
-	/**
-	 * Validate or invalidate the new minimum value of the parameter.
-	 * 
-	 * @param value The new minimum value of the parameter.
-	 */
-	public void validateParameterMinValue(Object minValue) {
-		this.minValue = minValue;
-		validateParameterValues();
-		EventManager.callEvent(new ParameterMinValueChangeRequestEvent(rangeParameter, this.minValue));
-	}
-
-	/**
-	 * Validate or invalidate the new maximum value of the parameter.
-	 * 
-	 * @param value The new maximum value of the parameter.
-	 */
-	public void validateParameterMaxValue(Object maxValue) {
-		this.maxValue = maxValue;
-		validateParameterValues();
-		EventManager.callEvent(new ParameterMaxValueChangeRequestEvent(rangeParameter, this.maxValue));
-	}
-
 	@EventHandler
 	private void onParameterValueChange(MumbleParameterValueChangePostEvent event) {
 		if (!event.getParameter().equals(parameter))
@@ -272,6 +301,39 @@ public class ParameterPresenter extends PresenterBase implements IEventListener 
 		ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.ADD_CHANNEL_TITLE, EMessageCode.ADD_CHANNEL_NAME_RESPONSE, response);
 	}
 
+	/**
+	 * Validate or invalidate the new value of the parameter.
+	 * 
+	 * @param value The new value of the parameter.
+	 */
+	private void validateParameterValue(Object value) {
+		this.value = value;
+		validateParameterValues();
+		EventManager.callEvent(new ParameterValueChangeRequestEvent(parameter, this.value));
+	}
+
+	/**
+	 * Validate or invalidate the new minimum value of the parameter.
+	 * 
+	 * @param value The new minimum value of the parameter.
+	 */
+	private void validateParameterMinValue(Object minValue) {
+		this.minValue = minValue;
+		validateParameterValues();
+		EventManager.callEvent(new ParameterMinValueChangeRequestEvent(rangeParameter, this.minValue));
+	}
+
+	/**
+	 * Validate or invalidate the new maximum value of the parameter.
+	 * 
+	 * @param value The new maximum value of the parameter.
+	 */
+	private void validateParameterMaxValue(Object maxValue) {
+		this.maxValue = maxValue;
+		validateParameterValues();
+		EventManager.callEvent(new ParameterMaxValueChangeRequestEvent(rangeParameter, this.maxValue));
+	}
+
 	private void validateParameterValues() {
 		isValueValid = true;
 		if (value == null || value.equals("")) {
@@ -282,6 +344,10 @@ public class ParameterPresenter extends PresenterBase implements IEventListener 
 		if (isValueValid)
 			try {
 				value = parameter.getType().getValue(value.toString());
+
+				if (parameter.getType() == ParameterType.BOOLEAN)
+					booleanTextProperty.setCode((Boolean) value ? EMessageCode.ENABLE : EMessageCode.DISABLE);
+
 				if (rangeParameter == null)
 					valueBorderProperty.set(null);
 			} catch (Exception e) {

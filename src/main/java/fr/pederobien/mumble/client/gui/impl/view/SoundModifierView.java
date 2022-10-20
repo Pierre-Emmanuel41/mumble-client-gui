@@ -16,6 +16,6 @@ public class SoundModifierView extends ViewBase<SoundModifierPresenter, BorderPa
 
 	@Override
 	public void onPostShown() {
-		getPresenter().getSelectableSoundModifierView().onPostShown();
+		getPresenter().getSelectableSoundModifierView().computeWidth();
 	}
 }

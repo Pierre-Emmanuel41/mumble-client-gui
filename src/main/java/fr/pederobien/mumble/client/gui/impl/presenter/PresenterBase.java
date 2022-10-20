@@ -12,7 +12,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-public abstract class PresenterBase {
+public class PresenterBase {
 	private static final List<PresenterBase> PRESENTERS;
 	private static final ObjectProperty<Font> FONT_PROPERTY;
 
@@ -21,7 +21,7 @@ public abstract class PresenterBase {
 		FONT_PROPERTY = MumbleClientApplication.getPropertyHelper().fontProperty();
 	}
 
-	protected PresenterBase() {
+	public PresenterBase() {
 		PRESENTERS.add(this);
 		getPrimaryStage().setOnCloseRequest(e -> PRESENTERS.forEach(presenter -> presenter.onCloseRequest()));
 	}

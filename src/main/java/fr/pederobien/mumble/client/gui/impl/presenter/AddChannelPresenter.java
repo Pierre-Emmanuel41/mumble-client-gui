@@ -2,6 +2,8 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import fr.pederobien.messenger.interfaces.IResponse;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
+import fr.pederobien.mumble.client.gui.event.ParameterMaxValueChangeRequestEvent;
+import fr.pederobien.mumble.client.gui.event.ParameterMinValueChangeRequestEvent;
 import fr.pederobien.mumble.client.gui.event.ParameterValueChangeRequestEvent;
 import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter;
 import fr.pederobien.mumble.client.gui.impl.generic.OkCancelPresenter;
@@ -46,7 +48,7 @@ public class AddChannelPresenter extends OkCancelPresenter implements IEventList
 	// Buttons ---------------------------------------------------
 	private BooleanProperty okDisableProperty;
 
-	private boolean isNotValid;
+	private boolean isChannelNameValid;
 
 	public AddChannelPresenter(IChannelList channelList) {
 		this.channelList = channelList;
@@ -63,7 +65,7 @@ public class AddChannelPresenter extends OkCancelPresenter implements IEventList
 		selectableSoundModifierPresenter = new SelectableSoundModifierPresenter(soundModifierList, soundModifierList.getDefaultSoundModifier());
 		selectableSoundModifierView = new SelectableSoundModifierView(selectableSoundModifierPresenter);
 
-		isNotValid = true;
+		isChannelNameValid = false;
 		okDisableProperty = new SimpleBooleanProperty(true);
 		EventManager.registerListener(this);
 	}
@@ -78,7 +80,7 @@ public class AddChannelPresenter extends OkCancelPresenter implements IEventList
 		if (okDisableProperty.get())
 			return false;
 
-		if (!selectableSoundModifierPresenter.onOkButtonClicked())
+		if (!selectableSoundModifierPresenter.apply())
 			return false;
 
 		channelList.add(channelNameProperty.get(), selectableSoundModifierPresenter.getSelectedSoundModifier(), response -> handleAddChannelResponse(response));
@@ -151,16 +153,26 @@ public class AddChannelPresenter extends OkCancelPresenter implements IEventList
 
 		if (isChannelNameLengthOk && isChannelNameUnique && isChannelNameWithoutSpaces) {
 			channelNameBorderProperty.set(Border.EMPTY);
-			isNotValid = false;
+			isChannelNameValid = true;
 		} else {
 			channelNameBorderProperty.set(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));
-			isNotValid = true;
+			isChannelNameValid = false;
 		}
 		updateOkDisable();
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
-	private void onParameterChangeValue(ParameterValueChangeRequestEvent event) {
+	private void onParameterValueChange(ParameterValueChangeRequestEvent event) {
+		updateOkDisable();
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	private void onParameterMinValueChange(ParameterMinValueChangeRequestEvent event) {
+		updateOkDisable();
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	private void onParameterMaxValueChange(ParameterMaxValueChangeRequestEvent event) {
 		updateOkDisable();
 	}
 
@@ -170,8 +182,9 @@ public class AddChannelPresenter extends OkCancelPresenter implements IEventList
 
 	private void updateOkDisable() {
 		if (selectableSoundModifierPresenter.getOldSoundModifier().equals(selectableSoundModifierPresenter.getSelectedSoundModifier()))
-			okDisableProperty.set(isNotValid);
-		else
-			okDisableProperty.set(isNotValid || selectableSoundModifierPresenter.okDisableProperty().get());
+			okDisableProperty.set(!isChannelNameValid);
+		else {
+			okDisableProperty.set(!isChannelNameValid || !selectableSoundModifierPresenter.isValid());
+		}
 	}
 }

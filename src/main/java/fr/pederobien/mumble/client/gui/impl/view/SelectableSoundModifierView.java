@@ -1,7 +1,6 @@
 package fr.pederobien.mumble.client.gui.impl.view;
 
 import fr.pederobien.mumble.client.gui.impl.presenter.SelectableSoundModifierPresenter;
-import fr.pederobien.mumble.client.gui.interfaces.IOkCancelView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
@@ -10,7 +9,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-public class SelectableSoundModifierView extends ViewBase<SelectableSoundModifierPresenter, BorderPane> implements IOkCancelView {
+public class SelectableSoundModifierView extends ViewBase<SelectableSoundModifierPresenter, BorderPane> {
 	private Stage stage;
 	private Label modifierNameLabel;
 	private ComboBox<String> modifierNames;
@@ -41,8 +40,7 @@ public class SelectableSoundModifierView extends ViewBase<SelectableSoundModifie
 		getPresenter().selectedParameterListViewProperty().addListener((obs, oldValue, newValue) -> onOnSoundModifierChange(newValue));
 	}
 
-	@Override
-	public void onPostShown() {
+	public void computeWidth() {
 		maxWidthLabel();
 		maxWidthTextField();
 	}
@@ -60,7 +58,7 @@ public class SelectableSoundModifierView extends ViewBase<SelectableSoundModifie
 		getRoot().setCenter(newValue.getRoot());
 		if (stage != null)
 			stage.sizeToScene();
-		onPostShown();
+		computeWidth();
 	}
 
 	private void maxWidthLabel() {

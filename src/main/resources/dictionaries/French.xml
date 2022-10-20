@@ -371,8 +371,16 @@
 			<value>La valeur du paramètre doit être un %s et être compris dans l'intervalle [%s,%s]</value>
 		</message>
 		<message>
+			<code>MUMBLE_CLIENT_GUI__MIN_VALUE</code>
+			<value>Min :</value>
+		</message>
+		<message>
 			<code>MUMBLE_CLIENT_GUI__MIN_VALUE_TOOLTIP</code>
 			<value>La valeur minimum du paramètre doit être un %s et doit être plus petite que %s</value>
+		</message>
+		<message>
+			<code>MUMBLE_CLIENT_GUI__MAX_VALUE</code>
+			<value>Max :</value>
 		</message>
 		<message>
 			<code>MUMBLE_CLIENT_GUI__MAX_VALUE_TOOLTIP</code>
