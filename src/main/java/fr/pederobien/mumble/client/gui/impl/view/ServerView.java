@@ -9,6 +9,11 @@ import javafx.scene.paint.Color;
 
 public class ServerView extends ViewBase<ServerPresenter, BorderPane> {
 
+	/**
+	 * Creates a view in order to display the name, IP address, port number and reachable status of a server.
+	 * 
+	 * @param presenter The presenter associated to this view.
+	 */
 	public ServerView(ServerPresenter presenter) {
 		super(presenter, new BorderPane());
 

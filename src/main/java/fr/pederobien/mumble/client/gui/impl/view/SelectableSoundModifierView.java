@@ -9,6 +9,11 @@ public class SelectableSoundModifierView extends ViewBase<SelectableSoundModifie
 	private Label soundModifierNameLabel;
 	private ComboBox<String> soundModifierNames;
 
+	/**
+	 * Creates a view in order to let the user to chose a sound modifier for a channel.
+	 * 
+	 * @param presenter The presenter associated to this view.
+	 */
 	public SelectableSoundModifierView(SelectableSoundModifierPresenter presenter) {
 		super(presenter, new BorderPane());
 

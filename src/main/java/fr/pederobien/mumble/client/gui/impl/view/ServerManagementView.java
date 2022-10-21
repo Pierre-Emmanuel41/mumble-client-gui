@@ -9,6 +9,11 @@ import javafx.scene.layout.FlowPane;
 
 public class ServerManagementView extends ViewBase<ServerManagementPresenter, FlowPane> {
 
+	/**
+	 * Creates a view in order to join/add/remove/modify a server.
+	 * 
+	 * @param presenter The presenter associated to this node.
+	 */
 	public ServerManagementView(ServerManagementPresenter presenter) {
 		super(presenter, new FlowPane());
 

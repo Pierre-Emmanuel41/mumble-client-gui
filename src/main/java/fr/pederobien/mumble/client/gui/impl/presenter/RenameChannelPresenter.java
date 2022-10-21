@@ -37,6 +37,12 @@ public class RenameChannelPresenter extends OkCancelPresenter {
 	// Buttons ---------------------------------------------------
 	private BooleanProperty okDisableProperty;
 
+	/**
+	 * Creates a presenter in order to rename a channel.
+	 * 
+	 * @param channelList The list in which the channel to rename is registered.
+	 * @param channel     The channel to rename.
+	 */
 	public RenameChannelPresenter(IChannelList channelList, IChannel channel) {
 		this.channelList = channelList;
 		this.channel = channel;
@@ -94,7 +100,7 @@ public class RenameChannelPresenter extends OkCancelPresenter {
 
 	/**
 	 * @return The property that contains the tooltip of the component on which the new channel name is written. This tooltip contains
-	 *         a description of the contraints associated to the channel name.>
+	 *         a description of the constraints associated to the channel name.>
 	 */
 	public ObjectProperty<Tooltip> channelNameTooltipProperty() {
 		return channelNameTooltipProperty;

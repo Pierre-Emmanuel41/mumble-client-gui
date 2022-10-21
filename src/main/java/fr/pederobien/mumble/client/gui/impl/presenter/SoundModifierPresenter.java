@@ -12,7 +12,6 @@ import fr.pederobien.mumble.client.gui.impl.view.SelectableSoundModifierView;
 import fr.pederobien.mumble.client.player.interfaces.IChannel;
 import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
-import fr.pederobien.utils.event.EventPriority;
 import fr.pederobien.utils.event.IEventListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -28,6 +27,11 @@ public class SoundModifierPresenter extends OkCancelPresenter implements IEventL
 	private SelectableSoundModifierPresenter selectableSoundModifierPresenter;
 	private SelectableSoundModifierView selectableSoundModifierView;
 
+	/**
+	 * Creates a presenter in order to modify the sound modifier of a channel.
+	 * 
+	 * @param channel The channel associated to this presenter.
+	 */
 	public SoundModifierPresenter(IChannel channel) {
 		this.channel = channel;
 
@@ -45,6 +49,7 @@ public class SoundModifierPresenter extends OkCancelPresenter implements IEventL
 		return titleTextProperty;
 	}
 
+	@Override
 	public boolean onOkButtonClicked() {
 		if (okDisableProperty().get())
 			return false;
@@ -74,17 +79,17 @@ public class SoundModifierPresenter extends OkCancelPresenter implements IEventL
 		return selectableSoundModifierView;
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler
 	private void onParameterValueChange(ParameterValueChangeRequestEvent event) {
 		updateOkDisable();
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler
 	private void onParameterMinValueChange(ParameterMinValueChangeRequestEvent event) {
 		updateOkDisable();
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler
 	private void onParameterMaxValueChange(ParameterMaxValueChangeRequestEvent event) {
 		updateOkDisable();
 	}

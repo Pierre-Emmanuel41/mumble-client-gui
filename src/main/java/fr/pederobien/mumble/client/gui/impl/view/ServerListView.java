@@ -11,6 +11,11 @@ import javafx.scene.paint.Color;
 
 public class ServerListView extends ViewBase<ServerListPresenter, StackPane> {
 
+	/**
+	 * Creates a view in order to display all servers registered in a servers list.
+	 * 
+	 * @param presenter The presenter associated to this view.
+	 */
 	public ServerListView(ServerListPresenter presenter) {
 		super(presenter, new StackPane());
 

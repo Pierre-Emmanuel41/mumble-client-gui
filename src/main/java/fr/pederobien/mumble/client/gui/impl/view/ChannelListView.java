@@ -9,6 +9,11 @@ import javafx.scene.layout.StackPane;
 
 public class ChannelListView extends ViewBase<ChannelListPresenter, StackPane> {
 
+	/**
+	 * Creates a view in order to display all the channel of a server.
+	 * 
+	 * @param presenter The presenter associated to this view.
+	 */
 	public ChannelListView(ChannelListPresenter presenter) {
 		super(presenter, new StackPane());
 

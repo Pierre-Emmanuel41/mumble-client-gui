@@ -1,13 +1,18 @@
 package fr.pederobien.mumble.client.gui.impl.view;
 
-import fr.pederobien.mumble.client.gui.impl.presenter.ServerChannelsPresenter;
+import fr.pederobien.mumble.client.gui.impl.presenter.ServerDetailsPresenter;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
 
-public class ServerChannelsView extends ViewBase<ServerChannelsPresenter, BorderPane> {
+public class ServerDetailsView extends ViewBase<ServerDetailsPresenter, BorderPane> {
 
-	public ServerChannelsView(ServerChannelsPresenter presenter) {
+	/**
+	 * Creates a view in order to display in details the configuration of a server.
+	 * 
+	 * @param presenter The presenter associated to this view.
+	 */
+	public ServerDetailsView(ServerDetailsPresenter presenter) {
 		super(presenter, new BorderPane());
 
 		BorderPane left = new BorderPane();

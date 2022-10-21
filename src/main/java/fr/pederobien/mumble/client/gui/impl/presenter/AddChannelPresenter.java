@@ -14,7 +14,6 @@ import fr.pederobien.mumble.client.player.interfaces.IChannelList;
 import fr.pederobien.mumble.client.player.interfaces.ISoundModifierList;
 import fr.pederobien.utils.event.EventHandler;
 import fr.pederobien.utils.event.EventManager;
-import fr.pederobien.utils.event.EventPriority;
 import fr.pederobien.utils.event.IEventListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -50,6 +49,11 @@ public class AddChannelPresenter extends OkCancelPresenter implements IEventList
 
 	private boolean isChannelNameValid;
 
+	/**
+	 * Creates a presenter in order to add a channel to the given list.
+	 * 
+	 * @param channelList The list to which a channel should be added.
+	 */
 	public AddChannelPresenter(IChannelList channelList) {
 		this.channelList = channelList;
 
@@ -76,6 +80,7 @@ public class AddChannelPresenter extends OkCancelPresenter implements IEventList
 		return titleTextProperty;
 	}
 
+	@Override
 	public boolean onOkButtonClicked() {
 		if (okDisableProperty.get())
 			return false;
@@ -142,17 +147,17 @@ public class AddChannelPresenter extends OkCancelPresenter implements IEventList
 		return selectableSoundModifierView;
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler
 	private void onParameterValueChange(ParameterValueChangeRequestEvent event) {
 		updateOkDisable();
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler
 	private void onParameterMinValueChange(ParameterMinValueChangeRequestEvent event) {
 		updateOkDisable();
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler
 	private void onParameterMaxValueChange(ParameterMaxValueChangeRequestEvent event) {
 		updateOkDisable();
 	}

@@ -44,7 +44,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
 public class ChannelPresenter extends PresenterBase implements IEventListener {
-	private IPlayerMumbleServer mumbleServer;
+	private IPlayerMumbleServer server;
 	private IChannelList channelList;
 	private IChannel channel;
 	private ObservableList<Object> players;
@@ -64,10 +64,15 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 	private SimpleLanguageProperty soundModifierTextProperty;
 	private BooleanProperty soundModifierVisibility;
 
-	public ChannelPresenter(IPlayerMumbleServer mumbleServer, IChannel channel) {
-		this.mumbleServer = mumbleServer;
-		this.channelList = mumbleServer.getChannels();
+	/**
+	 * Creates a presenter in order to display the characteristics of the given channel.
+	 * 
+	 * @param channel The channel to display.
+	 */
+	public ChannelPresenter(IChannel channel) {
 		this.channel = channel;
+		this.server = channel.getServer();
+		this.channelList = server.getChannels();
 
 		EventManager.registerListener(this);
 
@@ -77,16 +82,16 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 		channelNameProperty = new SimpleStringProperty(channel.getName());
 
 		addChannelTextProperty = getPropertyHelper().languageProperty(EMessageCode.ADD_CHANNEL);
-		addChannelVisibility = new SimpleBooleanProperty(mumbleServer.getMainPlayer().isAdmin());
+		addChannelVisibility = new SimpleBooleanProperty(server.getMainPlayer().isAdmin());
 
 		removeChannelTextProperty = getPropertyHelper().languageProperty(EMessageCode.REMOVE_CHANNEL);
-		removeChannelVisibility = new SimpleBooleanProperty(mumbleServer.getMainPlayer().isAdmin() && channelList.toList().size() > 1);
+		removeChannelVisibility = new SimpleBooleanProperty(server.getMainPlayer().isAdmin() && channelList.toList().size() > 1);
 
 		renameChannelTextProperty = getPropertyHelper().languageProperty(EMessageCode.RENAME_CHANNEL);
-		renameChannelVisibility = new SimpleBooleanProperty(mumbleServer.getMainPlayer().isAdmin());
+		renameChannelVisibility = new SimpleBooleanProperty(server.getMainPlayer().isAdmin());
 
 		soundModifierTextProperty = getPropertyHelper().languageProperty(EMessageCode.SOUND_MODIFIER, channel.getSoundModifier().getName());
-		soundModifierVisibility = new SimpleBooleanProperty(mumbleServer.getMainPlayer().isAdmin());
+		soundModifierVisibility = new SimpleBooleanProperty(server.getMainPlayer().isAdmin());
 	}
 
 	/**
@@ -117,7 +122,7 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 		return listView -> getPropertyHelper().cellView(item -> {
 			PlayerChannelView view = playersViews.get(((IPlayer) item).getName());
 			if (view == null) {
-				view = new PlayerChannelView(new PlayerChannelPresenter(mumbleServer, (IPlayer) item));
+				view = new PlayerChannelView(new PlayerChannelPresenter((IPlayer) item));
 				playersViews.put(((IPlayer) item).getName(), view);
 			}
 			return view.getRoot();
@@ -134,8 +139,8 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 		if (event.getButton() != MouseButton.PRIMARY)
 			return;
 
-		ChannelJoinRequestPreEvent preEvent = new ChannelJoinRequestPreEvent(mumbleServer, mumbleServer.getMainPlayer().getChannel(), channel);
-		ChannelJoinRequestPostEvent postEvent = new ChannelJoinRequestPostEvent(mumbleServer, channel, mumbleServer.getMainPlayer().getChannel());
+		ChannelJoinRequestPreEvent preEvent = new ChannelJoinRequestPreEvent(server, server.getMainPlayer().getChannel(), channel);
+		ChannelJoinRequestPostEvent postEvent = new ChannelJoinRequestPostEvent(server, channel, server.getMainPlayer().getChannel());
 		EventManager.callEvent(preEvent, postEvent);
 	}
 
@@ -293,20 +298,9 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 		soundModifierVisibility.set(event.getPlayer().isAdmin());
 	}
 
-	/*
-	 * @EventHandler(priority = EventPriority.HIGHEST) private void onChannelClicked(ChannelJoinRequestPreEvent event) { if
-	 * (!event.getFutureChannel().equals(channel)) return;
-	 * 
-	 * if (!event.getServer().getMainPlayer().isOnline()) ErrorPresenter.showAndWait(AlertType.ERROR,
-	 * EMessageCode.FAIL_TO_JOIN_A_CHANNEL_TITLE, EMessageCode.FAIL_TO_JOIN_A_CHANNEL_HEADER,
-	 * EMessageCode.PLAYER_NOT_CONNECTED_IN_GAME); else EventManager.callEvent(new ChannelJoinRequestPostEvent(mumbleServer,
-	 * mumbleServer.getMainPlayer().getChannel(), channel)); }
-	 * 
-	 */
-
 	@EventHandler
 	private void onServerLeave(MumbleServerLeavePostEvent event) {
-		if (!event.getServer().equals(mumbleServer))
+		if (!event.getServer().equals(server))
 			return;
 
 		EventManager.unregisterListener(this);

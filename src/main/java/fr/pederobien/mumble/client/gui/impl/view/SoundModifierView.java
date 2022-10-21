@@ -8,6 +8,11 @@ import javafx.scene.layout.BorderPane;
 public class SoundModifierView extends ViewBase<SoundModifierPresenter, BorderPane> {
 	private OkCancelStage okCancelStage;
 
+	/**
+	 * Creates a view in order to modify the sound modifier of a channel.
+	 * 
+	 * @param presenter The presenter associated to this view.
+	 */
 	public SoundModifierView(SoundModifierPresenter presenter) {
 		super(presenter, new BorderPane());
 

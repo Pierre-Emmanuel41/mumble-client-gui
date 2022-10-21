@@ -15,6 +15,12 @@ import javafx.scene.paint.Color;
 
 public class PlayerChannelView extends ViewBase<PlayerChannelPresenter, BorderPane> {
 
+	/**
+	 * Creates a view in order to display a player registered in a channel. It's mute/deafen status is represented by a mute/deafen
+	 * picture.
+	 * 
+	 * @param presenter The presenter associated to this view.
+	 */
 	public PlayerChannelView(PlayerChannelPresenter presenter) {
 		super(presenter, new BorderPane());
 

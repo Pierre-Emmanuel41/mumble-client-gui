@@ -27,7 +27,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 
 public class PlayerChannelPresenter extends PresenterBase implements IEventListener {
-	private IPlayerMumbleServer mumbleServer;
+	private IPlayerMumbleServer server;
 	private IPlayer player;
 	private StringProperty playerNameProperty;
 	private BooleanProperty isPlayerMute, isPlayerDeafen;
@@ -39,9 +39,14 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 	private SimpleLanguageProperty kickPlayerTextProperty;
 	private BooleanProperty kickPlayerVisiblity;
 
-	public PlayerChannelPresenter(IPlayerMumbleServer mumbleServer, IPlayer player) {
-		this.mumbleServer = mumbleServer;
+	/**
+	 * Creates a presenter in order to display the characteristics of the given player registered in a channel.
+	 * 
+	 * @param player The player associated to this presenter.
+	 */
+	public PlayerChannelPresenter(IPlayer player) {
 		this.player = player;
+		this.server = player.getServer();
 
 		playerNameProperty = new SimpleStringProperty(player.getName());
 		isPlayerMute = new SimpleBooleanProperty(player.isMute());
@@ -60,7 +65,7 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 		muteOrUnmuteVisibleProperty = new SimpleBooleanProperty(!isMainPlayer());
 
 		kickPlayerTextProperty = getPropertyHelper().languageProperty(EMessageCode.KICK_PLAYER, player.getName());
-		kickPlayerVisiblity = new SimpleBooleanProperty(!isMainPlayer() && mumbleServer.getMainPlayer().isAdmin());
+		kickPlayerVisiblity = new SimpleBooleanProperty(!isMainPlayer() && server.getMainPlayer().isAdmin());
 	}
 
 	/**
@@ -163,10 +168,10 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 
 	@EventHandler
 	private void onAdminStatusChanged(MumblePlayerAdminChangePostEvent event) {
-		if (!event.getPlayer().equals(mumbleServer.getMainPlayer()))
+		if (!event.getPlayer().equals(server.getMainPlayer()))
 			return;
 
-		dispatch(() -> kickPlayerVisiblity.set(!isMainPlayer() && mumbleServer.getMainPlayer().isAdmin()));
+		dispatch(() -> kickPlayerVisiblity.set(!isMainPlayer() && server.getMainPlayer().isAdmin()));
 	}
 
 	@EventHandler
@@ -193,7 +198,7 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 
 	@EventHandler
 	private void onServerLeave(MumbleServerLeavePostEvent event) {
-		if (!event.getServer().equals(mumbleServer))
+		if (!event.getServer().equals(server))
 			return;
 
 		EventManager.unregisterListener(this);
@@ -208,6 +213,6 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 	}
 
 	private boolean isMainPlayer() {
-		return mumbleServer.getMainPlayer().getName().equals(player.getName());
+		return server.getMainPlayer().getName().equals(player.getName());
 	}
 }

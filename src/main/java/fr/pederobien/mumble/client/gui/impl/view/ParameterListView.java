@@ -8,6 +8,11 @@ import javafx.scene.layout.VBox;
 
 public class ParameterListView extends ViewBase<ParameterListPresenter, VBox> {
 
+	/**
+	 * Creates a view in order to display all parameters of a sound modifier.
+	 * 
+	 * @param presenter the presenter associated to this view.
+	 */
 	public ParameterListView(ParameterListPresenter presenter) {
 		super(presenter, new VBox());
 

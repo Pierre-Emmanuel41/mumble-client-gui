@@ -11,7 +11,7 @@ import fr.pederobien.mumble.client.gui.event.ServerJoinRequestPostEvent;
 import fr.pederobien.mumble.client.gui.event.ServerJoinRequestPreEvent;
 import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
-import fr.pederobien.mumble.client.gui.impl.view.ServerChannelsView;
+import fr.pederobien.mumble.client.gui.impl.view.ServerDetailsView;
 import fr.pederobien.mumble.client.gui.impl.view.ServerInfoView;
 import fr.pederobien.mumble.client.gui.model.ServerList;
 import fr.pederobien.mumble.client.player.event.MumbleServerJoinPostEvent;
@@ -43,6 +43,11 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 
 	private ServerList serverList;
 
+	/**
+	 * Creates a presenter in order to add/remove/modify a server.
+	 * 
+	 * @param serverList The server list to update.
+	 */
 	public ServerManagementPresenter(ServerList serverList) {
 		this.serverList = serverList;
 
@@ -61,6 +66,9 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 		EventManager.registerListener(this);
 	}
 
+	/**
+	 * @return The property that display "Join"
+	 */
 	public StringProperty joinServerTextProperty() {
 		return joinServerTextProperty;
 	}
@@ -173,7 +181,7 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 			return;
 
 		dispatch(() -> {
-			getPrimaryStage().getScene().setRoot(new ServerChannelsView(new ServerChannelsPresenter(serverList.getSelectedServer())).getRoot());
+			getPrimaryStage().getScene().setRoot(new ServerDetailsView(new ServerDetailsPresenter(serverList.getSelectedServer())).getRoot());
 			serverList.getServers().forEach(server -> {
 				if (!server.equals(serverList.getSelectedServer()))
 					server.close();

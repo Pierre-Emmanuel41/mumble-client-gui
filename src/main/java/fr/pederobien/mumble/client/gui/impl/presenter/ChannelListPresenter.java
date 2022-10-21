@@ -27,13 +27,18 @@ import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
 public class ChannelListPresenter extends PresenterBase implements IEventListener {
-	private IPlayerMumbleServer mumbleServer;
+	private IPlayerMumbleServer server;
 	private IChannelList channelList;
 	private ObservableList<Object> channels;
 	private Map<IChannel, ChannelView> channelViews;
 
+	/**
+	 * Creates a presenter in order to display each channel associated to the given server.
+	 * 
+	 * @param mumbleServer The server that contains all channel to display.
+	 */
 	public ChannelListPresenter(IPlayerMumbleServer mumbleServer) {
-		this.mumbleServer = mumbleServer;
+		this.server = mumbleServer;
 		channels = FXCollections.observableArrayList();
 		channelViews = new HashMap<IChannel, ChannelView>();
 		channelList = mumbleServer.getChannels();
@@ -65,7 +70,7 @@ public class ChannelListPresenter extends PresenterBase implements IEventListene
 		return listView -> getPropertyHelper().cellView(item -> {
 			ChannelView view = channelViews.get(item);
 			if (view == null) {
-				view = new ChannelView(new ChannelPresenter(mumbleServer, (IChannel) item));
+				view = new ChannelView(new ChannelPresenter((IChannel) item));
 				channelViews.put((IChannel) item, view);
 			}
 			return view.getRoot();
@@ -90,20 +95,19 @@ public class ChannelListPresenter extends PresenterBase implements IEventListene
 
 	@EventHandler
 	public void onJoinChannel(ChannelJoinRequestPostEvent event) {
-		if (mumbleServer.getMainPlayer().getChannel() != null)
-			mumbleServer.getMainPlayer().getChannel().getPlayers().leave(response -> handleRemovePlayerResponse(response));
-
-		try {
-			event.getCurrentChannel().getPlayers().join(response -> handleAddPlayerResponse(response));
-		} catch (PlayerNotOnlineException e) {
-			ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.FAIL_TO_JOIN_A_CHANNEL_TITLE, EMessageCode.FAIL_TO_JOIN_A_CHANNEL_HEADER,
-					EMessageCode.PLAYER_NOT_CONNECTED_IN_GAME);
-		}
+		if (server.getMainPlayer().getChannel() != null)
+			server.getMainPlayer().getChannel().getPlayers().leave(response -> {
+				handleRemovePlayerResponse(response);
+				if (!response.hasFailed())
+					joinChannel(event.getCurrentChannel());
+			});
+		else
+			joinChannel(event.getCurrentChannel());
 	}
 
 	@EventHandler
 	private void onServerLeave(MumbleServerLeavePostEvent event) {
-		if (!event.getServer().equals(mumbleServer))
+		if (!event.getServer().equals(server))
 			return;
 
 		EventManager.unregisterListener(this);
@@ -113,7 +117,16 @@ public class ChannelListPresenter extends PresenterBase implements IEventListene
 		ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.HANG_UP_FAILED_TITLE, EMessageCode.HANG_UP_FAILED_HEADER, response);
 	}
 
-	private void handleAddPlayerResponse(IResponse response) {
+	private void handlePlayerJoinResponse(IResponse response) {
 		ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.FAIL_TO_JOIN_A_CHANNEL_TITLE, EMessageCode.FAIL_TO_JOIN_A_CHANNEL_HEADER, response);
+	}
+
+	private void joinChannel(IChannel channel) {
+		try {
+			channel.getPlayers().join(response -> handlePlayerJoinResponse(response));
+		} catch (PlayerNotOnlineException e) {
+			ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.FAIL_TO_JOIN_A_CHANNEL_TITLE, EMessageCode.FAIL_TO_JOIN_A_CHANNEL_HEADER,
+					EMessageCode.PLAYER_NOT_CONNECTED_IN_GAME);
+		}
 	}
 }

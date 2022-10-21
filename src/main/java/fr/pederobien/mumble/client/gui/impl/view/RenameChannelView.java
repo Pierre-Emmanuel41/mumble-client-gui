@@ -8,6 +8,11 @@ import javafx.scene.layout.FlowPane;
 
 public class RenameChannelView extends ViewBase<RenameChannelPresenter, FlowPane> {
 
+	/**
+	 * Creates a view in order to rename a channel.
+	 * 
+	 * @param presenter The presenter associated to this view.
+	 */
 	public RenameChannelView(RenameChannelPresenter presenter) {
 		super(presenter, new FlowPane());
 

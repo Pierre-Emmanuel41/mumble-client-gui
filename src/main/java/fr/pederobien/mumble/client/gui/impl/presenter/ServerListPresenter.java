@@ -38,6 +38,11 @@ public class ServerListPresenter extends PresenterBase implements IEventListener
 	private BooleanProperty emptyServersListVisibilityProperty;
 	private SimpleLanguageProperty emptyServerTextProperty;
 
+	/**
+	 * Creates a presenter in order to display each server registered in the given list.
+	 * 
+	 * @param serverList The list that contains server to display.
+	 */
 	public ServerListPresenter(ServerList serverList) {
 		this.serverList = serverList;
 		EventManager.registerListener(this);
@@ -88,8 +93,8 @@ public class ServerListPresenter extends PresenterBase implements IEventListener
 	 */
 	public void onServerSelectedChanged(Object oldServer, Object newServer) {
 		SelectedServerChangePreEvent preEvent = new SelectedServerChangePreEvent(serverList, (IPlayerMumbleServer) oldServer, (IPlayerMumbleServer) newServer);
-		Runnable update = () -> serverList.setSelectedServer((IPlayerMumbleServer) newServer);
 		SelectedServerChangePostEvent postEvent = new SelectedServerChangePostEvent(serverList, (IPlayerMumbleServer) newServer, (IPlayerMumbleServer) oldServer);
+		Runnable update = () -> serverList.setSelectedServer((IPlayerMumbleServer) newServer);
 		EventManager.callEvent(preEvent, update, postEvent);
 	}
 

@@ -8,6 +8,11 @@ import javafx.scene.layout.GridPane;
 
 public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> {
 
+	/**
+	 * Creates a view in order to modify the name, IP address and port number of a server.
+	 * 
+	 * @param presenter The presenter associated to this view.
+	 */
 	public ServerInfoView(ServerInfoPresenter presenter) {
 		super(presenter, new GridPane());
 

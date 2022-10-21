@@ -24,6 +24,11 @@ public class ServerPresenter extends PresenterBase implements IEventListener {
 	private SimpleLanguageProperty serverReachableStatusProperty;
 	private ObjectProperty<Paint> textFillProperty;
 
+	/**
+	 * Creates a presenter in order to display the name, IP address and port number of the given server.
+	 * 
+	 * @param server The server associated to this presenter.
+	 */
 	public ServerPresenter(IPlayerMumbleServer server) {
 		this.server = server;
 

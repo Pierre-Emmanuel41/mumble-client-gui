@@ -10,6 +10,11 @@ import javafx.scene.layout.BorderPane;
 public class AddChannelView extends ViewBase<AddChannelPresenter, BorderPane> {
 	private OkCancelStage okCancelStage;
 
+	/**
+	 * Creates a view in order to add a channel to a server.
+	 * 
+	 * @param presenter The presenter associated to this view.
+	 */
 	public AddChannelView(AddChannelPresenter presenter) {
 		super(presenter, new BorderPane());
 

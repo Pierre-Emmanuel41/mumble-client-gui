@@ -1,6 +1,6 @@
 package fr.pederobien.mumble.client.gui.impl.view;
 
-import fr.pederobien.mumble.client.gui.impl.presenter.PlayerPresenter;
+import fr.pederobien.mumble.client.gui.impl.presenter.MainPlayerPresenter;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -9,9 +9,14 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class PlayerView extends ViewBase<PlayerPresenter, VBox> {
+public class MainPlayerView extends ViewBase<MainPlayerPresenter, VBox> {
 
-	public PlayerView(PlayerPresenter presenter) {
+	/**
+	 * Creates a view in order to display the details of the main player of a server.
+	 * 
+	 * @param presenter the presenter associated to this view.
+	 */
+	public MainPlayerView(MainPlayerPresenter presenter) {
 		super(presenter, new VBox());
 
 		HBox playerInfo = new HBox();

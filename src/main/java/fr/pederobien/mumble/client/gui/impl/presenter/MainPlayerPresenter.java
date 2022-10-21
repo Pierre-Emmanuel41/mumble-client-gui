@@ -36,7 +36,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class PlayerPresenter extends PresenterBase implements IEventListener {
+public class MainPlayerPresenter extends PresenterBase implements IEventListener {
 	private IPlayerMumbleServer server;
 	private IMainPlayer player;
 
@@ -56,12 +56,16 @@ public class PlayerPresenter extends PresenterBase implements IEventListener {
 	private ObjectProperty<Node> deafenOrUndeafenGraphicProperty;
 	private ObjectProperty<Node> hangupGraphicProperty;
 
-	public PlayerPresenter(IPlayerMumbleServer server) {
-		this.server = server;
+	/**
+	 * Creates a presenter in order to display the characteristics of a main player.
+	 * 
+	 * @param player The main player associated to this presenter.
+	 */
+	public MainPlayerPresenter(IMainPlayer player) {
+		this.player = player;
+		this.server = player.getServer();
 
 		EventManager.registerListener(this);
-
-		player = server.getMainPlayer();
 
 		playerNameProperty = new SimpleStringProperty("");
 		playerStatusProperty = getPropertyHelper().languageProperty(EMessageCode.PLAYER_OFFLINE);

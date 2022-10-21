@@ -19,6 +19,11 @@ import javafx.scene.paint.Color;
 
 public class ChannelView extends ViewBase<ChannelPresenter, GridPane> {
 
+	/**
+	 * Creates a view in order to display a channel.
+	 * 
+	 * @param presenter The presenter associated to this view.
+	 */
 	public ChannelView(ChannelPresenter presenter) {
 		super(presenter, new GridPane());
 

@@ -14,6 +14,12 @@ public class ParameterView extends ViewBase<ParameterPresenter, HBox> {
 	private Region valueView;
 	private double marginBetweenLabelAndTextField = 20.0;
 
+	/**
+	 * Creates a view in order to display the name of a parameter, its value and its minimum/maximum value if the parameter is
+	 * associated to a range.
+	 * 
+	 * @param presenter The presenter associated to this view.
+	 */
 	public ParameterView(ParameterPresenter presenter) {
 		super(presenter, new HBox());
 

@@ -11,6 +11,11 @@ import javafx.scene.control.Dialog;
 public class AlertPresenter extends PresenterBase {
 	private Alert alert;
 
+	/**
+	 * Creates a presenter that manage a pop-up to display.
+	 * 
+	 * @param alertType The type of the pop-up.
+	 */
 	public AlertPresenter(AlertType alertType) {
 		alert = new Alert(alertType);
 	}
