@@ -56,13 +56,14 @@ public class AddChannelPresenter extends OkCancelPresenter implements IEventList
 		titleTextProperty = getPropertyHelper().languageProperty(EMessageCode.ADD_CHANNEL_TITLE);
 
 		channelNameProperty = new SimpleStringProperty();
+		channelNameProperty.addListener((obs, oldValue, newValue) -> validateChannelName(newValue));
 		channelNameTextProperty = getPropertyHelper().languageProperty(EMessageCode.ADD_CHANNEL_NAME);
 		channelNameBorderProperty = new SimpleObjectProperty<Border>(null);
 		channelNamePromptProperty = getPropertyHelper().languageProperty(EMessageCode.ADD_CHANNEL_NAME_PROMPT);
 		channelNameTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.CHANNEL_NAME_TOOLTIP);
 
 		ISoundModifierList soundModifierList = channelList.getServer().getSoundModifiers();
-		selectableSoundModifierPresenter = new SelectableSoundModifierPresenter(soundModifierList, soundModifierList.getDefaultSoundModifier());
+		selectableSoundModifierPresenter = new SelectableSoundModifierPresenter(getFormView(), soundModifierList, soundModifierList.getDefaultSoundModifier());
 		selectableSoundModifierView = new SelectableSoundModifierView(selectableSoundModifierPresenter);
 
 		isChannelNameValid = false;
@@ -75,7 +76,6 @@ public class AddChannelPresenter extends OkCancelPresenter implements IEventList
 		return titleTextProperty;
 	}
 
-	@Override
 	public boolean onOkButtonClicked() {
 		if (okDisableProperty.get())
 			return false;
@@ -142,25 +142,6 @@ public class AddChannelPresenter extends OkCancelPresenter implements IEventList
 		return selectableSoundModifierView;
 	}
 
-	public void validateChannelName() {
-		String channelName = channelNameProperty.get();
-		boolean isChannelNameLengthOk = channelName.length() > 5;
-		boolean isChannelNameWithoutSpaces = !channelName.contains(" ");
-		boolean isChannelNameUnique = true;
-
-		if (channelList.get(channelName).isPresent())
-			isChannelNameUnique = false;
-
-		if (isChannelNameLengthOk && isChannelNameUnique && isChannelNameWithoutSpaces) {
-			channelNameBorderProperty.set(Border.EMPTY);
-			isChannelNameValid = true;
-		} else {
-			channelNameBorderProperty.set(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));
-			isChannelNameValid = false;
-		}
-		updateOkDisable();
-	}
-
 	@EventHandler(priority = EventPriority.HIGHEST)
 	private void onParameterValueChange(ParameterValueChangeRequestEvent event) {
 		updateOkDisable();
@@ -176,8 +157,22 @@ public class AddChannelPresenter extends OkCancelPresenter implements IEventList
 		updateOkDisable();
 	}
 
-	private void handleAddChannelResponse(IResponse response) {
-		ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.ADD_CHANNEL_TITLE, EMessageCode.ADD_CHANNEL_NAME_RESPONSE, response);
+	private void validateChannelName(String newName) {
+		boolean isChannelNameLengthOk = newName.length() > 5;
+		boolean isChannelNameWithoutSpaces = !newName.contains(" ");
+		boolean isChannelNameUnique = true;
+
+		if (channelList.get(newName).isPresent())
+			isChannelNameUnique = false;
+
+		if (isChannelNameLengthOk && isChannelNameUnique && isChannelNameWithoutSpaces) {
+			channelNameBorderProperty.set(Border.EMPTY);
+			isChannelNameValid = true;
+		} else {
+			channelNameBorderProperty.set(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));
+			isChannelNameValid = false;
+		}
+		updateOkDisable();
 	}
 
 	private void updateOkDisable() {
@@ -186,5 +181,9 @@ public class AddChannelPresenter extends OkCancelPresenter implements IEventList
 		else {
 			okDisableProperty.set(!isChannelNameValid || !selectableSoundModifierPresenter.isValid());
 		}
+	}
+
+	private void handleAddChannelResponse(IResponse response) {
+		ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.ADD_CHANNEL_TITLE, EMessageCode.ADD_CHANNEL_NAME_RESPONSE, response);
 	}
 }

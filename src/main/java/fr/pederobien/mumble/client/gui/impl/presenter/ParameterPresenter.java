@@ -99,35 +99,60 @@ public class ParameterPresenter extends PresenterBase implements IEventListener 
 	 */
 	public boolean apply() {
 		if (rangeParameter != null) {
-			try {
-				rangeParameter.setMin(minValue, respMin -> {
-					handleResponse(respMin);
-					if (!respMin.hasFailed())
-						rangeParameter.setMax(maxValue, respMax -> {
-							handleResponse(respMax);
-							if (!respMax.hasFailed())
-								parameter.setValue(value, respValue -> handleResponse(respValue));
-						});
-				});
-			} catch (IllegalArgumentException e) {
-				// When the new minimum is greater than the old maximum
+
+			// When the sound modifier is not associated to a channel then no request is sent to the server
+			if (rangeParameter.getSoundModifier().getChannel() == null) {
 				try {
-					rangeParameter.setMax(maxValue, respMax -> {
-						handleResponse(respMax);
-						if (!respMax.hasFailed())
-							rangeParameter.setMin(minValue, respMin -> {
-								handleResponse(respMin);
-								if (!respMin.hasFailed())
+					rangeParameter.setMin(minValue, response -> handleResponse(response));
+					rangeParameter.setMax(maxValue, response -> handleResponse(response));
+				} catch (IllegalArgumentException e) {
+					try {
+						rangeParameter.setMax(maxValue, response -> handleResponse(response));
+						rangeParameter.setMin(minValue, response -> handleResponse(response));
+					} catch (IllegalArgumentException e2) {
+						return false;
+					}
+				}
+
+				parameter.setValue(value, response -> handleResponse(response));
+				return true;
+			}
+			// When the sound modifier is associated to a channel then requests are sent to the server
+			else {
+				try {
+					rangeParameter.setMin(minValue, respMin -> {
+						handleResponse(respMin);
+						if (!respMin.hasFailed())
+							rangeParameter.setMax(maxValue, respMax -> {
+								handleResponse(respMax);
+								if (!respMax.hasFailed())
 									parameter.setValue(value, respValue -> handleResponse(respValue));
 							});
 					});
-				} catch (IllegalArgumentException e1) {
-					// When the new maximum is less than the old minimum
-					return false;
+					return true;
+				} catch (IllegalArgumentException e) {
+					// When the new minimum is greater than the old maximum
+					try {
+						rangeParameter.setMax(maxValue, respMax -> {
+							handleResponse(respMax);
+							if (!respMax.hasFailed())
+								rangeParameter.setMin(minValue, respMin -> {
+									handleResponse(respMin);
+									if (!respMin.hasFailed())
+										parameter.setValue(value, respValue -> handleResponse(respValue));
+								});
+						});
+						return true;
+					} catch (IllegalArgumentException e1) {
+						// When the new maximum is less than the old minimum
+						return false;
+					}
 				}
 			}
+		} else {
+			parameter.setValue(value, response -> handleResponse(response));
+			return true;
 		}
-		return true;
 	}
 
 	/**

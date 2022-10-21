@@ -108,18 +108,15 @@ public abstract class ServerInfoPresenter extends OkCancelPresenter {
 	}
 
 	@Override
+	public void onClosing() {
+		server.open();
+	}
+
 	public boolean onOkButtonClicked() {
 		if (okDisableProperty.get())
 			return false;
 
 		onOkButtonClicked(server, serverNameProperty().get(), serverIpAddressProperty().get(), Integer.parseInt(serverPortProperty().get()));
-		server.open();
-		return true;
-	}
-
-	@Override
-	public boolean onCancelButtonClicked() {
-		server.open();
 		return true;
 	}
 

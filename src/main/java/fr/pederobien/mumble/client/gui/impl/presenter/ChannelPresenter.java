@@ -184,13 +184,17 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 	 * deletion.
 	 */
 	public void onRemoveChannel() {
-		AlertPresenter alertPresenter = new AlertPresenter(AlertType.CONFIRMATION);
-		alertPresenter.title(EMessageCode.REMOVE_CHANNEL_TITLE, channel.getName()).header(EMessageCode.REMOVE_CHANNEL_CONFIRMATION, channel.getName());
-		alertPresenter.content(EMessageCode.REMOVE_CHANNEL_EXPLANATION).getAlert().showAndWait().ifPresent(buttonType -> {
-			if (buttonType != ButtonType.OK)
-				return;
+		if (channel.getPlayers().toList().size() == 0)
 			channelList.remove(channel.getName(), response -> handleRemoveChannelResponse(response));
-		});
+		else {
+			AlertPresenter alertPresenter = new AlertPresenter(AlertType.CONFIRMATION);
+			alertPresenter.title(EMessageCode.REMOVE_CHANNEL_TITLE, channel.getName()).header(EMessageCode.REMOVE_CHANNEL_CONFIRMATION, channel.getName());
+			alertPresenter.content(EMessageCode.REMOVE_CHANNEL_EXPLANATION).getAlert().showAndWait().ifPresent(buttonType -> {
+				if (buttonType != ButtonType.OK)
+					return;
+				channelList.remove(channel.getName(), response -> handleRemoveChannelResponse(response));
+			});
+		}
 	}
 
 	/**

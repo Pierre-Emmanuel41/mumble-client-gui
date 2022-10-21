@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.generic.FormView;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.ParameterListView;
 import fr.pederobien.mumble.client.player.interfaces.ISoundModifier;
@@ -18,6 +19,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class SelectableSoundModifierPresenter extends PresenterBase {
+	private FormView formView;
 	private ISoundModifierList soundModifierList;
 	private ISoundModifier initialSoundModifier, selectedSoundModifier;
 
@@ -32,7 +34,8 @@ public class SelectableSoundModifierPresenter extends PresenterBase {
 	 * @param soundModifierList    The list that contains all the sound modifier available for selection.
 	 * @param initialSoundModifier The sound modifier initially selected.
 	 */
-	public SelectableSoundModifierPresenter(ISoundModifierList soundModifierList, ISoundModifier initialSoundModifier) {
+	public SelectableSoundModifierPresenter(FormView formView, ISoundModifierList soundModifierList, ISoundModifier initialSoundModifier) {
+		this.formView = formView;
 		this.soundModifierList = soundModifierList;
 		this.selectedSoundModifier = this.initialSoundModifier = initialSoundModifier;
 
@@ -76,6 +79,13 @@ public class SelectableSoundModifierPresenter extends PresenterBase {
 	 */
 	public boolean isIdentical() {
 		return initialSoundModifier.equals(selectedSoundModifier) && selectedParameterListViewProperty.get().getPresenter().isIdentical();
+	}
+
+	/**
+	 * @return The view that display information to the user..
+	 */
+	public FormView getFormView() {
+		return formView;
 	}
 
 	/**

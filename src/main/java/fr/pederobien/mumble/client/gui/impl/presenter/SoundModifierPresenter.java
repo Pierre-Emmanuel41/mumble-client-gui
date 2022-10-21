@@ -31,7 +31,8 @@ public class SoundModifierPresenter extends OkCancelPresenter implements IEventL
 	public SoundModifierPresenter(IChannel channel) {
 		this.channel = channel;
 
-		selectableSoundModifierPresenter = new SelectableSoundModifierPresenter(channel.getServer().getSoundModifiers(), channel.getSoundModifier());
+		selectableSoundModifierPresenter = new SelectableSoundModifierPresenter(getFormView(), channel.getServer().getSoundModifiers(), channel.getSoundModifier());
+		selectableSoundModifierPresenter.selectedSoundModifierNameProperty().addListener((obs, oldValue, newValue) -> updateOkDisable());
 		selectableSoundModifierView = new SelectableSoundModifierView(selectableSoundModifierPresenter);
 		titleTextProperty = getPropertyHelper().languageProperty(EMessageCode.SOUND_MODIFIER_TITLE, channel.getName());
 
@@ -44,7 +45,6 @@ public class SoundModifierPresenter extends OkCancelPresenter implements IEventL
 		return titleTextProperty;
 	}
 
-	@Override
 	public boolean onOkButtonClicked() {
 		if (okDisableProperty().get())
 			return false;
@@ -70,7 +70,7 @@ public class SoundModifierPresenter extends OkCancelPresenter implements IEventL
 	/**
 	 * @return The view that allows the user to select a sound modifier.
 	 */
-	public SelectableSoundModifierView getSelectableSoundModifierView() {
+	public SelectableSoundModifierView selectableSoundModifierView() {
 		return selectableSoundModifierView;
 	}
 

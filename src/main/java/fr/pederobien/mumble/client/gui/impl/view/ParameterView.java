@@ -71,25 +71,27 @@ public class ParameterView extends ViewBase<ParameterPresenter, HBox> {
 		Label minLabel = new Label();
 		minLabel.fontProperty().bind(getPresenter().fontProperty());
 		minLabel.textProperty().bind(getPresenter().minTextProperty());
-		// horizontalBox.getChildren().add(minLabel);
+		horizontalBox.getChildren().add(minLabel);
 
 		TextField minTextField = new TextField();
 		minTextField.fontProperty().bind(getPresenter().fontProperty());
 		minTextField.textProperty().bindBidirectional(getPresenter().minValueProperty());
 		minTextField.borderProperty().bind(getPresenter().minValueBorderProperty());
 		minTextField.tooltipProperty().bind(getPresenter().minValueTooltipProperty());
+		minTextField.setPrefWidth(60);
 		horizontalBox.getChildren().add(minTextField);
 
 		Label maxLabel = new Label();
 		maxLabel.fontProperty().bind(getPresenter().fontProperty());
 		maxLabel.textProperty().bind(getPresenter().maxTextProperty());
-		// horizontalBox.getChildren().add(maxLabel);
+		horizontalBox.getChildren().add(maxLabel);
 
 		TextField maxTextField = new TextField();
 		maxTextField.fontProperty().bind(getPresenter().fontProperty());
 		maxTextField.textProperty().bindBidirectional(getPresenter().maxValueProperty());
 		maxTextField.borderProperty().bind(getPresenter().maxValueBorderProperty());
 		maxTextField.tooltipProperty().bind(getPresenter().maxValueTooltipProperty());
+		maxTextField.setPrefWidth(60);
 		horizontalBox.getChildren().add(maxTextField);
 		return horizontalBox;
 	}

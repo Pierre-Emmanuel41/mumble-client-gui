@@ -52,16 +52,17 @@ public class RenameChannelPresenter extends OkCancelPresenter {
 	}
 
 	@Override
-	public StringProperty titleTextProperty() {
-		return titleTextProperty;
-	}
-
-	@Override
 	public boolean onOkButtonClicked() {
 		if (okDisableProperty.get())
 			return false;
-		channel.setName(channelNameProperty.get(), response -> hqndleRenameChannelResponse(response));
+
+		channel.setName(channelNameProperty.get(), response -> handleRenameChannelResponse(response));
 		return true;
+	}
+
+	@Override
+	public StringProperty titleTextProperty() {
+		return titleTextProperty;
 	}
 
 	@Override
@@ -126,7 +127,7 @@ public class RenameChannelPresenter extends OkCancelPresenter {
 		}
 	}
 
-	private void hqndleRenameChannelResponse(IResponse response) {
+	private void handleRenameChannelResponse(IResponse response) {
 		ErrorPresenterBuilder builder = ErrorPresenterBuilder.of(AlertType.ERROR);
 		builder.title(EMessageCode.RENAME_CHANNEL_TITLE, channel.getName());
 		builder.header(EMessageCode.RENAME_CHANNEL_NAME_RESPONSE, channel.getName(), channelNameProperty.get());

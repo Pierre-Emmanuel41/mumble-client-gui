@@ -2,20 +2,43 @@ package fr.pederobien.mumble.client.gui.impl.view;
 
 import fr.pederobien.mumble.client.gui.impl.generic.OkCancelStage;
 import fr.pederobien.mumble.client.gui.impl.presenter.SoundModifierPresenter;
-import fr.pederobien.mumble.client.gui.interfaces.IOkCancelView;
+import javafx.collections.ObservableList;
 import javafx.scene.layout.BorderPane;
 
-public class SoundModifierView extends ViewBase<SoundModifierPresenter, BorderPane> implements IOkCancelView {
+public class SoundModifierView extends ViewBase<SoundModifierPresenter, BorderPane> {
+	private OkCancelStage okCancelStage;
 
 	public SoundModifierView(SoundModifierPresenter presenter) {
 		super(presenter, new BorderPane());
 
-		getRoot().setTop(getPresenter().getSelectableSoundModifierView().getRoot());
-		getPresenter().getSelectableSoundModifierView().setStage(new OkCancelStage(getPrimaryStage(), this).getStage());
+		// Sound modifier name
+		SelectableSoundModifierView soundModifierView = getPresenter().selectableSoundModifierView();
+		getPresenter().getFormView().addRow(soundModifierView.getSoundModifierNameLabel(), soundModifierView.getSoundModifierNames());
+
+		// Sound modifier parameters
+		ObservableList<ParameterView> parameterViews = soundModifierView.getPresenter().selectedParameterListViewProperty().get().getPresenter().getParameterViews();
+		for (ParameterView parameterView : parameterViews)
+			getPresenter().getFormView().addRow(parameterView.getParameterName(), parameterView.getValueView());
+
+		soundModifierView.getPresenter().selectedParameterListViewProperty().addListener((obs, oldValue, newValue) -> onSoundModifierChange(oldValue, newValue));
+
+		okCancelStage = new OkCancelStage(getPrimaryStage(), getPresenter());
+		okCancelStage.show();
 	}
 
-	@Override
-	public void onPostShown() {
-		getPresenter().getSelectableSoundModifierView().computeWidth();
+	/**
+	 * Method to call when the selected sound modifier has changed, in order to update the displayed parameters.
+	 * 
+	 * @param oldValue The parameters list associated to the previous selected sound modifier.
+	 * @param newValue The parameters list associated to the new selected sound modifier.
+	 */
+	private void onSoundModifierChange(ParameterListView oldValue, ParameterListView newValue) {
+		for (int i = 0; i < oldValue.getPresenter().getParameterViews().size(); i++)
+			getPresenter().getFormView().removeRow(i + 1);
+
+		for (ParameterView parameterView : newValue.getPresenter().getParameterViews())
+			getPresenter().getFormView().addRow(parameterView.getParameterName(), parameterView.getValueView());
+
+		okCancelStage.sizeToScene();
 	}
 }
