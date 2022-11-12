@@ -1,9 +1,9 @@
 package fr.pederobien.mumble.client.gui.impl.properties;
 
 import fr.pederobien.dictionary.impl.MessageEvent;
+import fr.pederobien.dictionary.interfaces.ICode;
 import fr.pederobien.dictionary.interfaces.IDictionaryContext;
 import fr.pederobien.mumble.client.gui.impl.properties.InternalProperty.Action;
-import fr.pederobien.mumble.client.gui.interfaces.ICode;
 import fr.pederobien.mumble.client.gui.interfaces.IGuiConfiguration;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -57,6 +57,6 @@ public class SimpleLanguageProperty extends SimpleStringProperty {
 
 	private void update() {
 		IDictionaryContext context = internalProperty.getGuiConfiguration().getDictionaryContext();
-		setValue(context.getMessage(new MessageEvent(internalProperty.getGuiConfiguration().getLocale(), getCode().toString(), getArgs())));
+		setValue(context.getMessage(new MessageEvent(internalProperty.getGuiConfiguration().getLocale(), getCode(), getArgs())));
 	}
 }

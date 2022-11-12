@@ -1,6 +1,6 @@
 package fr.pederobien.mumble.client.gui.dictionary;
 
-import fr.pederobien.mumble.client.gui.interfaces.ICode;
+import fr.pederobien.dictionary.interfaces.ICode;
 
 public enum EErrorMessageCode implements ICode {
 
@@ -127,7 +127,7 @@ public enum EErrorMessageCode implements ICode {
 	;
 
 	@Override
-	public String value() {
+	public String getCode() {
 		return toString();
 	}
 }

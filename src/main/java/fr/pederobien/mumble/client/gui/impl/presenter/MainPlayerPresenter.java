@@ -2,6 +2,7 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import java.io.IOException;
 
+import fr.pederobien.dictionary.interfaces.ICode;
 import fr.pederobien.messenger.interfaces.IResponse;
 import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.environment.Environments;
@@ -10,7 +11,6 @@ import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleTooltipProperty;
 import fr.pederobien.mumble.client.gui.impl.view.MainView;
-import fr.pederobien.mumble.client.gui.interfaces.ICode;
 import fr.pederobien.mumble.client.player.event.MumbleChannelPlayerListPlayerAddPostEvent;
 import fr.pederobien.mumble.client.player.event.MumbleChannelPlayerListPlayerRemovePostEvent;
 import fr.pederobien.mumble.client.player.event.MumblePlayerOnlineChangePostEvent;

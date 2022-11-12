@@ -1,11 +1,11 @@
 package fr.pederobien.mumble.client.gui.impl.generic;
 
+import fr.pederobien.dictionary.interfaces.ICode;
 import fr.pederobien.messenger.interfaces.IErrorCode;
 import fr.pederobien.messenger.interfaces.IResponse;
 import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
 import fr.pederobien.mumble.client.gui.impl.presenter.AlertPresenter;
 import fr.pederobien.mumble.client.gui.impl.presenter.PresenterBase;
-import fr.pederobien.mumble.client.gui.interfaces.ICode;
 import javafx.scene.control.Alert.AlertType;
 
 public class ErrorPresenter extends PresenterBase {

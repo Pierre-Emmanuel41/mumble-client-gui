@@ -1,6 +1,6 @@
 package fr.pederobien.mumble.client.gui.dictionary;
 
-import fr.pederobien.mumble.client.gui.interfaces.ICode;
+import fr.pederobien.dictionary.interfaces.ICode;
 
 public enum EMessageCode implements ICode {
 	// APPLICATION ALREADY RUNNING
@@ -258,7 +258,7 @@ public enum EMessageCode implements ICode {
 	PLAYER_OFFLINE;
 
 	@Override
-	public String value() {
+	public String getCode() {
 		return toString();
 	}
 }

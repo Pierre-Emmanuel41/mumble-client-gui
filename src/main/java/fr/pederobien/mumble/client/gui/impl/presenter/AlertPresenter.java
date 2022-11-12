@@ -2,7 +2,7 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import java.util.Optional;
 
-import fr.pederobien.mumble.client.gui.interfaces.ICode;
+import fr.pederobien.dictionary.interfaces.ICode;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
