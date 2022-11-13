@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fr.pederobien.messenger.interfaces.IResponse;
-import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.event.ChannelJoinRequestPostEvent;
+import fr.pederobien.mumble.client.gui.impl.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter;
 import fr.pederobien.mumble.client.gui.impl.view.ChannelView;
 import fr.pederobien.mumble.client.player.event.MumbleChannelListChannelAddPostEvent;

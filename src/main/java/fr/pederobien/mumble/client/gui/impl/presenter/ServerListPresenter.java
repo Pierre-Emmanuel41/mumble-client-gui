@@ -3,13 +3,13 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 import java.util.HashMap;
 import java.util.Map;
 
-import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.event.SelectedServerChangePostEvent;
 import fr.pederobien.mumble.client.gui.event.SelectedServerChangePreEvent;
 import fr.pederobien.mumble.client.gui.event.ServerJoinRequestPostEvent;
 import fr.pederobien.mumble.client.gui.event.ServerJoinRequestPreEvent;
 import fr.pederobien.mumble.client.gui.event.ServerListAddServerPostEvent;
 import fr.pederobien.mumble.client.gui.event.ServerListRemoveServerPostEvent;
+import fr.pederobien.mumble.client.gui.impl.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.properties.ListCellView;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.ServerView;

@@ -1,7 +1,7 @@
 package fr.pederobien.mumble.client.gui.impl.generic;
 
 import fr.pederobien.dictionary.interfaces.ICode;
-import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.EMessageCode;
 
 public enum ButtonType {
 	/**

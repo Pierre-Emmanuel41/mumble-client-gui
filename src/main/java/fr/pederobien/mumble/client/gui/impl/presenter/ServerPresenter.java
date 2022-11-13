@@ -1,7 +1,7 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import fr.pederobien.dictionary.interfaces.ICode;
-import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.player.event.MumbleServerAddressChangePostEvent;
 import fr.pederobien.mumble.client.player.event.MumbleServerJoinPostEvent;

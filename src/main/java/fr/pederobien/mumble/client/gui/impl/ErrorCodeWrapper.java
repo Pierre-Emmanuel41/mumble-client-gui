@@ -5,7 +5,6 @@ import java.util.Map;
 
 import fr.pederobien.dictionary.interfaces.ICode;
 import fr.pederobien.messenger.interfaces.IErrorCode;
-import fr.pederobien.mumble.client.gui.dictionary.EErrorMessageCode;
 import fr.pederobien.mumble.common.impl.MumbleErrorCode;
 
 public enum ErrorCodeWrapper {

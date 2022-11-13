@@ -1,4 +1,4 @@
-package fr.pederobien.mumble.client.gui.dictionary;
+package fr.pederobien.mumble.client.gui.impl;
 
 import fr.pederobien.dictionary.interfaces.ICode;
 

@@ -1,8 +1,8 @@
 package fr.pederobien.mumble.client.gui;
 
-import fr.pederobien.mumble.client.gui.dictionary.EMessageCode;
 import fr.pederobien.mumble.client.gui.environment.Environments;
 import fr.pederobien.mumble.client.gui.environment.Variables;
+import fr.pederobien.mumble.client.gui.impl.EMessageCode;
 import fr.pederobien.mumble.client.gui.impl.presenter.AlertPresenter;
 import fr.pederobien.mumble.client.gui.impl.presenter.MainPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.PropertyHelper;
