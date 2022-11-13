@@ -5,7 +5,7 @@ import java.util.Map;
 
 import fr.pederobien.messenger.interfaces.IResponse;
 import fr.pederobien.mumble.client.gui.event.ChannelJoinRequestPostEvent;
-import fr.pederobien.mumble.client.gui.impl.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter;
 import fr.pederobien.mumble.client.gui.impl.view.ChannelView;
 import fr.pederobien.mumble.client.player.event.MumbleChannelListChannelAddPostEvent;
@@ -114,19 +114,19 @@ public class ChannelListPresenter extends PresenterBase implements IEventListene
 	}
 
 	private void handleRemovePlayerResponse(IResponse response) {
-		ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.HANG_UP_FAILED_TITLE, EMessageCode.HANG_UP_FAILED_HEADER, response);
+		ErrorPresenter.showAndWait(AlertType.ERROR, EGuiCode.HANG_UP_FAILED_TITLE, EGuiCode.HANG_UP_FAILED_HEADER, response);
 	}
 
 	private void handlePlayerJoinResponse(IResponse response) {
-		ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.FAIL_TO_JOIN_A_CHANNEL_TITLE, EMessageCode.FAIL_TO_JOIN_A_CHANNEL_HEADER, response);
+		ErrorPresenter.showAndWait(AlertType.ERROR, EGuiCode.FAIL_TO_JOIN_A_CHANNEL_TITLE, EGuiCode.FAIL_TO_JOIN_A_CHANNEL_HEADER, response);
 	}
 
 	private void joinChannel(IChannel channel) {
 		try {
 			channel.getPlayers().join(response -> handlePlayerJoinResponse(response));
 		} catch (PlayerNotOnlineException e) {
-			ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.FAIL_TO_JOIN_A_CHANNEL_TITLE, EMessageCode.FAIL_TO_JOIN_A_CHANNEL_HEADER,
-					EMessageCode.PLAYER_NOT_CONNECTED_IN_GAME);
+			ErrorPresenter.showAndWait(AlertType.ERROR, EGuiCode.FAIL_TO_JOIN_A_CHANNEL_TITLE, EGuiCode.FAIL_TO_JOIN_A_CHANNEL_HEADER,
+					EGuiCode.PLAYER_NOT_CONNECTED_IN_GAME);
 		}
 	}
 }

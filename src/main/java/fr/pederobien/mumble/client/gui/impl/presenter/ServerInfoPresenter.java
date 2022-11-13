@@ -2,7 +2,7 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import java.util.regex.Pattern;
 
-import fr.pederobien.mumble.client.gui.impl.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.generic.OkCancelPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleTooltipProperty;
@@ -60,26 +60,26 @@ public abstract class ServerInfoPresenter extends OkCancelPresenter {
 		this.server = server;
 
 		server.close();
-		titleTextProperty = getPropertyHelper().languageProperty(EMessageCode.ADD_NEW_SERVER_TITLE);
+		titleTextProperty = getPropertyHelper().languageProperty(EGuiCode.ADD_NEW_SERVER_TITLE);
 
 		serverNameProperty = new SimpleStringProperty(server.getName().equals(ServerList.DEFAULT_SERVER_NAME) ? null : server.getName());
-		serverNameTextProperty = getPropertyHelper().languageProperty(EMessageCode.SERVER_NAME);
+		serverNameTextProperty = getPropertyHelper().languageProperty(EGuiCode.SERVER_NAME);
 		serverNameBorderProperty = new SimpleObjectProperty<Border>(null);
-		serverNamePromptProperty = getPropertyHelper().languageProperty(EMessageCode.SERVER_NAME_PROMPT);
-		serverNameTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.SERVER_NAME_TOOLTIP);
+		serverNamePromptProperty = getPropertyHelper().languageProperty(EGuiCode.SERVER_NAME_PROMPT);
+		serverNameTooltipProperty = getPropertyHelper().tooltipProperty(EGuiCode.SERVER_NAME_TOOLTIP);
 
 		serverIpAddressProperty = new SimpleStringProperty(
 				server.getAddress().getAddress().getHostAddress().equals(ServerList.DEFAULT_SERVER_ADDRESS) ? null : server.getAddress().getAddress().getHostAddress());
-		serverIpAddressTextProperty = getPropertyHelper().languageProperty(EMessageCode.SERVER_IP_ADDRESS);
+		serverIpAddressTextProperty = getPropertyHelper().languageProperty(EGuiCode.SERVER_IP_ADDRESS);
 		serverIpAddressBorderProperty = new SimpleObjectProperty<Border>(null);
-		serverIpAddressPromptProperty = getPropertyHelper().languageProperty(EMessageCode.SERVER_IP_ADDRESS_PROMPT);
-		serverIpAddressTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.SERVER_IP_ADDRESS_TOOLTIP);
+		serverIpAddressPromptProperty = getPropertyHelper().languageProperty(EGuiCode.SERVER_IP_ADDRESS_PROMPT);
+		serverIpAddressTooltipProperty = getPropertyHelper().tooltipProperty(EGuiCode.SERVER_IP_ADDRESS_TOOLTIP);
 
 		serverPortProperty = new SimpleStringProperty(server.getAddress().getPort() == ServerList.DEFAULT_SERVER_PORT ? null : "" + server.getAddress().getPort());
-		serverPortTextProperty = getPropertyHelper().languageProperty(EMessageCode.SERVER_PORT_NUMBER);
+		serverPortTextProperty = getPropertyHelper().languageProperty(EGuiCode.SERVER_PORT_NUMBER);
 		serverPortBorderProperty = new SimpleObjectProperty<Border>(null);
-		serverPortPromptProperty = getPropertyHelper().languageProperty(EMessageCode.SERVER_PORT_NUMBER_PROMPT);
-		serverPortTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.SERVER_PORT_NUMBER_TOOLTIP);
+		serverPortPromptProperty = getPropertyHelper().languageProperty(EGuiCode.SERVER_PORT_NUMBER_PROMPT);
+		serverPortTooltipProperty = getPropertyHelper().tooltipProperty(EGuiCode.SERVER_PORT_NUMBER_TOOLTIP);
 
 		okDisableProperty = new SimpleBooleanProperty(true);
 

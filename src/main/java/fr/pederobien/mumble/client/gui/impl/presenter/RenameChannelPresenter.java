@@ -2,7 +2,7 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import fr.pederobien.messenger.interfaces.IResponse;
 import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter.ErrorPresenterBuilder;
-import fr.pederobien.mumble.client.gui.impl.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.generic.OkCancelPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleTooltipProperty;
@@ -47,12 +47,12 @@ public class RenameChannelPresenter extends OkCancelPresenter {
 		this.channelList = channelList;
 		this.channel = channel;
 
-		titleTextProperty = getPropertyHelper().languageProperty(EMessageCode.RENAME_CHANNEL_TITLE, channel.getName());
+		titleTextProperty = getPropertyHelper().languageProperty(EGuiCode.RENAME_CHANNEL_TITLE, channel.getName());
 
 		channelNameProperty = new SimpleStringProperty(channel.getName());
-		channelNameTextProperty = getPropertyHelper().languageProperty(EMessageCode.RENAME_CHANNEL_NAME);
+		channelNameTextProperty = getPropertyHelper().languageProperty(EGuiCode.RENAME_CHANNEL_NAME);
 		channelNameBorderProperty = new SimpleObjectProperty<Border>(null);
-		channelNameTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.CHANNEL_NAME_TOOLTIP);
+		channelNameTooltipProperty = getPropertyHelper().tooltipProperty(EGuiCode.CHANNEL_NAME_TOOLTIP);
 
 		okDisableProperty = new SimpleBooleanProperty(true);
 	}
@@ -135,8 +135,8 @@ public class RenameChannelPresenter extends OkCancelPresenter {
 
 	private void handleRenameChannelResponse(IResponse response) {
 		ErrorPresenterBuilder builder = ErrorPresenterBuilder.of(AlertType.ERROR);
-		builder.title(EMessageCode.RENAME_CHANNEL_TITLE, channel.getName());
-		builder.header(EMessageCode.RENAME_CHANNEL_NAME_RESPONSE, channel.getName(), channelNameProperty.get());
+		builder.title(EGuiCode.RENAME_CHANNEL_TITLE, channel.getName());
+		builder.header(EGuiCode.RENAME_CHANNEL_NAME_RESPONSE, channel.getName(), channelNameProperty.get());
 		builder.error(response);
 		builder.showAndWait();
 	}

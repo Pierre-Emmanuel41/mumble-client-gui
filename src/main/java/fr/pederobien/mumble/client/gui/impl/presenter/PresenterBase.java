@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.pederobien.mumble.client.gui.MumbleClientApplication;
-import fr.pederobien.mumble.client.gui.impl.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.properties.PropertyHelper;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import javafx.application.Platform;
@@ -76,7 +76,7 @@ public class PresenterBase {
 	 * @param code The code associated to the message to display.
 	 * @param args The message arguments if the message needs arguments.
 	 */
-	public static void setPrimaryStageTitle(EMessageCode code, Object... args) {
+	public static void setPrimaryStageTitle(EGuiCode code, Object... args) {
 		getPrimaryStage().titleProperty().bind(getPropertyHelper().languageProperty(code, args));
 	}
 

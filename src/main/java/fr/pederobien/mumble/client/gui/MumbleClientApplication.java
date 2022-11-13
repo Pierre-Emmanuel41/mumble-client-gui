@@ -2,7 +2,7 @@ package fr.pederobien.mumble.client.gui;
 
 import fr.pederobien.mumble.client.gui.environment.Environments;
 import fr.pederobien.mumble.client.gui.environment.Variables;
-import fr.pederobien.mumble.client.gui.impl.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.presenter.AlertPresenter;
 import fr.pederobien.mumble.client.gui.impl.presenter.MainPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.PropertyHelper;
@@ -50,8 +50,8 @@ public class MumbleClientApplication extends Application implements IEventListen
 
 		if (!lock.lock()) {
 			AlertPresenter presenter = new AlertPresenter(AlertType.ERROR);
-			presenter.title(EMessageCode.APPLICATION_ALREADY_RUNNING_TITLE);
-			presenter.header(EMessageCode.APPLICATION_ALREADY_RUNNING_HEADER);
+			presenter.title(EGuiCode.APPLICATION_ALREADY_RUNNING_TITLE);
+			presenter.header(EGuiCode.APPLICATION_ALREADY_RUNNING_HEADER);
 			presenter.getAlert().showAndWait();
 			Platform.exit();
 			return;

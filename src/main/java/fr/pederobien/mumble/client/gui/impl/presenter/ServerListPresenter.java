@@ -9,7 +9,7 @@ import fr.pederobien.mumble.client.gui.event.ServerJoinRequestPostEvent;
 import fr.pederobien.mumble.client.gui.event.ServerJoinRequestPreEvent;
 import fr.pederobien.mumble.client.gui.event.ServerListAddServerPostEvent;
 import fr.pederobien.mumble.client.gui.event.ServerListRemoveServerPostEvent;
-import fr.pederobien.mumble.client.gui.impl.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.properties.ListCellView;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.ServerView;
@@ -50,7 +50,7 @@ public class ServerListPresenter extends PresenterBase implements IEventListener
 		serverViews = new HashMap<IPlayerMumbleServer, ServerView>();
 
 		emptyServersListVisibilityProperty = new SimpleBooleanProperty(serverList.getServers().isEmpty());
-		emptyServerTextProperty = getPropertyHelper().languageProperty(EMessageCode.EMPTY_SERVER_LIST);
+		emptyServerTextProperty = getPropertyHelper().languageProperty(EGuiCode.EMPTY_SERVER_LIST);
 	}
 
 	/**

@@ -8,7 +8,7 @@ import fr.pederobien.messenger.interfaces.IResponse;
 import fr.pederobien.mumble.client.gui.event.SelectedServerChangePostEvent;
 import fr.pederobien.mumble.client.gui.event.ServerJoinRequestPostEvent;
 import fr.pederobien.mumble.client.gui.event.ServerJoinRequestPreEvent;
-import fr.pederobien.mumble.client.gui.impl.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.ServerDetailsView;
@@ -51,16 +51,16 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 	public ServerManagementPresenter(ServerList serverList) {
 		this.serverList = serverList;
 
-		joinServerTextProperty = getPropertyHelper().languageProperty(EMessageCode.JOIN_SERVER);
+		joinServerTextProperty = getPropertyHelper().languageProperty(EGuiCode.JOIN_SERVER);
 		joinServerDisableProperty = new SimpleBooleanProperty(true);
 
-		addServerTextProperty = getPropertyHelper().languageProperty(EMessageCode.ADD_SERVER);
+		addServerTextProperty = getPropertyHelper().languageProperty(EGuiCode.ADD_SERVER);
 		addServerDisableProperty = new SimpleBooleanProperty(false);
 
-		editServerTextProperty = getPropertyHelper().languageProperty(EMessageCode.EDIT_SERVER);
+		editServerTextProperty = getPropertyHelper().languageProperty(EGuiCode.EDIT_SERVER);
 		editServerDisableProperty = new SimpleBooleanProperty(true);
 
-		deleteServerTextProperty = getPropertyHelper().languageProperty(EMessageCode.DELETE_SERVER);
+		deleteServerTextProperty = getPropertyHelper().languageProperty(EGuiCode.DELETE_SERVER);
 		deleteServerDisableProperty = new SimpleBooleanProperty(true);
 
 		EventManager.registerListener(this);
@@ -207,6 +207,6 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 	}
 
 	private void handleJoinServerResponse(IResponse response) {
-		ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.SERVER_JOIN_FAILED_TITLE, EMessageCode.SERVER_JOIN_FAILED_HEADER, response);
+		ErrorPresenter.showAndWait(AlertType.ERROR, EGuiCode.SERVER_JOIN_FAILED_TITLE, EGuiCode.SERVER_JOIN_FAILED_HEADER, response);
 	}
 }

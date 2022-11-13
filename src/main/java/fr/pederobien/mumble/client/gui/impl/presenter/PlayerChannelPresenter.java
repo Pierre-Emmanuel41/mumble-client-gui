@@ -5,7 +5,7 @@ import java.io.IOException;
 import fr.pederobien.messenger.interfaces.IResponse;
 import fr.pederobien.mumble.client.gui.environment.Environments;
 import fr.pederobien.mumble.client.gui.environment.Variables;
-import fr.pederobien.mumble.client.gui.impl.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
 import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter.ErrorPresenterBuilder;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
@@ -61,10 +61,10 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 
 		EventManager.registerListener(this);
 
-		muteOrUnmuteTextProperty = getPropertyHelper().languageProperty(EMessageCode.MUTE_TOOLTIP);
+		muteOrUnmuteTextProperty = getPropertyHelper().languageProperty(EGuiCode.MUTE_TOOLTIP);
 		muteOrUnmuteVisibleProperty = new SimpleBooleanProperty(!isMainPlayer());
 
-		kickPlayerTextProperty = getPropertyHelper().languageProperty(EMessageCode.KICK_PLAYER, player.getName());
+		kickPlayerTextProperty = getPropertyHelper().languageProperty(EGuiCode.KICK_PLAYER, player.getName());
 		kickPlayerVisiblity = new SimpleBooleanProperty(!isMainPlayer() && server.getMainPlayer().isAdmin());
 	}
 
@@ -157,13 +157,13 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 		if (response.hasFailed())
 			dispatch(() -> {
 				AlertPresenter alertPresenter = new AlertPresenter(AlertType.ERROR);
-				alertPresenter.title(EMessageCode.CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE_TITLE, player.getName());
-				alertPresenter.header(EMessageCode.CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE, player.getName());
+				alertPresenter.title(EGuiCode.CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE_TITLE, player.getName());
+				alertPresenter.header(EGuiCode.CANNOT_MUTE_OR_UNMUTE_PLAYER_RESPONSE, player.getName());
 				alertPresenter.content(ErrorCodeWrapper.getByErrorCode(response.getErrorCode()).getMessageCode());
 				alertPresenter.getAlert().showAndWait();
 			});
 		else
-			muteOrUnmuteTextProperty.setCode(player.isMute() ? EMessageCode.UNMUTE_TOOLTIP : EMessageCode.MUTE_TOOLTIP);
+			muteOrUnmuteTextProperty.setCode(player.isMute() ? EGuiCode.UNMUTE_TOOLTIP : EGuiCode.MUTE_TOOLTIP);
 	}
 
 	@EventHandler
@@ -206,8 +206,8 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 
 	private void handleKickPlayerResponse(IResponse response) {
 		ErrorPresenterBuilder builder = ErrorPresenterBuilder.of(AlertType.ERROR);
-		builder.title(EMessageCode.CANNOT_KICK_PLAYER_RESPONSE_TITLE, player.getName());
-		builder.header(EMessageCode.CANNOT_KICK_PLAYER_RESPONSE, player.getName());
+		builder.title(EGuiCode.CANNOT_KICK_PLAYER_RESPONSE_TITLE, player.getName());
+		builder.header(EGuiCode.CANNOT_KICK_PLAYER_RESPONSE, player.getName());
 		builder.error(response);
 		builder.showAndWait();
 	}

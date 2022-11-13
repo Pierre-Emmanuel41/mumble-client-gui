@@ -5,7 +5,7 @@ import fr.pederobien.mumble.client.gui.MumbleClientApplication;
 import fr.pederobien.mumble.client.gui.event.ParameterMaxValueChangeRequestEvent;
 import fr.pederobien.mumble.client.gui.event.ParameterMinValueChangeRequestEvent;
 import fr.pederobien.mumble.client.gui.event.ParameterValueChangeRequestEvent;
-import fr.pederobien.mumble.client.gui.impl.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleTooltipProperty;
@@ -61,7 +61,7 @@ public class ParameterPresenter extends PresenterBase implements IEventListener 
 		valueProperty.addListener((obs, oldValue, newValue) -> validateParameterValue(newValue));
 
 		if (parameter.getType() == ParameterType.BOOLEAN) {
-			booleanTextProperty = MumbleClientApplication.getPropertyHelper().languageProperty((Boolean) value ? EMessageCode.ENABLE : EMessageCode.DISABLE);
+			booleanTextProperty = MumbleClientApplication.getPropertyHelper().languageProperty((Boolean) value ? EGuiCode.ENABLE : EGuiCode.DISABLE);
 			booleanValueProperty = new SimpleBooleanProperty((Boolean) value);
 			booleanValueProperty.addListener((obs, oldValue, newValue) -> validateParameterValue(newValue));
 		}
@@ -73,18 +73,18 @@ public class ParameterPresenter extends PresenterBase implements IEventListener 
 			minValueProperty = new SimpleStringProperty(minValue.toString());
 			minValueProperty.addListener((obs, oldValue, newValue) -> validateParameterMinValue(newValue));
 			minValueBorderProperty = new SimpleObjectProperty<Border>(null);
-			minTextProperty = getPropertyHelper().languageProperty(EMessageCode.MUMBLE_CLIENT_GUI__MIN_VALUE);
-			minValueTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.MUMBLE_CLIENT_GUI__MIN_VALUE_TOOLTIP, rangeParameter.getType(), maxValue);
+			minTextProperty = getPropertyHelper().languageProperty(EGuiCode.MUMBLE_CLIENT_GUI__MIN_VALUE);
+			minValueTooltipProperty = getPropertyHelper().tooltipProperty(EGuiCode.MUMBLE_CLIENT_GUI__MIN_VALUE_TOOLTIP, rangeParameter.getType(), maxValue);
 
 			maxValueProperty = new SimpleStringProperty(maxValue.toString());
 			maxValueProperty.addListener((obs, oldValue, newValue) -> validateParameterMaxValue(newValue));
 			maxValueBorderProperty = new SimpleObjectProperty<Border>(null);
-			maxTextProperty = getPropertyHelper().languageProperty(EMessageCode.MUMBLE_CLIENT_GUI__MAX_VALUE);
-			maxValueTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.MUMBLE_CLIENT_GUI__MAX_VALUE_TOOLTIP, rangeParameter.getType(), minValue);
+			maxTextProperty = getPropertyHelper().languageProperty(EGuiCode.MUMBLE_CLIENT_GUI__MAX_VALUE);
+			maxValueTooltipProperty = getPropertyHelper().tooltipProperty(EGuiCode.MUMBLE_CLIENT_GUI__MAX_VALUE_TOOLTIP, rangeParameter.getType(), minValue);
 
-			valueTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.RANGE_PARAMETER_TOOLTIP, rangeParameter.getType(), minValue, maxValue);
+			valueTooltipProperty = getPropertyHelper().tooltipProperty(EGuiCode.RANGE_PARAMETER_TOOLTIP, rangeParameter.getType(), minValue, maxValue);
 		} else
-			valueTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.PARAMETER_TOOLTIP, parameter.getType());
+			valueTooltipProperty = getPropertyHelper().tooltipProperty(EGuiCode.PARAMETER_TOOLTIP, parameter.getType());
 
 		isValueValid = isMinValueValid = isMaxValueValid = true;
 
@@ -284,7 +284,7 @@ public class ParameterPresenter extends PresenterBase implements IEventListener 
 	}
 
 	private void handleResponse(IResponse response) {
-		ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.ADD_CHANNEL_TITLE, EMessageCode.ADD_CHANNEL_NAME_RESPONSE, response);
+		ErrorPresenter.showAndWait(AlertType.ERROR, EGuiCode.ADD_CHANNEL_TITLE, EGuiCode.ADD_CHANNEL_NAME_RESPONSE, response);
 	}
 
 	/**
@@ -332,7 +332,7 @@ public class ParameterPresenter extends PresenterBase implements IEventListener 
 				value = parameter.getType().getValue(value.toString());
 
 				if (parameter.getType() == ParameterType.BOOLEAN)
-					booleanTextProperty.setCode((Boolean) value ? EMessageCode.ENABLE : EMessageCode.DISABLE);
+					booleanTextProperty.setCode((Boolean) value ? EGuiCode.ENABLE : EGuiCode.DISABLE);
 
 				if (rangeParameter == null)
 					valueBorderProperty.set(null);
@@ -378,7 +378,7 @@ public class ParameterPresenter extends PresenterBase implements IEventListener 
 				try {
 					rangeParameter.check(minValue, maxValue, "The minimum value must be less than the maximimum value");
 					minValueBorderProperty.set(null);
-					minValueTooltipProperty.setMessageCode(EMessageCode.MUMBLE_CLIENT_GUI__MIN_VALUE_TOOLTIP, rangeParameter.getType(), minValue);
+					minValueTooltipProperty.setMessageCode(EGuiCode.MUMBLE_CLIENT_GUI__MIN_VALUE_TOOLTIP, rangeParameter.getType(), minValue);
 				} catch (Exception e) {
 					// When the minimum value is strictly greater than the maximum value
 					isMinValueValid = false;
@@ -388,7 +388,7 @@ public class ParameterPresenter extends PresenterBase implements IEventListener 
 				try {
 					rangeParameter.check(minValue, maxValue, "The maximum value must be greater than the minimum value");
 					maxValueBorderProperty.set(null);
-					maxValueTooltipProperty.setMessageCode(EMessageCode.MUMBLE_CLIENT_GUI__MAX_VALUE_TOOLTIP, rangeParameter.getType(), minValue);
+					maxValueTooltipProperty.setMessageCode(EGuiCode.MUMBLE_CLIENT_GUI__MAX_VALUE_TOOLTIP, rangeParameter.getType(), minValue);
 				} catch (Exception e) {
 					// When the maximum value is strictly less than the minimum value
 					isMaxValueValid = false;
@@ -401,7 +401,7 @@ public class ParameterPresenter extends PresenterBase implements IEventListener 
 					rangeParameter.checkRange(minValue, value, maxValue);
 					isValueValid = true;
 					valueBorderProperty.set(null);
-					valueTooltipProperty.setMessageCode(EMessageCode.RANGE_PARAMETER_TOOLTIP, rangeParameter.getType(), minValue, maxValue);
+					valueTooltipProperty.setMessageCode(EGuiCode.RANGE_PARAMETER_TOOLTIP, rangeParameter.getType(), minValue, maxValue);
 				} catch (IllegalArgumentException e) {
 					isValueValid = false;
 					valueBorderProperty.set(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));

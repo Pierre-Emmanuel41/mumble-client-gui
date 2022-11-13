@@ -1,6 +1,6 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
-import fr.pederobien.mumble.client.gui.impl.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.view.ChannelListView;
 import fr.pederobien.mumble.client.gui.impl.view.MainPlayerView;
 import fr.pederobien.mumble.client.player.interfaces.IPlayerMumbleServer;
@@ -15,7 +15,7 @@ public class ServerDetailsPresenter extends PresenterBase {
 	 * @param server The server associated to this presenter.
 	 */
 	public ServerDetailsPresenter(IPlayerMumbleServer server) {
-		setPrimaryStageTitle(EMessageCode.SERVER_WINDOW_TITLE, server.getName(), server.getAddress().getAddress().getHostAddress(), server.getAddress().getPort());
+		setPrimaryStageTitle(EGuiCode.SERVER_WINDOW_TITLE, server.getName(), server.getAddress().getAddress().getHostAddress(), server.getAddress().getPort());
 		mainPlayerView = new MainPlayerView(new MainPlayerPresenter(server.getMainPlayer()));
 		channelListView = new ChannelListView(new ChannelListPresenter(server));
 	}

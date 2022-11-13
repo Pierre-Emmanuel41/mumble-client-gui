@@ -1,18 +1,18 @@
 package fr.pederobien.mumble.client.gui.impl.generic;
 
 import fr.pederobien.dictionary.interfaces.ICode;
-import fr.pederobien.mumble.client.gui.impl.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 
 public enum ButtonType {
 	/**
 	 * Creates a button with the text "ok" (language sensitive)
 	 */
-	OK(EMessageCode.OK),
+	OK(EGuiCode.OK),
 
 	/**
 	 * Creates a button with the text "cancel" (language sensitive)
 	 */
-	CANCEL(EMessageCode.CANCEL);
+	CANCEL(EGuiCode.CANCEL);
 
 	private ICode code;
 

@@ -4,7 +4,7 @@ import fr.pederobien.messenger.interfaces.IResponse;
 import fr.pederobien.mumble.client.gui.event.ParameterMaxValueChangeRequestEvent;
 import fr.pederobien.mumble.client.gui.event.ParameterMinValueChangeRequestEvent;
 import fr.pederobien.mumble.client.gui.event.ParameterValueChangeRequestEvent;
-import fr.pederobien.mumble.client.gui.impl.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter;
 import fr.pederobien.mumble.client.gui.impl.generic.OkCancelPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
@@ -57,14 +57,14 @@ public class AddChannelPresenter extends OkCancelPresenter implements IEventList
 	public AddChannelPresenter(IChannelList channelList) {
 		this.channelList = channelList;
 
-		titleTextProperty = getPropertyHelper().languageProperty(EMessageCode.ADD_CHANNEL_TITLE);
+		titleTextProperty = getPropertyHelper().languageProperty(EGuiCode.ADD_CHANNEL_TITLE);
 
 		channelNameProperty = new SimpleStringProperty();
 		channelNameProperty.addListener((obs, oldValue, newValue) -> validateChannelName(newValue));
-		channelNameTextProperty = getPropertyHelper().languageProperty(EMessageCode.ADD_CHANNEL_NAME);
+		channelNameTextProperty = getPropertyHelper().languageProperty(EGuiCode.ADD_CHANNEL_NAME);
 		channelNameBorderProperty = new SimpleObjectProperty<Border>(null);
-		channelNamePromptProperty = getPropertyHelper().languageProperty(EMessageCode.ADD_CHANNEL_NAME_PROMPT);
-		channelNameTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.CHANNEL_NAME_TOOLTIP);
+		channelNamePromptProperty = getPropertyHelper().languageProperty(EGuiCode.ADD_CHANNEL_NAME_PROMPT);
+		channelNameTooltipProperty = getPropertyHelper().tooltipProperty(EGuiCode.CHANNEL_NAME_TOOLTIP);
 
 		ISoundModifierList soundModifierList = channelList.getServer().getSoundModifiers();
 		selectableSoundModifierPresenter = new SelectableSoundModifierPresenter(getFormView(), soundModifierList, soundModifierList.getDefaultSoundModifier());
@@ -189,6 +189,6 @@ public class AddChannelPresenter extends OkCancelPresenter implements IEventList
 	}
 
 	private void handleAddChannelResponse(IResponse response) {
-		ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.ADD_CHANNEL_TITLE, EMessageCode.ADD_CHANNEL_NAME_RESPONSE, response);
+		ErrorPresenter.showAndWait(AlertType.ERROR, EGuiCode.ADD_CHANNEL_TITLE, EGuiCode.ADD_CHANNEL_NAME_RESPONSE, response);
 	}
 }

@@ -6,7 +6,7 @@ import fr.pederobien.dictionary.interfaces.ICode;
 import fr.pederobien.messenger.interfaces.IResponse;
 import fr.pederobien.mumble.client.gui.environment.Environments;
 import fr.pederobien.mumble.client.gui.environment.Variables;
-import fr.pederobien.mumble.client.gui.impl.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleTooltipProperty;
@@ -68,14 +68,14 @@ public class MainPlayerPresenter extends PresenterBase implements IEventListener
 		EventManager.registerListener(this);
 
 		playerNameProperty = new SimpleStringProperty("");
-		playerStatusProperty = getPropertyHelper().languageProperty(EMessageCode.PLAYER_OFFLINE);
-		disconnectFromServerTextProperty = getPropertyHelper().languageProperty(EMessageCode.DISCONNECT_FROM_SERVER);
+		playerStatusProperty = getPropertyHelper().languageProperty(EGuiCode.PLAYER_OFFLINE);
+		disconnectFromServerTextProperty = getPropertyHelper().languageProperty(EGuiCode.DISCONNECT_FROM_SERVER);
 		playerConnectedProperty = new SimpleBooleanProperty(false);
 		playerCanDisconnectFromChannel = new SimpleBooleanProperty(false);
 
-		muteOrUnmuteTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.MUTE_TOOLTIP);
-		deafenOrUndeafenTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.DEAFEN_TOOLTIP);
-		hangupTooltipProperty = getPropertyHelper().tooltipProperty(EMessageCode.HANG_UP_TOOLTIP);
+		muteOrUnmuteTooltipProperty = getPropertyHelper().tooltipProperty(EGuiCode.MUTE_TOOLTIP);
+		deafenOrUndeafenTooltipProperty = getPropertyHelper().tooltipProperty(EGuiCode.DEAFEN_TOOLTIP);
+		hangupTooltipProperty = getPropertyHelper().tooltipProperty(EGuiCode.HANG_UP_TOOLTIP);
 
 		try {
 			unmuteImage = Environments.loadImage(Variables.MICROPHONE_UNMUTE.getFileName());
@@ -284,19 +284,19 @@ public class MainPlayerPresenter extends PresenterBase implements IEventListener
 	}
 
 	private ICode getPlayerStatusCode() {
-		return player.isOnline() ? EMessageCode.PLAYER_ONLINE : EMessageCode.PLAYER_OFFLINE;
+		return player.isOnline() ? EGuiCode.PLAYER_ONLINE : EGuiCode.PLAYER_OFFLINE;
 	}
 
 	private void handleRemovePlayerResponse(IResponse response) {
-		ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.HANG_UP_FAILED_TITLE, EMessageCode.HANG_UP_FAILED_HEADER, response);
+		ErrorPresenter.showAndWait(AlertType.ERROR, EGuiCode.HANG_UP_FAILED_TITLE, EGuiCode.HANG_UP_FAILED_HEADER, response);
 	}
 
 	private void handlePlayerMuteStatusChangeResponse(IResponse response) {
-		ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.MUTE_FAILED_TITLE, EMessageCode.MUTE_FAILED_HEADER, response);
+		ErrorPresenter.showAndWait(AlertType.ERROR, EGuiCode.MUTE_FAILED_TITLE, EGuiCode.MUTE_FAILED_HEADER, response);
 	}
 
 	private void handlePlayerDeafenStatusChangeResponse(IResponse response) {
-		ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.DEAFEN_FAILED_TITLE, EMessageCode.DEAFEN_FAILED_HEADER, response);
+		ErrorPresenter.showAndWait(AlertType.ERROR, EGuiCode.DEAFEN_FAILED_TITLE, EGuiCode.DEAFEN_FAILED_HEADER, response);
 	}
 
 	private void updateMuteOrUnmute() {
@@ -306,7 +306,7 @@ public class MainPlayerPresenter extends PresenterBase implements IEventListener
 		imageView.setFitHeight(fitHeight);
 		dispatch(() -> {
 			muteOrUnmuteGraphicProperty.set(imageView);
-			muteOrUnmuteTooltipProperty.setMessageCode(isMute ? EMessageCode.UNMUTE_TOOLTIP : EMessageCode.MUTE_TOOLTIP);
+			muteOrUnmuteTooltipProperty.setMessageCode(isMute ? EGuiCode.UNMUTE_TOOLTIP : EGuiCode.MUTE_TOOLTIP);
 		});
 	}
 
@@ -317,7 +317,7 @@ public class MainPlayerPresenter extends PresenterBase implements IEventListener
 		imageView.setFitHeight(fitHeight);
 		dispatch(() -> {
 			deafenOrUndeafenGraphicProperty.set(imageView);
-			deafenOrUndeafenTooltipProperty.setMessageCode(isDeafen ? EMessageCode.UNDEAFEN_TOOLTIP : EMessageCode.DEAFEN_TOOLTIP);
+			deafenOrUndeafenTooltipProperty.setMessageCode(isDeafen ? EGuiCode.UNDEAFEN_TOOLTIP : EGuiCode.DEAFEN_TOOLTIP);
 		});
 	}
 
@@ -330,6 +330,6 @@ public class MainPlayerPresenter extends PresenterBase implements IEventListener
 	}
 
 	private void manageServerLeaveResponse(IResponse response) {
-		ErrorPresenter.showAndWait(AlertType.ERROR, EMessageCode.CANNOT_LEAVE_SERVER_RESPONSE_TITLE, EMessageCode.CANNOT_LEAVE_SERVER_RESPONSE, response);
+		ErrorPresenter.showAndWait(AlertType.ERROR, EGuiCode.CANNOT_LEAVE_SERVER_RESPONSE_TITLE, EGuiCode.CANNOT_LEAVE_SERVER_RESPONSE, response);
 	}
 }

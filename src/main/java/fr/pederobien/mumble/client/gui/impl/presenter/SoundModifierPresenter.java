@@ -5,7 +5,7 @@ import fr.pederobien.mumble.client.gui.event.ParameterMaxValueChangeRequestEvent
 import fr.pederobien.mumble.client.gui.event.ParameterMinValueChangeRequestEvent;
 import fr.pederobien.mumble.client.gui.event.ParameterValueChangeRequestEvent;
 import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter.ErrorPresenterBuilder;
-import fr.pederobien.mumble.client.gui.impl.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.generic.OkCancelPresenter;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.SelectableSoundModifierView;
@@ -38,7 +38,7 @@ public class SoundModifierPresenter extends OkCancelPresenter implements IEventL
 		selectableSoundModifierPresenter = new SelectableSoundModifierPresenter(getFormView(), channel.getServer().getSoundModifiers(), channel.getSoundModifier());
 		selectableSoundModifierPresenter.selectedSoundModifierNameProperty().addListener((obs, oldValue, newValue) -> updateOkDisable());
 		selectableSoundModifierView = new SelectableSoundModifierView(selectableSoundModifierPresenter);
-		titleTextProperty = getPropertyHelper().languageProperty(EMessageCode.SOUND_MODIFIER_TITLE, channel.getName());
+		titleTextProperty = getPropertyHelper().languageProperty(EGuiCode.SOUND_MODIFIER_TITLE, channel.getName());
 
 		okDisableProperty = new SimpleBooleanProperty(true);
 		EventManager.registerListener(this);
@@ -96,8 +96,8 @@ public class SoundModifierPresenter extends OkCancelPresenter implements IEventL
 
 	private void handleSetChannelSoundModifierResponse(IResponse response) {
 		ErrorPresenterBuilder builder = ErrorPresenterBuilder.of(AlertType.ERROR);
-		builder.title(EMessageCode.SOUND_MODIFIER_TITLE, channel.getName());
-		builder.header(EMessageCode.SOUND_MODIFIER_NAME_RESPONSE, selectableSoundModifierPresenter.getSelectedSoundModifier().getName(), channel.getName());
+		builder.title(EGuiCode.SOUND_MODIFIER_TITLE, channel.getName());
+		builder.header(EGuiCode.SOUND_MODIFIER_NAME_RESPONSE, selectableSoundModifierPresenter.getSelectedSoundModifier().getName(), channel.getName());
 		builder.error(response);
 		builder.showAndWait();
 	}

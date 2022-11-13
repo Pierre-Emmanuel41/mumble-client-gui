@@ -2,7 +2,7 @@ package fr.pederobien.mumble.client.gui.impl;
 
 import fr.pederobien.dictionary.interfaces.ICode;
 
-public enum EErrorMessageCode implements ICode {
+public enum EGuiErrorCode implements ICode {
 
 	/**
 	 * Code when no errors occurs.

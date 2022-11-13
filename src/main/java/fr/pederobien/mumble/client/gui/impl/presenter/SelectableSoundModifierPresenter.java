@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import fr.pederobien.mumble.client.gui.impl.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.generic.FormView;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.ParameterListView;
@@ -44,7 +44,7 @@ public class SelectableSoundModifierPresenter extends PresenterBase {
 		parameterListViews.put(selectedSoundModifier, new ParameterListView(new ParameterListPresenter(selectedSoundModifier.getParameters())));
 		selectedParameterListViewProperty = new SimpleObjectProperty<ParameterListView>(parameterListViews.get(selectedSoundModifier));
 
-		modifierNameTextProperty = getPropertyHelper().languageProperty(EMessageCode.SOUND_MODIFIER_NAME);
+		modifierNameTextProperty = getPropertyHelper().languageProperty(EGuiCode.SOUND_MODIFIER_NAME);
 		selectedSoundModifierNameProperty = new SimpleStringProperty(selectedSoundModifier.getName());
 		selectedSoundModifierNameProperty.addListener((obs, oldValue, newValue) -> onSelectedSoundModifierChange(oldValue, newValue));
 	}

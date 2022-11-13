@@ -6,7 +6,7 @@ import java.util.Map;
 import fr.pederobien.messenger.interfaces.IResponse;
 import fr.pederobien.mumble.client.gui.event.ChannelJoinRequestPostEvent;
 import fr.pederobien.mumble.client.gui.event.ChannelJoinRequestPreEvent;
-import fr.pederobien.mumble.client.gui.impl.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter.ErrorPresenterBuilder;
 import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.AddChannelView;
@@ -81,16 +81,16 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 
 		channelNameProperty = new SimpleStringProperty(channel.getName());
 
-		addChannelTextProperty = getPropertyHelper().languageProperty(EMessageCode.ADD_CHANNEL);
+		addChannelTextProperty = getPropertyHelper().languageProperty(EGuiCode.ADD_CHANNEL);
 		addChannelVisibility = new SimpleBooleanProperty(server.getMainPlayer().isAdmin());
 
-		removeChannelTextProperty = getPropertyHelper().languageProperty(EMessageCode.REMOVE_CHANNEL);
+		removeChannelTextProperty = getPropertyHelper().languageProperty(EGuiCode.REMOVE_CHANNEL);
 		removeChannelVisibility = new SimpleBooleanProperty(server.getMainPlayer().isAdmin() && channelList.toList().size() > 1);
 
-		renameChannelTextProperty = getPropertyHelper().languageProperty(EMessageCode.RENAME_CHANNEL);
+		renameChannelTextProperty = getPropertyHelper().languageProperty(EGuiCode.RENAME_CHANNEL);
 		renameChannelVisibility = new SimpleBooleanProperty(server.getMainPlayer().isAdmin());
 
-		soundModifierTextProperty = getPropertyHelper().languageProperty(EMessageCode.SOUND_MODIFIER, channel.getSoundModifier().getName());
+		soundModifierTextProperty = getPropertyHelper().languageProperty(EGuiCode.SOUND_MODIFIER, channel.getSoundModifier().getName());
 		soundModifierVisibility = new SimpleBooleanProperty(server.getMainPlayer().isAdmin());
 	}
 
@@ -193,8 +193,8 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 			channelList.remove(channel.getName(), response -> handleRemoveChannelResponse(response));
 		else {
 			AlertPresenter alertPresenter = new AlertPresenter(AlertType.CONFIRMATION);
-			alertPresenter.title(EMessageCode.REMOVE_CHANNEL_TITLE, channel.getName()).header(EMessageCode.REMOVE_CHANNEL_CONFIRMATION, channel.getName());
-			alertPresenter.content(EMessageCode.REMOVE_CHANNEL_EXPLANATION).getAlert().showAndWait().ifPresent(buttonType -> {
+			alertPresenter.title(EGuiCode.REMOVE_CHANNEL_TITLE, channel.getName()).header(EGuiCode.REMOVE_CHANNEL_CONFIRMATION, channel.getName());
+			alertPresenter.content(EGuiCode.REMOVE_CHANNEL_EXPLANATION).getAlert().showAndWait().ifPresent(buttonType -> {
 				if (buttonType != ButtonType.OK)
 					return;
 				channelList.remove(channel.getName(), response -> handleRemoveChannelResponse(response));
@@ -247,7 +247,7 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 		if (!event.getChannel().equals(channel))
 			return;
 
-		dispatch(() -> soundModifierTextProperty.setCode(EMessageCode.SOUND_MODIFIER, event.getChannel().getSoundModifier().getName()));
+		dispatch(() -> soundModifierTextProperty.setCode(EGuiCode.SOUND_MODIFIER, event.getChannel().getSoundModifier().getName()));
 	}
 
 	@EventHandler
@@ -308,8 +308,8 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 
 	private void handleRemoveChannelResponse(IResponse response) {
 		ErrorPresenterBuilder builder = ErrorPresenterBuilder.of(AlertType.ERROR);
-		builder.title(EMessageCode.REMOVE_CHANNEL_TITLE, channel.getName());
-		builder.header(EMessageCode.REMOVE_CHANNEL_RESPONSE, channel.getName());
+		builder.title(EGuiCode.REMOVE_CHANNEL_TITLE, channel.getName());
+		builder.header(EGuiCode.REMOVE_CHANNEL_RESPONSE, channel.getName());
 		builder.error(response);
 		builder.showAndWait();
 	}

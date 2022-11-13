@@ -1,6 +1,6 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
-import fr.pederobien.mumble.client.gui.impl.EMessageCode;
+import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.view.ServerListView;
 import fr.pederobien.mumble.client.gui.impl.view.ServerManagementView;
 import fr.pederobien.mumble.client.gui.persistence.configuration.GuiConfigurationPersistence;
@@ -13,7 +13,7 @@ public class MainPresenter extends PresenterBase {
 	private ServerManagementView serverManagementView;
 
 	public MainPresenter() {
-		setPrimaryStageTitle(EMessageCode.MUMBLE_WINDOW_TITLE);
+		setPrimaryStageTitle(EGuiCode.MUMBLE_WINDOW_TITLE);
 
 		for (IPlayerMumbleServer server : ServerListPersistence.getInstance().getServerList().getServers())
 			server.open();
