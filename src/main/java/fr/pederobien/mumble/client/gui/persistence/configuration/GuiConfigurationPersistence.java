@@ -1,5 +1,7 @@
 package fr.pederobien.mumble.client.gui.persistence.configuration;
 
+import java.io.FileNotFoundException;
+
 import fr.pederobien.mumble.client.gui.environment.Variables;
 import fr.pederobien.mumble.client.gui.impl.GuiConfiguration;
 import fr.pederobien.mumble.client.gui.interfaces.IGuiConfiguration;
@@ -47,6 +49,8 @@ public class GuiConfigurationPersistence {
 	public void deserialize() {
 		try {
 			persistence.deserialize(guiConfiguration, Variables.MUMBLE_FOLDER.getPath().resolve(Variables.GUI_CONFIGURATION.getFileName()).toString());
+		} catch (FileNotFoundException e) {
+			// Do nothing, use the default GUI configuration instead.
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -1,5 +1,7 @@
 package fr.pederobien.mumble.client.gui.persistence.model;
 
+import java.io.FileNotFoundException;
+
 import fr.pederobien.mumble.client.gui.environment.Variables;
 import fr.pederobien.mumble.client.gui.model.ServerList;
 import fr.pederobien.mumble.client.gui.persistence.model.loaders.ServerListSerializerV10;
@@ -46,6 +48,8 @@ public class ServerListPersistence {
 	public void deserialize() {
 		try {
 			persistence.deserialize(serverList, Variables.MUMBLE_FOLDER.getPath().resolve(Variables.SERVER_LIST.getFileName()).toString());
+		} catch (FileNotFoundException e) {
+			// Do nothing, use an empty server list instead.
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
