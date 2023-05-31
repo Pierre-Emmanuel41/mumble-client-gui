@@ -8,3 +8,8 @@
 	url = https://github.com/Pierre-Emmanuel41/dictionary.git
 	update = rebase
 	branch = 2.0-SNAPSHOT
+[submodule "java-fx-configuration"]
+	path = java-fx-configuration
+	url = https://github.com/Pierre-Emmanuel41/java-fx-configuration.git
+	update = rebase
+	branch = 1.0-SNAPSHOT
