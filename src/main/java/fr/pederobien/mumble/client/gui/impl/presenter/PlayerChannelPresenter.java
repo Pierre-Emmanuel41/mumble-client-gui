@@ -2,13 +2,13 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import java.io.IOException;
 
+import fr.pederobien.javafx.configuration.impl.GuiHelper;
+import fr.pederobien.javafx.configuration.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.messenger.interfaces.IResponse;
-import fr.pederobien.mumble.client.gui.environment.Environments;
-import fr.pederobien.mumble.client.gui.environment.Variables;
 import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.ErrorCodeWrapper;
+import fr.pederobien.mumble.client.gui.impl.Images;
 import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter.ErrorPresenterBuilder;
-import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.player.event.MumblePlayerAdminChangePostEvent;
 import fr.pederobien.mumble.client.player.event.MumbleServerLeavePostEvent;
 import fr.pederobien.mumble.client.player.interfaces.IPlayer;
@@ -36,7 +36,6 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 	private SimpleLanguageProperty muteOrUnmuteTextProperty;
 	private BooleanProperty muteOrUnmuteVisibleProperty;
 
-	private SimpleLanguageProperty kickPlayerTextProperty;
 	private BooleanProperty kickPlayerVisiblity;
 
 	/**
@@ -53,19 +52,17 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 		isPlayerDeafen = new SimpleBooleanProperty(player.isDeafen());
 
 		try {
-			muteImage = Environments.loadImage(Variables.MICROPHONE_OFF.getFileName());
-			deafenImage = Environments.loadImage(Variables.HEADSET_OFF.getFileName());
+			muteImage = GuiHelper.loadImage(Images.MICROPHONE_OFF.getName());
+			deafenImage = GuiHelper.loadImage(Images.HEADSET_OFF.getName());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		EventManager.registerListener(this);
-
-		muteOrUnmuteTextProperty = getPropertyHelper().languageProperty(EGuiCode.MUTE_TOOLTIP);
+		muteOrUnmuteTextProperty = getPropertyHelper().newLanguageProperty(EGuiCode.MUTE_TOOLTIP);
 		muteOrUnmuteVisibleProperty = new SimpleBooleanProperty(!isMainPlayer());
-
-		kickPlayerTextProperty = getPropertyHelper().languageProperty(EGuiCode.KICK_PLAYER, player.getName());
 		kickPlayerVisiblity = new SimpleBooleanProperty(!isMainPlayer() && server.getMainPlayer().isAdmin());
+
+		EventManager.registerListener(this);
 	}
 
 	/**
@@ -127,13 +124,6 @@ public class PlayerChannelPresenter extends PresenterBase implements IEventListe
 	 */
 	public void onMuteOrUnmute() {
 		player.setMute(!player.isMute(), response -> onPlayerMuteOrUnmuteResponse(response));
-	}
-
-	/**
-	 * @return The property that display "Kick".
-	 */
-	public StringProperty kickPlayerTextProperty() {
-		return kickPlayerTextProperty;
 	}
 
 	/**

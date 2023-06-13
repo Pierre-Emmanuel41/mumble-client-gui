@@ -1,13 +1,12 @@
 package fr.pederobien.mumble.client.gui;
 
-import fr.pederobien.mumble.client.gui.environment.Environments;
-import fr.pederobien.mumble.client.gui.environment.Variables;
+import fr.pederobien.javafx.configuration.impl.GuiHelper;
+import fr.pederobien.javafx.configuration.interfaces.IEnvironmentVariable;
 import fr.pederobien.mumble.client.gui.impl.EGuiCode;
+import fr.pederobien.mumble.client.gui.impl.Variables;
 import fr.pederobien.mumble.client.gui.impl.presenter.AlertPresenter;
 import fr.pederobien.mumble.client.gui.impl.presenter.MainPresenter;
-import fr.pederobien.mumble.client.gui.impl.properties.PropertyHelper;
 import fr.pederobien.mumble.client.gui.impl.view.MainView;
-import fr.pederobien.mumble.client.gui.persistence.configuration.GuiConfigurationPersistence;
 import fr.pederobien.mumble.client.gui.persistence.model.ServerListPersistence;
 import fr.pederobien.mumble.client.player.event.MumbleGamePortCheckPostEvent;
 import fr.pederobien.utils.ApplicationLock;
@@ -21,7 +20,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
 public class MumbleClientApplication extends Application implements IEventListener {
-	private static PropertyHelper propertyHelper;
 	private static Stage primaryStage;
 	private static ApplicationLock lock;
 
@@ -31,7 +29,7 @@ public class MumbleClientApplication extends Application implements IEventListen
 	 * @param args The command line arguments passed to the application.
 	 */
 	public void run(String[] args) {
-		lock = new ApplicationLock(Variables.LOCK_FILE.getFileName(), Variables.MUMBLE_FOLDER.getPath());
+		lock = new ApplicationLock(Variables.LOCK_FILE.getPath().toFile().getName(), Variables.LOCK_FILE.getPath().getParent());
 
 		if (args.length > 0 && args[0].equalsIgnoreCase("true"))
 			EventManager.registerListener(this);
@@ -43,10 +41,13 @@ public class MumbleClientApplication extends Application implements IEventListen
 	public void start(Stage primaryStage) throws Exception {
 		MumbleClientApplication.primaryStage = primaryStage;
 
-		GuiConfigurationPersistence.getInstance().deserialize();
+		GuiHelper.deserialize(Variables.MUMBLE_FOLDER.getPath().toString(), GuiHelper.getConfiguration());
+		for (IEnvironmentVariable variable : Variables.values())
+			GuiHelper.add(variable);
 
-		propertyHelper = new PropertyHelper(GuiConfigurationPersistence.getInstance().getGuiConfiguration());
-		Environments.registerDictionaries();
+		String[] dictionaries = new String[] { "English.xml", "French.xml" };
+		for (String dictionary : dictionaries)
+			GuiHelper.registerDictionary(dictionary);
 
 		if (!lock.lock()) {
 			AlertPresenter presenter = new AlertPresenter(AlertType.ERROR);
@@ -63,13 +64,6 @@ public class MumbleClientApplication extends Application implements IEventListen
 		primaryStage.setScene(new Scene(mainView.getRoot()));
 		primaryStage.setMaximized(true);
 		primaryStage.show();
-	}
-
-	/**
-	 * @return The helper that creates properties.
-	 */
-	public static PropertyHelper getPropertyHelper() {
-		return propertyHelper;
 	}
 
 	/**

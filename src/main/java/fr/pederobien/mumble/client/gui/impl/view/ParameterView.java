@@ -1,5 +1,9 @@
 package fr.pederobien.mumble.client.gui.impl.view;
 
+import fr.pederobien.javafx.configuration.impl.components.SimpleLabel;
+import fr.pederobien.javafx.configuration.impl.components.SimpleTextField;
+import fr.pederobien.javafx.configuration.impl.components.SimpleToggleButton;
+import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.presenter.ParameterPresenter;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -10,7 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 
 public class ParameterView extends ViewBase<ParameterPresenter, HBox> {
-	private Label parameterName;
+	private SimpleLabel parameterName;
 	private Region valueView;
 	private double marginBetweenLabelAndTextField = 20.0;
 
@@ -26,9 +30,7 @@ public class ParameterView extends ViewBase<ParameterPresenter, HBox> {
 		HBox box = new HBox();
 		box.setAlignment(Pos.CENTER_LEFT);
 
-		parameterName = new Label();
-		parameterName.fontProperty().bind(getPresenter().fontProperty());
-		parameterName.textProperty().bind(getPresenter().parameterNameProperty());
+		parameterName = new SimpleLabel(getPresenter().parameterNameProperty());
 		getRoot().getChildren().add(parameterName);
 
 		valueView = getPresenter().isBooleanParameter() ? createBooleanView() : getPresenter().isRangeParameter() ? createRangeView() : createDefaultView();
@@ -51,18 +53,14 @@ public class ParameterView extends ViewBase<ParameterPresenter, HBox> {
 	}
 
 	private TextField createDefaultView() {
-		TextField textfield = new TextField();
-		textfield.fontProperty().bind(getPresenter().fontProperty());
-		textfield.textProperty().bindBidirectional(getPresenter().valueProperty());
+		SimpleTextField textfield = new SimpleTextField(getPresenter().valueProperty());
 		textfield.borderProperty().bind(getPresenter().valueBorderProperty());
 		textfield.tooltipProperty().bind(getPresenter().valueTooltipProperty());
 		return textfield;
 	}
 
 	private ToggleButton createBooleanView() {
-		ToggleButton button = new ToggleButton();
-		button.fontProperty().bind(getPresenter().fontProperty());
-		button.textProperty().bind(getPresenter().booleanTextProperty());
+		SimpleToggleButton button = new SimpleToggleButton(getPresenter().booleanTextProperty());
 		button.selectedProperty().bindBidirectional(getPresenter().booleanValueProperty());
 		return button;
 	}
@@ -74,27 +72,19 @@ public class ParameterView extends ViewBase<ParameterPresenter, HBox> {
 		TextField valueTextField = createDefaultView();
 		horizontalBox.getChildren().add(valueTextField);
 
-		Label minLabel = new Label();
-		minLabel.fontProperty().bind(getPresenter().fontProperty());
-		minLabel.textProperty().bind(getPresenter().minTextProperty());
+		SimpleLabel minLabel = new SimpleLabel(EGuiCode.MUMBLE_CLIENT_GUI__MIN_VALUE);
 		horizontalBox.getChildren().add(minLabel);
 
-		TextField minTextField = new TextField();
-		minTextField.fontProperty().bind(getPresenter().fontProperty());
-		minTextField.textProperty().bindBidirectional(getPresenter().minValueProperty());
+		SimpleTextField minTextField = new SimpleTextField(getPresenter().minValueProperty());
 		minTextField.borderProperty().bind(getPresenter().minValueBorderProperty());
 		minTextField.tooltipProperty().bind(getPresenter().minValueTooltipProperty());
 		minTextField.setPrefWidth(60);
 		horizontalBox.getChildren().add(minTextField);
 
-		Label maxLabel = new Label();
-		maxLabel.fontProperty().bind(getPresenter().fontProperty());
-		maxLabel.textProperty().bind(getPresenter().maxTextProperty());
+		SimpleLabel maxLabel = new SimpleLabel(EGuiCode.MUMBLE_CLIENT_GUI__MAX_VALUE);
 		horizontalBox.getChildren().add(maxLabel);
 
-		TextField maxTextField = new TextField();
-		maxTextField.fontProperty().bind(getPresenter().fontProperty());
-		maxTextField.textProperty().bindBidirectional(getPresenter().maxValueProperty());
+		SimpleTextField maxTextField = new SimpleTextField(getPresenter().maxValueProperty());
 		maxTextField.borderProperty().bind(getPresenter().maxValueBorderProperty());
 		maxTextField.tooltipProperty().bind(getPresenter().maxValueTooltipProperty());
 		maxTextField.setPrefWidth(60);

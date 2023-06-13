@@ -1,10 +1,11 @@
 package fr.pederobien.mumble.client.gui.impl.view;
 
+import fr.pederobien.javafx.configuration.impl.components.SimpleLabel;
+import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.presenter.PlayerChannelPresenter;
 import javafx.geometry.Insets;
 import javafx.geometry.Side;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -24,9 +25,7 @@ public class PlayerChannelView extends ViewBase<PlayerChannelPresenter, BorderPa
 	public PlayerChannelView(PlayerChannelPresenter presenter) {
 		super(presenter, new BorderPane());
 
-		Label playerName = new Label();
-		playerName.fontProperty().bind(getPresenter().fontProperty());
-		playerName.textProperty().bind(getPresenter().playerNameProperty());
+		SimpleLabel playerName = new SimpleLabel(getPresenter().playerNameProperty());
 		playerName.setTextFill(Color.BLACK);
 		getRoot().setLeft(playerName);
 
@@ -52,9 +51,7 @@ public class PlayerChannelView extends ViewBase<PlayerChannelPresenter, BorderPa
 		ContextMenu contextMenu = new ContextMenu();
 
 		// Graphic for muteOrUnmute menuItem
-		Label muteOrUnmuteLabel = new Label();
-		muteOrUnmuteLabel.fontProperty().bind(getPresenter().fontProperty());
-		muteOrUnmuteLabel.textProperty().bind(getPresenter().muteOrUnmuteTextProperty());
+		SimpleLabel muteOrUnmuteLabel = new SimpleLabel(getPresenter().muteOrUnmuteTextProperty());
 		muteOrUnmuteLabel.setTextFill(Color.BLACK);
 
 		MenuItem muteOrUnmute = new MenuItem();
@@ -64,9 +61,7 @@ public class PlayerChannelView extends ViewBase<PlayerChannelPresenter, BorderPa
 		contextMenu.getItems().add(muteOrUnmute);
 
 		// Graphic for kick menuItem
-		Label kickLabel = new Label();
-		kickLabel.fontProperty().bind(getPresenter().fontProperty());
-		kickLabel.textProperty().bind(getPresenter().kickPlayerTextProperty());
+		SimpleLabel kickLabel = new SimpleLabel(EGuiCode.KICK_PLAYER);
 		kickLabel.setTextFill(Color.BLACK);
 
 		MenuItem kick = new MenuItem();

@@ -3,22 +3,19 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.pederobien.javafx.configuration.impl.GuiHelper;
+import fr.pederobien.javafx.configuration.impl.properties.PropertyHelper;
+import fr.pederobien.javafx.configuration.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.MumbleClientApplication;
 import fr.pederobien.mumble.client.gui.impl.EGuiCode;
-import fr.pederobien.mumble.client.gui.impl.properties.PropertyHelper;
-import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class PresenterBase {
 	private static final List<PresenterBase> PRESENTERS;
-	private static final ObjectProperty<Font> FONT_PROPERTY;
 
 	static {
 		PRESENTERS = new ArrayList<PresenterBase>();
-		FONT_PROPERTY = MumbleClientApplication.getPropertyHelper().fontProperty();
 	}
 
 	public PresenterBase() {
@@ -37,7 +34,7 @@ public class PresenterBase {
 	 * @return The helper that creates properties.
 	 */
 	public static PropertyHelper getPropertyHelper() {
-		return MumbleClientApplication.getPropertyHelper();
+		return GuiHelper.getPropertyHelper();
 	}
 
 	/**
@@ -77,7 +74,7 @@ public class PresenterBase {
 	 * @param args The message arguments if the message needs arguments.
 	 */
 	public static void setPrimaryStageTitle(EGuiCode code, Object... args) {
-		getPrimaryStage().titleProperty().bind(getPropertyHelper().languageProperty(code, args));
+		getPrimaryStage().titleProperty().bind(getPropertyHelper().newLanguageProperty(code, args));
 	}
 
 	/**
@@ -85,12 +82,5 @@ public class PresenterBase {
 	 * performed.
 	 */
 	public void onCloseRequest() {
-	}
-
-	/**
-	 * @return The font property used for each view.
-	 */
-	public ObjectProperty<Font> fontProperty() {
-		return FONT_PROPERTY;
 	}
 }

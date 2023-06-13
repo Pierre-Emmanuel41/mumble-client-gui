@@ -1,10 +1,11 @@
 package fr.pederobien.mumble.client.gui.impl.view;
 
+import fr.pederobien.javafx.configuration.impl.components.SimpleButton;
+import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.presenter.ServerManagementPresenter;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.layout.FlowPane;
 
 public class ServerManagementView extends ViewBase<ServerManagementPresenter, FlowPane> {
@@ -19,30 +20,22 @@ public class ServerManagementView extends ViewBase<ServerManagementPresenter, Fl
 
 		getRoot().setAlignment(Pos.CENTER);
 
-		Button joinButton = new Button();
-		joinButton.fontProperty().bind(getPresenter().fontProperty());
-		joinButton.textProperty().bind(getPresenter().joinServerTextProperty());
+		SimpleButton joinButton = new SimpleButton(EGuiCode.JOIN_SERVER);
 		joinButton.disableProperty().bind(getPresenter().joinDisableProperty());
 		joinButton.setOnAction(e -> getPresenter().onJoin());
 		add(joinButton);
 
-		Button addButton = new Button();
-		addButton.fontProperty().bind(getPresenter().fontProperty());
-		addButton.textProperty().bind(getPresenter().addServerTextProperty());
+		SimpleButton addButton = new SimpleButton(EGuiCode.ADD_SERVER);
 		addButton.disableProperty().bind(getPresenter().addDisableProperty());
 		addButton.setOnAction(e -> getPresenter().onAdd());
 		add(addButton);
 
-		Button editButton = new Button();
-		editButton.fontProperty().bind(getPresenter().fontProperty());
-		editButton.textProperty().bind(getPresenter().editServerTextProperty());
+		SimpleButton editButton = new SimpleButton(EGuiCode.EDIT_SERVER);
 		editButton.disableProperty().bind(getPresenter().editDisableProperty());
 		editButton.setOnAction(e -> getPresenter().onEdit());
 		add(editButton);
 
-		Button deleteButton = new Button();
-		deleteButton.fontProperty().bind(getPresenter().fontProperty());
-		deleteButton.textProperty().bind(getPresenter().deleteServerTextProperty());
+		SimpleButton deleteButton = new SimpleButton(EGuiCode.DELETE_SERVER);
 		deleteButton.disableProperty().bind(getPresenter().deleteDisableProperty());
 		deleteButton.setOnAction(e -> getPresenter().onDelete());
 		add(deleteButton);

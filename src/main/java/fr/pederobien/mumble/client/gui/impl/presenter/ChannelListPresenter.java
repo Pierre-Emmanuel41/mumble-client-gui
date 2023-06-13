@@ -67,7 +67,7 @@ public class ChannelListPresenter extends PresenterBase implements IEventListene
 	 * @throws ClassCastException If the type of object used as model to create its view is not IChannel.
 	 */
 	public <T> Callback<ListView<T>, ListCell<T>> channelViewFactory(Color enteredColor) {
-		return listView -> getPropertyHelper().cellView(item -> {
+		return listView -> getPropertyHelper().newListCell(item -> {
 			ChannelView view = channelViews.get(item);
 			if (view == null) {
 				view = new ChannelView(new ChannelPresenter((IChannel) item));

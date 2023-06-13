@@ -1,13 +1,13 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
+import fr.pederobien.javafx.configuration.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.messenger.interfaces.IResponse;
 import fr.pederobien.mumble.client.gui.event.ParameterMaxValueChangeRequestEvent;
 import fr.pederobien.mumble.client.gui.event.ParameterMinValueChangeRequestEvent;
 import fr.pederobien.mumble.client.gui.event.ParameterValueChangeRequestEvent;
-import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter.ErrorPresenterBuilder;
 import fr.pederobien.mumble.client.gui.impl.EGuiCode;
+import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter.ErrorPresenterBuilder;
 import fr.pederobien.mumble.client.gui.impl.generic.OkCancelPresenter;
-import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.SelectableSoundModifierView;
 import fr.pederobien.mumble.client.player.interfaces.IChannel;
 import fr.pederobien.utils.event.EventHandler;
@@ -38,7 +38,7 @@ public class SoundModifierPresenter extends OkCancelPresenter implements IEventL
 		selectableSoundModifierPresenter = new SelectableSoundModifierPresenter(getFormView(), channel.getServer().getSoundModifiers(), channel.getSoundModifier());
 		selectableSoundModifierPresenter.selectedSoundModifierNameProperty().addListener((obs, oldValue, newValue) -> updateOkDisable());
 		selectableSoundModifierView = new SelectableSoundModifierView(selectableSoundModifierPresenter);
-		titleTextProperty = getPropertyHelper().languageProperty(EGuiCode.SOUND_MODIFIER_TITLE, channel.getName());
+		titleTextProperty = getPropertyHelper().newLanguageProperty(EGuiCode.SOUND_MODIFIER_TITLE, channel.getName());
 
 		okDisableProperty = new SimpleBooleanProperty(true);
 		EventManager.registerListener(this);

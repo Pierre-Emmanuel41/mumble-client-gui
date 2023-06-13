@@ -5,9 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.generic.FormView;
-import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.ParameterListView;
 import fr.pederobien.mumble.client.player.interfaces.ISoundModifier;
 import fr.pederobien.mumble.client.player.interfaces.ISoundModifierList;
@@ -23,7 +21,6 @@ public class SelectableSoundModifierPresenter extends PresenterBase {
 	private ISoundModifierList soundModifierList;
 	private ISoundModifier initialSoundModifier, selectedSoundModifier;
 
-	private SimpleLanguageProperty modifierNameTextProperty;
 	private StringProperty selectedSoundModifierNameProperty;
 	private ObjectProperty<ParameterListView> selectedParameterListViewProperty;
 	private Map<ISoundModifier, ParameterListView> parameterListViews;
@@ -44,7 +41,6 @@ public class SelectableSoundModifierPresenter extends PresenterBase {
 		parameterListViews.put(selectedSoundModifier, new ParameterListView(new ParameterListPresenter(selectedSoundModifier.getParameters())));
 		selectedParameterListViewProperty = new SimpleObjectProperty<ParameterListView>(parameterListViews.get(selectedSoundModifier));
 
-		modifierNameTextProperty = getPropertyHelper().languageProperty(EGuiCode.SOUND_MODIFIER_NAME);
 		selectedSoundModifierNameProperty = new SimpleStringProperty(selectedSoundModifier.getName());
 		selectedSoundModifierNameProperty.addListener((obs, oldValue, newValue) -> onSelectedSoundModifierChange(oldValue, newValue));
 	}
@@ -107,13 +103,6 @@ public class SelectableSoundModifierPresenter extends PresenterBase {
 	 */
 	public ISoundModifier getSelectedSoundModifier() {
 		return selectedSoundModifier;
-	}
-
-	/**
-	 * @return The property that contains the text "New sound modifier :"
-	 */
-	public StringProperty modifierNameTextProperty() {
-		return modifierNameTextProperty;
 	}
 
 	/**

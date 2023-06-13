@@ -21,10 +21,10 @@ public class ChannelListView extends ViewBase<ChannelListPresenter, StackPane> {
 		channelListView.setItems(getPresenter().getChannels());
 		channelListView.setBackground(Background.EMPTY);
 
-		// Visible if the list view is not empty.
 		channelListView.visibleProperty().bind(Bindings.greaterThan(Bindings.size(channelListView.getItems()), new SimpleIntegerProperty(0)));
 		channelListView.managedProperty().bind(channelListView.visibleProperty());
 
+		// Visible if the list view is not empty.
 		channelListView.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
 			dispatch(() -> channelListView.getSelectionModel().clearSelection());
 		});

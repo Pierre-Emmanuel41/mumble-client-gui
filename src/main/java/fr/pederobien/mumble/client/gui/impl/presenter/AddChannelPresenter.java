@@ -1,5 +1,6 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
+import fr.pederobien.javafx.configuration.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.messenger.interfaces.IResponse;
 import fr.pederobien.mumble.client.gui.event.ParameterMaxValueChangeRequestEvent;
 import fr.pederobien.mumble.client.gui.event.ParameterMinValueChangeRequestEvent;
@@ -7,8 +8,6 @@ import fr.pederobien.mumble.client.gui.event.ParameterValueChangeRequestEvent;
 import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter;
 import fr.pederobien.mumble.client.gui.impl.generic.OkCancelPresenter;
-import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
-import fr.pederobien.mumble.client.gui.impl.properties.SimpleTooltipProperty;
 import fr.pederobien.mumble.client.gui.impl.view.SelectableSoundModifierView;
 import fr.pederobien.mumble.client.player.interfaces.IChannelList;
 import fr.pederobien.mumble.client.player.interfaces.ISoundModifierList;
@@ -22,7 +21,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
@@ -36,10 +34,7 @@ public class AddChannelPresenter extends OkCancelPresenter implements IEventList
 	private SimpleLanguageProperty titleTextProperty;
 
 	private StringProperty channelNameProperty;
-	private SimpleLanguageProperty channelNameTextProperty;
 	private ObjectProperty<Border> channelNameBorderProperty;
-	private SimpleLanguageProperty channelNamePromptProperty;
-	private SimpleTooltipProperty channelNameTooltipProperty;
 
 	private SelectableSoundModifierPresenter selectableSoundModifierPresenter;
 	private SelectableSoundModifierView selectableSoundModifierView;
@@ -57,14 +52,11 @@ public class AddChannelPresenter extends OkCancelPresenter implements IEventList
 	public AddChannelPresenter(IChannelList channelList) {
 		this.channelList = channelList;
 
-		titleTextProperty = getPropertyHelper().languageProperty(EGuiCode.ADD_CHANNEL_TITLE);
+		titleTextProperty = getPropertyHelper().newLanguageProperty(EGuiCode.ADD_CHANNEL_TITLE);
 
 		channelNameProperty = new SimpleStringProperty();
 		channelNameProperty.addListener((obs, oldValue, newValue) -> validateChannelName(newValue));
-		channelNameTextProperty = getPropertyHelper().languageProperty(EGuiCode.ADD_CHANNEL_NAME);
 		channelNameBorderProperty = new SimpleObjectProperty<Border>(null);
-		channelNamePromptProperty = getPropertyHelper().languageProperty(EGuiCode.ADD_CHANNEL_NAME_PROMPT);
-		channelNameTooltipProperty = getPropertyHelper().tooltipProperty(EGuiCode.CHANNEL_NAME_TOOLTIP);
 
 		ISoundModifierList soundModifierList = channelList.getServer().getSoundModifiers();
 		selectableSoundModifierPresenter = new SelectableSoundModifierPresenter(getFormView(), soundModifierList, soundModifierList.getDefaultSoundModifier());
@@ -111,33 +103,11 @@ public class AddChannelPresenter extends OkCancelPresenter implements IEventList
 	}
 
 	/**
-	 * @return The property to display "Channel name : ".
-	 */
-	public StringProperty channelNameTextProperty() {
-		return channelNameTextProperty;
-	}
-
-	/**
 	 * @return The border property when the channel name is defined by the user. The border becomes red when the channel name does not
 	 *         respect the constraints and disappears when the channel name respects constraints.
 	 */
 	public ObjectProperty<Border> channelNameBorderProperty() {
 		return channelNameBorderProperty;
-	}
-
-	/**
-	 * @return The property to display "Channel name" as prompt.
-	 */
-	public StringProperty channelNamePromptProperty() {
-		return channelNamePromptProperty;
-	}
-
-	/**
-	 * @return The tooltip property to display on the channel name. This tooltip explains the constraints the channel name must
-	 *         respect.
-	 */
-	public ObjectProperty<Tooltip> channelNameTooltipProperty() {
-		return channelNameTooltipProperty;
 	}
 
 	/**

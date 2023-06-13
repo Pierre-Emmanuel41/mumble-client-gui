@@ -3,13 +3,13 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 import java.io.IOException;
 
 import fr.pederobien.dictionary.interfaces.ICode;
+import fr.pederobien.javafx.configuration.impl.GuiHelper;
+import fr.pederobien.javafx.configuration.impl.properties.SimpleLanguageProperty;
+import fr.pederobien.javafx.configuration.impl.properties.SimpleTooltipProperty;
 import fr.pederobien.messenger.interfaces.IResponse;
-import fr.pederobien.mumble.client.gui.environment.Environments;
-import fr.pederobien.mumble.client.gui.environment.Variables;
 import fr.pederobien.mumble.client.gui.impl.EGuiCode;
+import fr.pederobien.mumble.client.gui.impl.Images;
 import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter;
-import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
-import fr.pederobien.mumble.client.gui.impl.properties.SimpleTooltipProperty;
 import fr.pederobien.mumble.client.gui.impl.view.MainView;
 import fr.pederobien.mumble.client.player.event.MumbleChannelPlayerListPlayerAddPostEvent;
 import fr.pederobien.mumble.client.player.event.MumbleChannelPlayerListPlayerRemovePostEvent;
@@ -42,7 +42,6 @@ public class MainPlayerPresenter extends PresenterBase implements IEventListener
 
 	private StringProperty playerNameProperty;
 	private SimpleLanguageProperty playerStatusProperty;
-	private SimpleLanguageProperty disconnectFromServerTextProperty;
 	private BooleanProperty playerConnectedProperty;
 	private BooleanProperty playerCanDisconnectFromChannel;
 
@@ -68,23 +67,24 @@ public class MainPlayerPresenter extends PresenterBase implements IEventListener
 		EventManager.registerListener(this);
 
 		playerNameProperty = new SimpleStringProperty("");
-		playerStatusProperty = getPropertyHelper().languageProperty(EGuiCode.PLAYER_OFFLINE);
-		disconnectFromServerTextProperty = getPropertyHelper().languageProperty(EGuiCode.DISCONNECT_FROM_SERVER);
+		playerStatusProperty = getPropertyHelper().newLanguageProperty(EGuiCode.PLAYER_OFFLINE);
 		playerConnectedProperty = new SimpleBooleanProperty(false);
 		playerCanDisconnectFromChannel = new SimpleBooleanProperty(false);
 
-		muteOrUnmuteTooltipProperty = getPropertyHelper().tooltipProperty(EGuiCode.MUTE_TOOLTIP);
-		deafenOrUndeafenTooltipProperty = getPropertyHelper().tooltipProperty(EGuiCode.DEAFEN_TOOLTIP);
-		hangupTooltipProperty = getPropertyHelper().tooltipProperty(EGuiCode.HANG_UP_TOOLTIP);
+		muteOrUnmuteTooltipProperty = getPropertyHelper().newTooltipProperty(EGuiCode.MUTE_TOOLTIP);
+		deafenOrUndeafenTooltipProperty = getPropertyHelper().newTooltipProperty(EGuiCode.DEAFEN_TOOLTIP);
+		hangupTooltipProperty = getPropertyHelper().newTooltipProperty(EGuiCode.HANG_UP_TOOLTIP);
 
 		try {
-			unmuteImage = Environments.loadImage(Variables.MICROPHONE_UNMUTE.getFileName());
-			muteImage = Environments.loadImage(Variables.MICROPHONE_MUTE.getFileName());
+			unmuteImage = GuiHelper.loadImage(Images.MICROPHONE_UNMUTE.getName());
+			muteImage = GuiHelper.loadImage(Images.MICROPHONE_MUTE.getName());
 			muteOrUnmuteGraphicProperty = new SimpleObjectProperty<Node>();
-			deafenImage = Environments.loadImage(Variables.HEADSET_DEAFEN.getFileName());
-			undeafenImage = Environments.loadImage(Variables.HEADSET_UNDEAFEN.getFileName());
+
+			deafenImage = GuiHelper.loadImage(Images.HEADSET_DEAFEN.getName());
+			undeafenImage = GuiHelper.loadImage(Images.HEADSET_UNDEAFEN.getName());
 			deafenOrUndeafenGraphicProperty = new SimpleObjectProperty<Node>();
-			hangupImage = Environments.loadImage(Variables.HANG_UP.getFileName());
+
+			hangupImage = GuiHelper.loadImage(Images.HANG_UP.getName());
 			hangupGraphicProperty = new SimpleObjectProperty<Node>();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -208,13 +208,6 @@ public class MainPlayerPresenter extends PresenterBase implements IEventListener
 	}
 
 	/**
-	 * @return The text to display on the component that allow the player to leave the server.
-	 */
-	public StringProperty disconnectFromServerTextProperty() {
-		return disconnectFromServerTextProperty;
-	}
-
-	/**
 	 * @return The client mumble player.
 	 */
 	public IPlayer getPlayer() {
@@ -306,7 +299,7 @@ public class MainPlayerPresenter extends PresenterBase implements IEventListener
 		imageView.setFitHeight(fitHeight);
 		dispatch(() -> {
 			muteOrUnmuteGraphicProperty.set(imageView);
-			muteOrUnmuteTooltipProperty.setMessageCode(isMute ? EGuiCode.UNMUTE_TOOLTIP : EGuiCode.MUTE_TOOLTIP);
+			muteOrUnmuteTooltipProperty.setCode(isMute ? EGuiCode.UNMUTE_TOOLTIP : EGuiCode.MUTE_TOOLTIP);
 		});
 	}
 
@@ -317,7 +310,7 @@ public class MainPlayerPresenter extends PresenterBase implements IEventListener
 		imageView.setFitHeight(fitHeight);
 		dispatch(() -> {
 			deafenOrUndeafenGraphicProperty.set(imageView);
-			deafenOrUndeafenTooltipProperty.setMessageCode(isDeafen ? EGuiCode.UNDEAFEN_TOOLTIP : EGuiCode.DEAFEN_TOOLTIP);
+			deafenOrUndeafenTooltipProperty.setCode(isDeafen ? EGuiCode.UNDEAFEN_TOOLTIP : EGuiCode.DEAFEN_TOOLTIP);
 		});
 	}
 

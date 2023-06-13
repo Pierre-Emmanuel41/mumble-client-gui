@@ -13,7 +13,7 @@ import fr.pederobien.communication.event.ConnectionEvent;
 import fr.pederobien.dictionary.event.DictionaryEvent;
 import fr.pederobien.mumble.client.external.event.PlayerPositionChangePostEvent;
 import fr.pederobien.mumble.client.external.event.PlayerPositionChangePreEvent;
-import fr.pederobien.mumble.client.gui.environment.Variables;
+import fr.pederobien.mumble.client.gui.impl.Variables;
 import fr.pederobien.mumble.client.player.event.MumblePlayerPositionChangePostEvent;
 import fr.pederobien.sound.event.ProjectSoundEvent;
 import fr.pederobien.utils.event.EventCalledEvent;

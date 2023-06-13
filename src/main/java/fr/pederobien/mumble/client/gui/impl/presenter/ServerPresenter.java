@@ -1,8 +1,8 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import fr.pederobien.dictionary.interfaces.ICode;
+import fr.pederobien.javafx.configuration.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.EGuiCode;
-import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.player.event.MumbleServerAddressChangePostEvent;
 import fr.pederobien.mumble.client.player.event.MumbleServerJoinPostEvent;
 import fr.pederobien.mumble.client.player.event.MumbleServerNameChangePostEvent;
@@ -34,7 +34,7 @@ public class ServerPresenter extends PresenterBase implements IEventListener {
 
 		serverNameProperty = new SimpleStringProperty(server.getName());
 		serverIpAddressProperty = new SimpleStringProperty(server.getAddress().getAddress().getHostAddress() + ":" + server.getAddress().getPort());
-		serverReachableStatusProperty = getPropertyHelper().languageProperty(getServerStateCode());
+		serverReachableStatusProperty = getPropertyHelper().newLanguageProperty(getServerStateCode());
 		textFillProperty = new SimpleObjectProperty<Paint>(getServerReachableStatusColor());
 
 		EventManager.registerListener(this);

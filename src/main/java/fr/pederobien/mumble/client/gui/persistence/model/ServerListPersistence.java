@@ -1,6 +1,6 @@
 package fr.pederobien.mumble.client.gui.persistence.model;
 
-import fr.pederobien.mumble.client.gui.environment.Variables;
+import fr.pederobien.mumble.client.gui.impl.Variables;
 import fr.pederobien.mumble.client.gui.model.ServerList;
 import fr.pederobien.mumble.client.gui.persistence.model.loaders.ServerListSerializerV10;
 import fr.pederobien.persistence.impl.Persistences;
@@ -34,7 +34,7 @@ public class ServerListPersistence {
 	 */
 	public void serialize() {
 		try {
-			persistence.serialize(serverList, IPersistence.LATEST, Variables.MUMBLE_FOLDER.getPath().resolve(Variables.SERVER_LIST.getFileName()).toString());
+			persistence.serialize(serverList, IPersistence.LATEST, Variables.SERVER_LIST.getPath().toAbsolutePath().toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -45,7 +45,7 @@ public class ServerListPersistence {
 	 */
 	public void deserialize() {
 		try {
-			persistence.deserialize(serverList, Variables.MUMBLE_FOLDER.getPath().resolve(Variables.SERVER_LIST.getFileName()).toString());
+			persistence.deserialize(serverList, Variables.SERVER_LIST.getPath().toAbsolutePath().toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

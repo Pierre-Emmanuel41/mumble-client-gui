@@ -1,9 +1,10 @@
 package fr.pederobien.mumble.client.gui.impl.presenter;
 
+import fr.pederobien.javafx.configuration.impl.GuiHelper;
 import fr.pederobien.mumble.client.gui.impl.EGuiCode;
+import fr.pederobien.mumble.client.gui.impl.Variables;
 import fr.pederobien.mumble.client.gui.impl.view.ServerListView;
 import fr.pederobien.mumble.client.gui.impl.view.ServerManagementView;
-import fr.pederobien.mumble.client.gui.persistence.configuration.GuiConfigurationPersistence;
 import fr.pederobien.mumble.client.gui.persistence.model.ServerListPersistence;
 import fr.pederobien.mumble.client.player.interfaces.IPlayerMumbleServer;
 import fr.pederobien.utils.event.EventLogger;
@@ -24,7 +25,7 @@ public class MainPresenter extends PresenterBase {
 
 	@Override
 	public void onCloseRequest() {
-		GuiConfigurationPersistence.getInstance().serialize();
+		GuiHelper.serialize(Variables.MUMBLE_FOLDER.getPath().toString());
 		ServerListPersistence.getInstance().serialize();
 		EventLogger.instance().unregister();
 	}

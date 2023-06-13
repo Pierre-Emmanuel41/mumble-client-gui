@@ -1,9 +1,10 @@
 package fr.pederobien.mumble.client.gui.impl.view;
 
+import fr.pederobien.javafx.configuration.impl.components.SimpleLabel;
+import fr.pederobien.javafx.configuration.impl.components.SimpleTextField;
+import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.generic.OkCancelStage;
 import fr.pederobien.mumble.client.gui.impl.presenter.ServerInfoPresenter;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
 public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> {
@@ -19,53 +20,38 @@ public class ServerInfoView extends ViewBase<ServerInfoPresenter, GridPane> {
 		// Server Name
 		// -------------------------------------------------------------------------------------------------
 
-		Label serverNameLabel = new Label();
-		serverNameLabel.fontProperty().bind(getPresenter().fontProperty());
-		serverNameLabel.textProperty().bind(getPresenter().serverNameTextProperty());
-
-		TextField serverNameTextField = new TextField();
-		serverNameTextField.fontProperty().bind(getPresenter().fontProperty());
-		serverNameTextField.promptTextProperty().bind(getPresenter().serverNamePromptProperty());
+		SimpleTextField serverNameTextField = new SimpleTextField();
+		serverNameTextField.setPromptText(EGuiCode.SERVER_NAME_PROMPT);
+		serverNameTextField.setTooltip(EGuiCode.SERVER_NAME_TOOLTIP);
 		serverNameTextField.textProperty().bindBidirectional(getPresenter().serverNameProperty());
 		serverNameTextField.borderProperty().bind(getPresenter().serverNameBorderProperty());
 		serverNameTextField.focusedProperty().addListener((obs, oldValue, newValue) -> getPresenter().validateServerName(newValue));
-		serverNameTextField.tooltipProperty().bind(getPresenter().serverNameTooltipProperty());
 
-		getPresenter().getFormView().addRow(serverNameLabel, serverNameTextField);
+		getPresenter().getFormView().addRow(new SimpleLabel(EGuiCode.SERVER_NAME), serverNameTextField);
 
 		// Server IP address
 		// --------------------------------------------------------------------------------------------------
 
-		Label serverIpAddressLabel = new Label();
-		serverIpAddressLabel.fontProperty().bind(getPresenter().fontProperty());
-		serverIpAddressLabel.textProperty().bind(getPresenter().serverIpAddressTextProperty());
-
-		TextField serverIpAddressTextField = new TextField();
-		serverIpAddressTextField.fontProperty().bind(getPresenter().fontProperty());
-		serverIpAddressTextField.promptTextProperty().bind(getPresenter().serverIpAddressPromptProperty());
+		SimpleTextField serverIpAddressTextField = new SimpleTextField();
+		serverIpAddressTextField.setPromptText(EGuiCode.SERVER_IP_ADDRESS_PROMPT);
+		serverIpAddressTextField.setTooltip(EGuiCode.SERVER_IP_ADDRESS_TOOLTIP);
 		serverIpAddressTextField.textProperty().bindBidirectional(getPresenter().serverIpAddressProperty());
 		serverIpAddressTextField.borderProperty().bind(getPresenter().serverIpAddressBorderProperty());
 		serverIpAddressTextField.focusedProperty().addListener((obs, oldValue, newValue) -> getPresenter().validateServerIpAdress(newValue));
-		serverIpAddressTextField.tooltipProperty().bind(getPresenter().serverIpAddressTooltipProperty());
 
-		getPresenter().getFormView().addRow(serverIpAddressLabel, serverIpAddressTextField);
+		getPresenter().getFormView().addRow(new SimpleLabel(EGuiCode.SERVER_IP_ADDRESS), serverIpAddressTextField);
 
 		// Server Port number
 		// --------------------------------------------------------------------------------------------------
 
-		Label serverPortLabel = new Label();
-		serverPortLabel.fontProperty().bind(getPresenter().fontProperty());
-		serverPortLabel.textProperty().bind(getPresenter().serverPortTextProperty());
-
-		TextField serverPortTextField = new TextField();
-		serverPortTextField.fontProperty().bind(getPresenter().fontProperty());
-		serverPortTextField.promptTextProperty().bind(getPresenter().serverPortPromptProperty());
+		SimpleTextField serverPortTextField = new SimpleTextField();
+		serverPortTextField.setPromptText(EGuiCode.SERVER_PORT_NUMBER_PROMPT);
+		serverPortTextField.setTooltip(EGuiCode.SERVER_PORT_NUMBER_TOOLTIP);
 		serverPortTextField.textProperty().bindBidirectional(getPresenter().serverPortProperty());
 		serverPortTextField.borderProperty().bind(getPresenter().serverPortBorderProperty());
 		serverPortTextField.focusedProperty().addListener((obs, oldValue, newValue) -> getPresenter().validateServerPortNumber(newValue));
-		serverPortTextField.tooltipProperty().bind(getPresenter().serverPortTooltipProperty());
 
-		getPresenter().getFormView().addRow(serverPortLabel, serverPortTextField);
+		getPresenter().getFormView().addRow(new SimpleLabel(EGuiCode.SERVER_PORT_NUMBER), serverPortTextField);
 
 		OkCancelStage okCancelStage = new OkCancelStage(getPrimaryStage(), getPresenter());
 		okCancelStage.show();

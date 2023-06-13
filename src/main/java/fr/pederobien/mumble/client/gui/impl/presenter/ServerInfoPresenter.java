@@ -2,10 +2,9 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 
 import java.util.regex.Pattern;
 
+import fr.pederobien.javafx.configuration.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.generic.OkCancelPresenter;
-import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
-import fr.pederobien.mumble.client.gui.impl.properties.SimpleTooltipProperty;
 import fr.pederobien.mumble.client.gui.model.ServerList;
 import fr.pederobien.mumble.client.player.interfaces.IPlayerMumbleServer;
 import javafx.beans.property.BooleanProperty;
@@ -16,7 +15,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
@@ -33,24 +31,15 @@ public abstract class ServerInfoPresenter extends OkCancelPresenter {
 
 	// Server name ---------------------------------------------
 	private StringProperty serverNameProperty;
-	private SimpleLanguageProperty serverNameTextProperty;
 	private ObjectProperty<Border> serverNameBorderProperty;
-	private SimpleLanguageProperty serverNamePromptProperty;
-	private SimpleTooltipProperty serverNameTooltipProperty;
 
 	// Server Ip address -----------------------------------------
 	private StringProperty serverIpAddressProperty;
-	private SimpleLanguageProperty serverIpAddressTextProperty;
 	private ObjectProperty<Border> serverIpAddressBorderProperty;
-	private SimpleLanguageProperty serverIpAddressPromptProperty;
-	private SimpleTooltipProperty serverIpAddressTooltipProperty;
 
 	// Server port number ----------------------------------------
 	private StringProperty serverPortProperty;
-	private SimpleLanguageProperty serverPortTextProperty;
 	private ObjectProperty<Border> serverPortBorderProperty;
-	private SimpleLanguageProperty serverPortPromptProperty;
-	private SimpleTooltipProperty serverPortTooltipProperty;
 
 	// Buttons ---------------------------------------------------
 	private BooleanProperty okDisableProperty;
@@ -60,26 +49,17 @@ public abstract class ServerInfoPresenter extends OkCancelPresenter {
 		this.server = server;
 
 		server.close();
-		titleTextProperty = getPropertyHelper().languageProperty(EGuiCode.ADD_NEW_SERVER_TITLE);
+		titleTextProperty = getPropertyHelper().newLanguageProperty(EGuiCode.ADD_NEW_SERVER_TITLE);
 
 		serverNameProperty = new SimpleStringProperty(server.getName().equals(ServerList.DEFAULT_SERVER_NAME) ? null : server.getName());
-		serverNameTextProperty = getPropertyHelper().languageProperty(EGuiCode.SERVER_NAME);
 		serverNameBorderProperty = new SimpleObjectProperty<Border>(null);
-		serverNamePromptProperty = getPropertyHelper().languageProperty(EGuiCode.SERVER_NAME_PROMPT);
-		serverNameTooltipProperty = getPropertyHelper().tooltipProperty(EGuiCode.SERVER_NAME_TOOLTIP);
 
 		serverIpAddressProperty = new SimpleStringProperty(
 				server.getAddress().getAddress().getHostAddress().equals(ServerList.DEFAULT_SERVER_ADDRESS) ? null : server.getAddress().getAddress().getHostAddress());
-		serverIpAddressTextProperty = getPropertyHelper().languageProperty(EGuiCode.SERVER_IP_ADDRESS);
 		serverIpAddressBorderProperty = new SimpleObjectProperty<Border>(null);
-		serverIpAddressPromptProperty = getPropertyHelper().languageProperty(EGuiCode.SERVER_IP_ADDRESS_PROMPT);
-		serverIpAddressTooltipProperty = getPropertyHelper().tooltipProperty(EGuiCode.SERVER_IP_ADDRESS_TOOLTIP);
 
 		serverPortProperty = new SimpleStringProperty(server.getAddress().getPort() == ServerList.DEFAULT_SERVER_PORT ? null : "" + server.getAddress().getPort());
-		serverPortTextProperty = getPropertyHelper().languageProperty(EGuiCode.SERVER_PORT_NUMBER);
 		serverPortBorderProperty = new SimpleObjectProperty<Border>(null);
-		serverPortPromptProperty = getPropertyHelper().languageProperty(EGuiCode.SERVER_PORT_NUMBER_PROMPT);
-		serverPortTooltipProperty = getPropertyHelper().tooltipProperty(EGuiCode.SERVER_PORT_NUMBER_TOOLTIP);
 
 		okDisableProperty = new SimpleBooleanProperty(true);
 
@@ -124,32 +104,10 @@ public abstract class ServerInfoPresenter extends OkCancelPresenter {
 	// -------------------------------------------------------------------------------------------------------------------
 
 	/**
-	 * @return The property that display the text "Name :"
-	 */
-	public StringProperty serverNameTextProperty() {
-		return serverNameTextProperty;
-	}
-
-	/**
 	 * @return The property to change the border for the server name input.
 	 */
 	public ObjectProperty<Border> serverNameBorderProperty() {
 		return serverNameBorderProperty;
-	}
-
-	/**
-	 * @return The property that display "Name" as prompt for a textfield.
-	 */
-	public StringProperty serverNamePromptProperty() {
-		return serverNamePromptProperty;
-	}
-
-	/**
-	 * @return The property that contains the tooltip of the component in which the server name is written. This tolltip contains a
-	 *         description of constraints for the server name.
-	 */
-	public ObjectProperty<Tooltip> serverNameTooltipProperty() {
-		return serverNameTooltipProperty;
 	}
 
 	/**
@@ -159,36 +117,14 @@ public abstract class ServerInfoPresenter extends OkCancelPresenter {
 		return serverNameProperty;
 	}
 
-	// Server ip address
+	// Server IP address
 	// -------------------------------------------------------------------------------------------------------------------
-
-	/**
-	 * @return The property that display the text "IP address :".
-	 */
-	public StringProperty serverIpAddressTextProperty() {
-		return serverIpAddressTextProperty;
-	}
 
 	/**
 	 * @return The property to change the border for the server ip adress input.
 	 */
 	public ObjectProperty<Border> serverIpAddressBorderProperty() {
 		return serverIpAddressBorderProperty;
-	}
-
-	/**
-	 * @return The property that display "IP address" as prompt for a textfield.
-	 */
-	public StringProperty serverIpAddressPromptProperty() {
-		return serverIpAddressPromptProperty;
-	}
-
-	/**
-	 * @return The property that contains the tolltip of the component in which the server IP address is written. This tooltip
-	 *         contains a description of constraints for the server IP address.
-	 */
-	public ObjectProperty<Tooltip> serverIpAddressTooltipProperty() {
-		return serverIpAddressTooltipProperty;
 	}
 
 	/**
@@ -202,32 +138,10 @@ public abstract class ServerInfoPresenter extends OkCancelPresenter {
 	// -------------------------------------------------------------------------------------------------------------------
 
 	/**
-	 * @return The property that display "Port number :"
-	 */
-	public StringProperty serverPortTextProperty() {
-		return serverPortTextProperty;
-	}
-
-	/**
 	 * @return The property to change the border for the server port number input.
 	 */
 	public ObjectProperty<Border> serverPortBorderProperty() {
 		return serverPortBorderProperty;
-	}
-
-	/**
-	 * @return The property that display "Port number" as prompt for a textfield.
-	 */
-	public StringProperty serverPortPromptProperty() {
-		return serverPortPromptProperty;
-	}
-
-	/**
-	 * @return The property that contains the tooltip of the component in which the server port number is written. This tooltip
-	 *         contains a description of constraints for the server port number.
-	 */
-	public ObjectProperty<Tooltip> serverPortTooltipProperty() {
-		return serverPortTooltipProperty;
 	}
 
 	/**

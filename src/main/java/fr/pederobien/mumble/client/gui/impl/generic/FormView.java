@@ -3,6 +3,8 @@ package fr.pederobien.mumble.client.gui.impl.generic;
 import java.util.HashMap;
 import java.util.Map;
 
+import fr.pederobien.javafx.configuration.impl.components.SimpleButton;
+import fr.pederobien.javafx.configuration.impl.components.SimpleLabel;
 import fr.pederobien.mumble.client.gui.impl.view.ViewBase;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
@@ -46,9 +48,7 @@ public class FormView extends ViewBase<FormPresenter, BorderPane> {
 
 		buttons = new FlowPane();
 		for (Map.Entry<ButtonType, StringProperty> entry : getPresenter().getButtonTexts().entrySet()) {
-			Button button = new Button();
-			button.fontProperty().bind(getPresenter().fontProperty());
-			button.textProperty().bind(entry.getValue());
+			SimpleButton button = new SimpleButton(entry.getValue());
 			button.setOnAction(e -> getPresenter().onButtonClicked(typeFromButton.get(e.getSource())));
 
 			buttons.getChildren().add(button);
@@ -84,8 +84,7 @@ public class FormView extends ViewBase<FormPresenter, BorderPane> {
 	 * @param field The field of the row.
 	 */
 	public void addRow(String label, Region field) {
-		Label labelView = new Label(label);
-		labelView.fontProperty().bind(getPresenter().fontProperty());
+		SimpleLabel labelView = new SimpleLabel(label);
 		addRow(labelView, field);
 	}
 

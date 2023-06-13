@@ -29,7 +29,7 @@ public class AlertPresenter extends PresenterBase {
 	 * @return This presenter.
 	 */
 	public AlertPresenter title(ICode title, Object... args) {
-		alert.titleProperty().bind(getPropertyHelper().languageProperty(title, args));
+		alert.titleProperty().bind(getPropertyHelper().newLanguageProperty(title, args));
 		return this;
 	}
 
@@ -42,7 +42,7 @@ public class AlertPresenter extends PresenterBase {
 	 * @return This presenter.
 	 */
 	public AlertPresenter header(ICode header, Object... args) {
-		alert.headerTextProperty().bind(getPropertyHelper().languageProperty(header, args));
+		alert.headerTextProperty().bind(getPropertyHelper().newLanguageProperty(header, args));
 		return this;
 	}
 
@@ -55,7 +55,7 @@ public class AlertPresenter extends PresenterBase {
 	 * @return This presenter.
 	 */
 	public AlertPresenter content(ICode content, Object... args) {
-		alert.contentTextProperty().bind(getPropertyHelper().languageProperty(content, args));
+		alert.contentTextProperty().bind(getPropertyHelper().newLanguageProperty(content, args));
 		return this;
 	}
 

@@ -1,9 +1,10 @@
 package fr.pederobien.mumble.client.gui.impl.view;
 
+import fr.pederobien.javafx.configuration.impl.components.SimpleLabel;
+import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.presenter.ServerListPresenter;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
@@ -20,9 +21,7 @@ public class ServerListView extends ViewBase<ServerListPresenter, StackPane> {
 		super(presenter, new StackPane());
 
 		// Label to display when there is no registered server.
-		Label emptyServerListLabel = new Label();
-		emptyServerListLabel.fontProperty().bind(getPresenter().fontProperty());
-		emptyServerListLabel.textProperty().bind(getPresenter().emptyServerTextProperty());
+		SimpleLabel emptyServerListLabel = new SimpleLabel(EGuiCode.EMPTY_SERVER_LIST);
 		emptyServerListLabel.visibleProperty().bind(getPresenter().emptyServersListVisibilityProperty());
 		getRoot().getChildren().add(emptyServerListLabel);
 

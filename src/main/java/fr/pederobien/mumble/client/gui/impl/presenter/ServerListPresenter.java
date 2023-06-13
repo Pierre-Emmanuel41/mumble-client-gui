@@ -9,9 +9,7 @@ import fr.pederobien.mumble.client.gui.event.ServerJoinRequestPostEvent;
 import fr.pederobien.mumble.client.gui.event.ServerJoinRequestPreEvent;
 import fr.pederobien.mumble.client.gui.event.ServerListAddServerPostEvent;
 import fr.pederobien.mumble.client.gui.event.ServerListRemoveServerPostEvent;
-import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.properties.ListCellView;
-import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.ServerView;
 import fr.pederobien.mumble.client.gui.model.ServerList;
 import fr.pederobien.mumble.client.player.event.MumbleServerJoinPostEvent;
@@ -21,7 +19,6 @@ import fr.pederobien.utils.event.EventManager;
 import fr.pederobien.utils.event.IEventListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListCell;
@@ -36,7 +33,6 @@ public class ServerListPresenter extends PresenterBase implements IEventListener
 	private ObservableList<Object> servers;
 	private Map<IPlayerMumbleServer, ServerView> serverViews;
 	private BooleanProperty emptyServersListVisibilityProperty;
-	private SimpleLanguageProperty emptyServerTextProperty;
 
 	/**
 	 * Creates a presenter in order to display each server registered in the given list.
@@ -45,12 +41,10 @@ public class ServerListPresenter extends PresenterBase implements IEventListener
 	 */
 	public ServerListPresenter(ServerList serverList) {
 		this.serverList = serverList;
-		EventManager.registerListener(this);
 		servers = FXCollections.observableArrayList(serverList.getServers());
 		serverViews = new HashMap<IPlayerMumbleServer, ServerView>();
-
 		emptyServersListVisibilityProperty = new SimpleBooleanProperty(serverList.getServers().isEmpty());
-		emptyServerTextProperty = getPropertyHelper().languageProperty(EGuiCode.EMPTY_SERVER_LIST);
+		EventManager.registerListener(this);
 	}
 
 	/**
@@ -61,13 +55,6 @@ public class ServerListPresenter extends PresenterBase implements IEventListener
 	}
 
 	/**
-	 * @return The code associated to the message to display when there is no registered server.
-	 */
-	public StringProperty emptyServerTextProperty() {
-		return emptyServerTextProperty;
-	}
-
-	/**
 	 * @return The property to display the message when there is no registered server.
 	 */
 	public BooleanProperty emptyServersListVisibilityProperty() {
@@ -75,7 +62,7 @@ public class ServerListPresenter extends PresenterBase implements IEventListener
 	}
 
 	public <T> Callback<ListView<T>, ListCell<T>> serverViewFactory(Color enteredColor) {
-		return listView -> getPropertyHelper().cellView(item -> {
+		return listView -> getPropertyHelper().newListCell(item -> {
 			ServerView view = serverViews.get(item);
 			if (view == null) {
 				view = new ServerView(new ServerPresenter((IPlayerMumbleServer) item));

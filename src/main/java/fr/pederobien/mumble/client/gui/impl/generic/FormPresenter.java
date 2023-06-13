@@ -25,7 +25,7 @@ public class FormPresenter extends PresenterBase {
 			if (buttonTexts.get(button) != null)
 				continue;
 
-			buttonTexts.put(button, getPropertyHelper().languageProperty(button.getCode()));
+			buttonTexts.put(button, getPropertyHelper().newLanguageProperty(button.getCode()));
 		}
 	}
 

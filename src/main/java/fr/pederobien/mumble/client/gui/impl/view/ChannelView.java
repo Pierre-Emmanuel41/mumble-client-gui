@@ -1,5 +1,7 @@
 package fr.pederobien.mumble.client.gui.impl.view;
 
+import fr.pederobien.javafx.configuration.impl.components.SimpleLabel;
+import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.presenter.ChannelPresenter;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -27,9 +29,7 @@ public class ChannelView extends ViewBase<ChannelPresenter, GridPane> {
 	public ChannelView(ChannelPresenter presenter) {
 		super(presenter, new GridPane());
 
-		Label channelName = new Label();
-		channelName.fontProperty().bind(getPresenter().fontProperty());
-		channelName.textProperty().bind(getPresenter().channelNameProperty());
+		SimpleLabel channelName = new SimpleLabel(getPresenter().channelNameProperty());
 		channelName.setTextFill(Color.BLACK);
 
 		channelName.setOnMouseEntered(e -> {
@@ -46,9 +46,7 @@ public class ChannelView extends ViewBase<ChannelPresenter, GridPane> {
 		ContextMenu contextMenu = new ContextMenu();
 
 		// Add channel ------------------------------------------------------------------------------------
-		Label addChannelLabel = new Label();
-		addChannelLabel.fontProperty().bind(getPresenter().fontProperty());
-		addChannelLabel.textProperty().bind(getPresenter().addChannelTextProperty());
+		SimpleLabel addChannelLabel = new SimpleLabel(EGuiCode.ADD_CHANNEL);
 		addChannelLabel.setTextFill(Color.BLACK);
 
 		MenuItem addChannel = new MenuItem();
@@ -58,9 +56,7 @@ public class ChannelView extends ViewBase<ChannelPresenter, GridPane> {
 		contextMenu.getItems().add(addChannel);
 
 		// Remove channel ---------------------------------------------------------------------------------
-		Label removeChannelLabel = new Label();
-		removeChannelLabel.fontProperty().bind(getPresenter().fontProperty());
-		removeChannelLabel.textProperty().bind(getPresenter().removeChannelTextProperty());
+		SimpleLabel removeChannelLabel = new SimpleLabel(EGuiCode.REMOVE_CHANNEL);
 		removeChannelLabel.setTextFill(Color.BLACK);
 
 		MenuItem removeChannel = new MenuItem();
@@ -70,9 +66,7 @@ public class ChannelView extends ViewBase<ChannelPresenter, GridPane> {
 		contextMenu.getItems().add(removeChannel);
 
 		// Rename channel ---------------------------------------------------------------------------------
-		Label renameChannelLabel = new Label();
-		renameChannelLabel.fontProperty().bind(getPresenter().fontProperty());
-		renameChannelLabel.textProperty().bind(getPresenter().renameChannelTextProperty());
+		SimpleLabel renameChannelLabel = new SimpleLabel(EGuiCode.RENAME_CHANNEL);
 		renameChannelLabel.setTextFill(Color.BLACK);
 
 		MenuItem renameChannel = new MenuItem();
@@ -82,9 +76,7 @@ public class ChannelView extends ViewBase<ChannelPresenter, GridPane> {
 		contextMenu.getItems().add(renameChannel);
 
 		// Sound modifier ---------------------------------------------------------------------------------
-		Label soundModifierLabel = new Label();
-		soundModifierLabel.fontProperty().bind(getPresenter().fontProperty());
-		soundModifierLabel.textProperty().bind(getPresenter().soundModifierTextProperty());
+		SimpleLabel soundModifierLabel = new SimpleLabel(getPresenter().soundModifierTextProperty());
 		soundModifierLabel.setTextFill(Color.BLACK);
 
 		MenuItem soundModifier = new MenuItem();

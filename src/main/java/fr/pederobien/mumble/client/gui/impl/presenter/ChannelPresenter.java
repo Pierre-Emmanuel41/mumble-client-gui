@@ -3,12 +3,12 @@ package fr.pederobien.mumble.client.gui.impl.presenter;
 import java.util.HashMap;
 import java.util.Map;
 
+import fr.pederobien.javafx.configuration.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.messenger.interfaces.IResponse;
 import fr.pederobien.mumble.client.gui.event.ChannelJoinRequestPostEvent;
 import fr.pederobien.mumble.client.gui.event.ChannelJoinRequestPreEvent;
 import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter.ErrorPresenterBuilder;
-import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.AddChannelView;
 import fr.pederobien.mumble.client.gui.impl.view.PlayerChannelView;
 import fr.pederobien.mumble.client.gui.impl.view.RenameChannelView;
@@ -52,13 +52,8 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 	private StringProperty channelNameProperty;
 
 	// Context Menu ----------------------------------------------------------------------------------------------------------------
-	private SimpleLanguageProperty addChannelTextProperty;
 	private BooleanProperty addChannelVisibility;
-
-	private SimpleLanguageProperty removeChannelTextProperty;
 	private BooleanProperty removeChannelVisibility;
-
-	private SimpleLanguageProperty renameChannelTextProperty;
 	private BooleanProperty renameChannelVisibility;
 
 	private SimpleLanguageProperty soundModifierTextProperty;
@@ -80,17 +75,11 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 		playersViews = new HashMap<String, PlayerChannelView>();
 
 		channelNameProperty = new SimpleStringProperty(channel.getName());
-
-		addChannelTextProperty = getPropertyHelper().languageProperty(EGuiCode.ADD_CHANNEL);
 		addChannelVisibility = new SimpleBooleanProperty(server.getMainPlayer().isAdmin());
-
-		removeChannelTextProperty = getPropertyHelper().languageProperty(EGuiCode.REMOVE_CHANNEL);
 		removeChannelVisibility = new SimpleBooleanProperty(server.getMainPlayer().isAdmin() && channelList.toList().size() > 1);
-
-		renameChannelTextProperty = getPropertyHelper().languageProperty(EGuiCode.RENAME_CHANNEL);
 		renameChannelVisibility = new SimpleBooleanProperty(server.getMainPlayer().isAdmin());
 
-		soundModifierTextProperty = getPropertyHelper().languageProperty(EGuiCode.SOUND_MODIFIER, channel.getSoundModifier().getName());
+		soundModifierTextProperty = getPropertyHelper().newLanguageProperty(EGuiCode.SOUND_MODIFIER, channel.getSoundModifier().getName());
 		soundModifierVisibility = new SimpleBooleanProperty(server.getMainPlayer().isAdmin());
 	}
 
@@ -119,7 +108,7 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 	 * @throws ClassCastException If the type of object used as model to create its view is not IOtherPlayer.
 	 */
 	public <T> Callback<ListView<T>, ListCell<T>> playerViewFactory(Color enteredColor) {
-		return listView -> getPropertyHelper().cellView(item -> {
+		return listView -> getPropertyHelper().newListCell(item -> {
 			PlayerChannelView view = playersViews.get(((IPlayer) item).getName());
 			if (view == null) {
 				view = new PlayerChannelView(new PlayerChannelPresenter((IPlayer) item));
@@ -145,13 +134,6 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 	}
 
 	/**
-	 * @return The property that display "Add channel".
-	 */
-	public StringProperty addChannelTextProperty() {
-		return addChannelTextProperty;
-	}
-
-	/**
 	 * The user can add a channel is and only if he is an administrator in game.
 	 * 
 	 * @return The property for the visibility of the "add channel" component.
@@ -166,13 +148,6 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 	 */
 	public void onAddChannel() {
 		new AddChannelView(new AddChannelPresenter(channelList));
-	}
-
-	/**
-	 * @return The property that display "Remove".
-	 */
-	public StringProperty removeChannelTextProperty() {
-		return removeChannelTextProperty;
 	}
 
 	/**
@@ -200,13 +175,6 @@ public class ChannelPresenter extends PresenterBase implements IEventListener {
 				channelList.remove(channel.getName(), response -> handleRemoveChannelResponse(response));
 			});
 		}
-	}
-
-	/**
-	 * @return The property that display "Rename channel".
-	 */
-	public StringProperty renameChannelTextProperty() {
-		return renameChannelTextProperty;
 	}
 
 	/**

@@ -1,10 +1,11 @@
 package fr.pederobien.mumble.client.gui.impl.view;
 
+import fr.pederobien.javafx.configuration.impl.components.SimpleLabel;
+import fr.pederobien.javafx.configuration.impl.components.SimpleTextField;
+import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.generic.OkCancelStage;
 import fr.pederobien.mumble.client.gui.impl.presenter.AddChannelPresenter;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 
 public class AddChannelView extends ViewBase<AddChannelPresenter, BorderPane> {
@@ -18,19 +19,13 @@ public class AddChannelView extends ViewBase<AddChannelPresenter, BorderPane> {
 	public AddChannelView(AddChannelPresenter presenter) {
 		super(presenter, new BorderPane());
 
-		// Channel name
-		Label channelNameLabel = new Label();
-		channelNameLabel.fontProperty().bind(getPresenter().fontProperty());
-		channelNameLabel.textProperty().bind(getPresenter().channelNameTextProperty());
-
-		TextField channelNameTextField = new TextField();
-		channelNameTextField.fontProperty().bind(getPresenter().fontProperty());
-		channelNameTextField.promptTextProperty().bind(getPresenter().channelNamePromptProperty());
-		channelNameTextField.textProperty().bindBidirectional(getPresenter().channelNameProperty());
+		// Channel name input
+		SimpleTextField channelNameTextField = new SimpleTextField(getPresenter().channelNameProperty());
+		channelNameTextField.setPromptText(EGuiCode.ADD_CHANNEL_NAME_PROMPT);
+		channelNameTextField.setTooltip(EGuiCode.CHANNEL_NAME_TOOLTIP);
 		channelNameTextField.borderProperty().bind(getPresenter().channelNameBorderProperty());
-		channelNameTextField.tooltipProperty().bind(getPresenter().channelNameTooltipProperty());
 
-		getPresenter().getFormView().addRow(channelNameLabel, channelNameTextField);
+		getPresenter().getFormView().addRow(new SimpleLabel(EGuiCode.ADD_CHANNEL_NAME), channelNameTextField);
 
 		// Sound modifier name
 		SelectableSoundModifierView soundModifierView = getPresenter().selectableSoundModifierView();

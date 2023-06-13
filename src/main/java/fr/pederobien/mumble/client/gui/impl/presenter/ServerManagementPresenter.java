@@ -10,7 +10,6 @@ import fr.pederobien.mumble.client.gui.event.ServerJoinRequestPostEvent;
 import fr.pederobien.mumble.client.gui.event.ServerJoinRequestPreEvent;
 import fr.pederobien.mumble.client.gui.impl.EGuiCode;
 import fr.pederobien.mumble.client.gui.impl.generic.ErrorPresenter;
-import fr.pederobien.mumble.client.gui.impl.properties.SimpleLanguageProperty;
 import fr.pederobien.mumble.client.gui.impl.view.ServerDetailsView;
 import fr.pederobien.mumble.client.gui.impl.view.ServerInfoView;
 import fr.pederobien.mumble.client.gui.model.ServerList;
@@ -21,24 +20,12 @@ import fr.pederobien.utils.event.EventManager;
 import fr.pederobien.utils.event.IEventListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.StringProperty;
 import javafx.scene.control.Alert.AlertType;
 
 public class ServerManagementPresenter extends PresenterBase implements IEventListener {
-	// Join server -----------------------------------------------------
-	private SimpleLanguageProperty joinServerTextProperty;
 	private BooleanProperty joinServerDisableProperty;
-
-	// Add server -----------------------------------------------------
-	private SimpleLanguageProperty addServerTextProperty;
 	private BooleanProperty addServerDisableProperty;
-
-	// Edit server -----------------------------------------------------
-	private SimpleLanguageProperty editServerTextProperty;
 	private BooleanProperty editServerDisableProperty;
-
-	// Delete server -----------------------------------------------------
-	private SimpleLanguageProperty deleteServerTextProperty;
 	private BooleanProperty deleteServerDisableProperty;
 
 	private ServerList serverList;
@@ -51,26 +38,12 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 	public ServerManagementPresenter(ServerList serverList) {
 		this.serverList = serverList;
 
-		joinServerTextProperty = getPropertyHelper().languageProperty(EGuiCode.JOIN_SERVER);
 		joinServerDisableProperty = new SimpleBooleanProperty(true);
-
-		addServerTextProperty = getPropertyHelper().languageProperty(EGuiCode.ADD_SERVER);
 		addServerDisableProperty = new SimpleBooleanProperty(false);
-
-		editServerTextProperty = getPropertyHelper().languageProperty(EGuiCode.EDIT_SERVER);
 		editServerDisableProperty = new SimpleBooleanProperty(true);
-
-		deleteServerTextProperty = getPropertyHelper().languageProperty(EGuiCode.DELETE_SERVER);
 		deleteServerDisableProperty = new SimpleBooleanProperty(true);
 
 		EventManager.registerListener(this);
-	}
-
-	/**
-	 * @return The property that display "Join"
-	 */
-	public StringProperty joinServerTextProperty() {
-		return joinServerTextProperty;
 	}
 
 	/**
@@ -81,13 +54,6 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 	}
 
 	/**
-	 * @return The property that display "Add"
-	 */
-	public StringProperty addServerTextProperty() {
-		return addServerTextProperty;
-	}
-
-	/**
 	 * @return The property in order to enable/disable the "add server" functionality.
 	 */
 	public BooleanProperty addDisableProperty() {
@@ -95,24 +61,10 @@ public class ServerManagementPresenter extends PresenterBase implements IEventLi
 	}
 
 	/**
-	 * @return The property that display "Edit"
-	 */
-	public StringProperty editServerTextProperty() {
-		return editServerTextProperty;
-	}
-
-	/**
 	 * @return The property to enable/disable the "edit server" functionality.
 	 */
 	public BooleanProperty editDisableProperty() {
 		return editServerDisableProperty;
-	}
-
-	/**
-	 * @return The property that display "Delete"
-	 */
-	public StringProperty deleteServerTextProperty() {
-		return deleteServerTextProperty;
 	}
 
 	/**
